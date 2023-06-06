@@ -89,6 +89,8 @@ return require('packer').startup(function(use)
   }
   use('tomtom/tcomment_vim')
   use('nvim-tree/nvim-tree.lua')
+  use('SirVer/ultisnips')
+  use('honza/vim-snippets')
 
 end)
 
