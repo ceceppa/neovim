@@ -158,6 +158,11 @@ _G.packer_plugins = {
     path = "/Users/ipad/.local/share/nvim/site/pack/packer/start/nvim-cmp",
     url = "https://github.com/hrsh7th/nvim-cmp"
   },
+  ["nvim-coverage"] = {
+    loaded = true,
+    path = "/Users/ipad/.local/share/nvim/site/pack/packer/start/nvim-coverage",
+    url = "https://github.com/andythigpen/nvim-coverage"
+  },
   ["nvim-lspconfig"] = {
     loaded = true,
     path = "/Users/ipad/.local/share/nvim/site/pack/packer/start/nvim-lspconfig",
@@ -242,6 +247,16 @@ _G.packer_plugins = {
     loaded = true,
     path = "/Users/ipad/.local/share/nvim/site/pack/packer/start/vim-fugitive",
     url = "https://github.com/tpope/vim-fugitive"
+  },
+  ["vim-gitgutter"] = {
+    loaded = true,
+    path = "/Users/ipad/.local/share/nvim/site/pack/packer/start/vim-gitgutter",
+    url = "https://github.com/airblade/vim-gitgutter"
+  },
+  ["vim-jest-snippets"] = {
+    loaded = true,
+    path = "/Users/ipad/.local/share/nvim/site/pack/packer/start/vim-jest-snippets",
+    url = "https://github.com/joaohkfaria/vim-jest-snippets"
   },
   ["vim-snippets"] = {
     loaded = true,

@@ -91,6 +91,12 @@ return require('packer').startup(function(use)
   use('nvim-tree/nvim-tree.lua')
   use('SirVer/ultisnips')
   use('honza/vim-snippets')
+  use('airblade/vim-gitgutter')
+  use('joaohkfaria/vim-jest-snippets')
+
+
+  use('nvim-lua/plenary.nvim')
+  use('andythigpen/nvim-coverage')
 
 end)
 

@@ -16,6 +16,7 @@ vim.api.nvim_set_keymap('n', '<leader>2', '<C-w>l', {noremap = true})
 vim.api.nvim_set_keymap('n', '<leader>wh', '<C-w>h', {noremap = true})
 vim.api.nvim_set_keymap('n', '<leader>wk', '<C-w>k', {noremap = true})
 vim.api.nvim_set_keymap('n', '<leader>wj', '<C-w>j', {noremap = true})
+vim.api.nvim_set_keymap('n', '<leader>wn', '<C-w>w', {noremap = true})
 vim.api.nvim_set_keymap('n', '<leader>w=', ':vertical resize 120<CR>', {noremap = true})
 vim.api.nvim_set_keymap('n', '<leader>wm', ':lua MaximizeCurrentWindow()<CR>', {noremap = true, silent = true})
 
@@ -31,8 +32,10 @@ function MaximizeCurrentWindow()
 end
 
 -- Buffers
-vim.api.nvim_set_keymap('n', '<leader>bp', '<C-^>', {noremap = true})
-vim.api.nvim_set_keymap('n', '<leader>bn', ':bnext<CR>', {noremap = true})
+vim.keymap.set('n', '<leader>bp', vim.cmd.BufferPrevious)
+vim.keymap.set('n', '<leader>b', vim.cmd.BufferClose)
+vim.keymap.set('n', '<leader>bn', vim.cmd.BufferNext)
+vim.keymap.set("n", "<leader>ko", ":%bd|e#<CR>") -- kill other buffers
 
 -- Move lines when selected
 vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
@@ -63,11 +66,11 @@ vim.keymap.set("n", "<leader>j", "<cmd>lprev<CR>zz")
 vim.keymap.set("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
 vim.keymap.set("n", "<leader>x", "<cmd>!chmod +x %<CR>", { silent = true })
 
-vim.keymap.set("n", "<leader>vpp", "<cmd>e ~/.dotfiles/nvim/.config/nvim/lua/theprimeagen/packer.lua<CR>");
 vim.keymap.set("n", "<leader>mr", "<cmd>CellularAutomaton make_it_rain<CR>");
 
 vim.keymap.set("n", "<leader><leader>", function()
     vim.cmd("so")
 end)
 
-vim.keymap.set("n", "<leader>bo", ":%bd|e#<CR>");
+
+vim.keymap.set("n", "<leader>W", "viw")
