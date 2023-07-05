@@ -53,7 +53,6 @@ return require('packer').startup(function(use)
       end
   }
 
-  -- use('vim-airline/vim-airline')
   use('vim-airline/vim-airline-themes')
 
   use('nvim-treesitter/nvim-treesitter-context')
@@ -74,7 +73,10 @@ return require('packer').startup(function(use)
   })
 
   use('tpope/vim-surround')
-  use('nvim-lualine/lualine.nvim')
+  use {
+      'nvim-lualine/lualine.nvim',
+      requires = { 'nvim-tree/nvim-web-devicons', opt = true }
+  }
   use('nvim-tree/nvim-web-devicons')
   use('zivyangll/git-blame.vim')
   use('dense-analysis/ale')
@@ -97,6 +99,27 @@ return require('packer').startup(function(use)
 
   use('nvim-lua/plenary.nvim')
   use('andythigpen/nvim-coverage')
+
+  use {
+      "folke/which-key.nvim",
+      config = function()
+          vim.o.timeout = true
+          vim.o.timeoutlen = 300
+          require("which-key").setup {
+              -- your configuration comes here
+              -- or leave it empty to use the default settings
+              -- refer to the configuration section below
+          }
+      end
+  }
+
+  use {
+      'folke/trouble.nvim',
+      config = function() 
+      end
+  }
+
+  use('dandavison/delta')
 
 end)
 

@@ -3,10 +3,8 @@ vim.keymap.set("n", "<leader>pv", vim.cmd.Ex)
 vim.api.nvim_set_keymap('n', '<leader>D', ':t.<CR>', {noremap = true})
 vim.api.nvim_set_keymap('v', '<leader>D', ':t.<CR>', {noremap = true})
 vim.api.nvim_set_keymap('n', '<leader>qq', ':qa<CR>', {noremap = true})
-vim.api.nvim_set_keymap('n', '<leader>gb', ':<C-u>call gitblame#echo()<CR>', {noremap = true})
 vim.api.nvim_set_keymap('n', '<leader>ss', ':w<CR>', {noremap = true})
 vim.api.nvim_set_keymap('i', '<Tab>', '<C-y>', {noremap = true})
-vim.api.nvim_set_keymap('n', '<leader>gc', ':GBranches checkout<CR>', { noremap = true })
 
 -- Windows
 vim.api.nvim_set_keymap('n', '<leader>wv', '<C-w>v', {noremap = true})
@@ -74,3 +72,8 @@ end)
 
 
 vim.keymap.set("n", "<leader>W", "viw")
+
+-- Clear
+vim.keymap.set("n", "<leader>c'", "ci'")
+vim.keymap.set("n", "<leader>c\"", "ci\"")
+vim.keymap.set("n", "<leader>c)", "ci)")
