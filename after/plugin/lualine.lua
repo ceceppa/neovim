@@ -125,7 +125,7 @@ local function git_status()
         git_state[2] = '  ' .. git_num[1]
     end
     if git_num[2] ~= 0 then
-        git_state[3] = ' ' .. git_num[2]
+        git_state[3] = '󰷉 ' .. git_num[2]
     end
     if git_num[3] ~= 0 then
         git_state[4] = ' ' .. git_num[3]
@@ -166,8 +166,8 @@ require('lualine').setup {
                   local gs = git_status()
                   if gs == 'd' then
                       return { fg = '#BFAAEE' }
-                  elseif gs ~= 'm' then
-                      return { fg = '#A4C379' }
+                  elseif gs == 'm' then
+                      return { fg = '#f0dbff' }
                   end
               end
           },
@@ -190,7 +190,7 @@ require('lualine').setup {
           {
               -- modified files
               "vim.b.git_state[3]",
-              color = { fg = '#ffa8a8' },
+              color = { fg = '#f0dbff' },
               padding = { left = 1, right = 1 }
           },
           {
@@ -214,7 +214,7 @@ require('lualine').setup {
               shorting_target = 40,    -- Shortens path to leave 40 spaces in the window
               -- for other components. (terrible name, any suggestions?)
               symbols = {
-                  modified = '',      -- Text to show when the file is modified.
+                  modified = ' ',      -- Text to show when the file is modified.
                   readonly = '[-]',      -- Text to show when the file is non-modifiable or readonly.
                   unnamed = '[No Name]', -- Text to show for unnamed buffers.
                   newfile = '[New]',     -- Text to show for newly created file before first write
@@ -231,7 +231,7 @@ require('lualine').setup {
                   modified = {fg='#f0dbff'},   
                   removed  = {fg='#ffa8a8'},
               },
-              symbols = {added = ' ', modified = '󰜥 ', removed = ' '}, 
+              symbols = {added = ' ', modified = '󰤀 ', removed = '󰐓 '}, 
           },
           'filetype',
       },
