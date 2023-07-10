@@ -122,7 +122,7 @@ local function git_status()
 
     -- build output string
     if git_num[1] ~= 0 then
-        git_state[2] = '  ' .. git_num[1]
+        git_state[2] = '󱣫 ' .. git_num[1]
     end
     if git_num[2] ~= 0 then
         git_state[3] = '󰷉 ' .. git_num[2]
@@ -179,12 +179,12 @@ require('lualine').setup {
                       return { fg = '#F49B55' }
                   end
               end,
-              padding = { left = 1, right = 1 }
+              padding = { left = 1, right = 0 }
           },
-          { 
-              -- staged files
-              "vim.b.git_state[2]",
-              color = { fg = '#A4C379' },
+          {
+              -- untracked files
+              "vim.b.git_state[4]",
+              color = { fg = '#F6B11E' },
               padding = { left = 1, right = 1 }
           },
           {
@@ -193,10 +193,10 @@ require('lualine').setup {
               color = { fg = '#f0dbff' },
               padding = { left = 1, right = 1 }
           },
-          {
-              -- untracked files
-              "vim.b.git_state[4]",
-              color = { fg = '#F6B11E' },
+          { 
+              -- staged files
+              "vim.b.git_state[2]",
+              color = { fg = '#A4C379' },
               padding = { left = 1, right = 1 }
           },
       },
@@ -231,7 +231,7 @@ require('lualine').setup {
                   modified = {fg='#f0dbff'},   
                   removed  = {fg='#ffa8a8'},
               },
-              symbols = {added = ' ', modified = '󰤀 ', removed = '󰐓 '}, 
+              symbols = {added = '󰐒 ', modified = '󰤀 ', removed = '󰐓 '}, 
           },
           'filetype',
       },
