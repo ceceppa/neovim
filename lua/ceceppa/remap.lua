@@ -85,10 +85,8 @@ vim.api.nvim_set_keymap('i', '<Tab>', '<C-y>', {noremap = true})
 vim.api.nvim_set_keymap('n', '<leader>1', '<C-w>h', {noremap = true})
 vim.api.nvim_set_keymap('n', '<leader>2', '<C-w>l', {noremap = true})
 vim.api.nvim_set_keymap('n', '<leader>w=', ':vertical resize 120<CR>', {noremap = true})
-vim.api.nvim_set_keymap('n', '<C-h>', '<C-w>h', {noremap = true})
-vim.api.nvim_set_keymap('n', '<C-k>', '<C-w>k', {noremap = true})
-vim.api.nvim_set_keymap('n', '<C-j>', '<C-w>j', {noremap = true})
-vim.api.nvim_set_keymap('n', '<C-l>', '<C-w>l', {noremap = true})
+vim.api.nvim_set_keymap('n', '<C-n>', '<C-w>w', {noremap = true})
+vim.api.nvim_set_keymap('n', '<C-p>', '<C-w>W', {noremap = true})
 
 
 vim.keymap.set("n", "<leader>ko", ":%bd|e#<CR>") -- kill other buffers
