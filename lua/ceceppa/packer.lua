@@ -1,4 +1,3 @@
---embark Only required if you have packer configured as `opt`
 vim.cmd [[packadd packer.nvim]]
 
 return require('packer').startup(function(use)
@@ -78,7 +77,6 @@ return require('packer').startup(function(use)
       requires = { 'nvim-tree/nvim-web-devicons', opt = true }
   }
   use('nvim-tree/nvim-web-devicons')
-  use('zivyangll/git-blame.vim')
   use('dense-analysis/ale')
   use('mrjones2014/nvim-ts-rainbow')
   use('ervandew/supertab')
@@ -119,7 +117,8 @@ return require('packer').startup(function(use)
       end
   }
 
-  use('dandavison/delta')
+  use('kshenoy/vim-signature')
+  use('nvim-telescope/telescope-ui-select.nvim')
 
 end)
 
