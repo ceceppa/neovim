@@ -87,7 +87,7 @@ vim.api.nvim_set_keymap('n', '<leader>2', '<C-w>l', {noremap = true})
 vim.api.nvim_set_keymap('n', '<leader>w=', ':vertical resize 120<CR>', {noremap = true})
 vim.api.nvim_set_keymap('n', '<C-n>', '<C-w>w', {noremap = true})
 vim.api.nvim_set_keymap('n', '<C-p>', '<C-w>W', {noremap = true})
-
+vim.keymap.set("n", "<C-k>", vim.lsp.buf.format)
 
 vim.keymap.set("n", "<leader>ko", ":%bd|e#<CR>") -- kill other buffers
 
