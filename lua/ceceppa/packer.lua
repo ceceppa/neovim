@@ -25,7 +25,12 @@ return require('packer').startup(function(use)
         branch = 'v2.x',
         requires = {
             -- LSP Support
-            { 'neovim/nvim-lspconfig' }, -- Required
+            {
+                    'neovim/nvim-lspconfig',
+                    opts = {
+                        inlay_hints = { enabled = true },
+                    },
+            }, -- Required
             {                  -- Optional
                 'williamboman/mason.nvim',
                 run = function()
