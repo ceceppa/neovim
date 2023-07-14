@@ -144,6 +144,8 @@ function unsaved_buffers()
 
     for _, buffer in ipairs(vim.api.nvim_list_bufs()) do
         if vim.api.nvim_buf_get_option(buffer, "modified") then
+            local buffer_name = vim.api.nvim_buf_get_name(buffer)
+
             unsaved_buffers = unsaved_buffers + 1
         end
     end
