@@ -11,3 +11,4 @@ if vim.fn.has("persistent_undo") == 1 then
     vim.o.undofile = true
 end
 
+vim.keymap.set("n", "<leader>ut", ':UndotreeToggle<CR>:UndoTreeFocus<CR>', { desc = 'Undo tree' })

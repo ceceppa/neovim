@@ -1,118 +1,58 @@
-local wk = require("which-key")
-
 vim.g.mapleader = " "
-vim.keymap.set("n", "<leader>pv", vim.cmd.Ex)
+vim.keymap.set("n", "<leader>pv", vim.cmd.Ex, { desc = 'directory listing' })
 
-wk.register({
-    a = { require("harpoon.mark").add_file, "Add to harpoon" },
-    b = {
-        name = "Buffers",
-        c = { ":bdelete<CR>", "Close current buffer" },
-        b = { "<cmd>Telescope buffers<cr>", "Open buffers" },
-        o = { ":%bd|e#<CR>", "Kill other buffers" },
-    },
-    d = {
-        name = "Document",
-        s = { "<cmd>Telescope lsp_document_symbols<cr>", "Document symbols" },
-    },
-    e = { "<cmd>Telescope diagnostics<cr>", "Show errors in all open buffers" },
-    f = {
-        name = "File tree",
-        t = { "<cmd>NvimTreeFindFile<cr>", "Show file tree" },
-        c = { "<cmd>NvimTreeClose<cr>", "Close file tree" },
-        s = { ":w<CR>", "Save file" },
-    },
-    g = {
-        name = "Git",
-        c = { "<cmd>Telescope git_commits<cr>", "Git commits" }, 
-        b = { "<cmd>Telescope git_branches<cr>", "Git branches" },
-        w = { "<cmd>G blame<cr>", "Git praise" },
-        p = { "<cmd>G pull<cr>", "Git pull" },
-        s = { vim.cmd.Git, "Git status" },
-        d = { '<cmd>GitGutterDiff<cr>', 'Git differ' },
-    },
-    m = { "<cmd>Telescope marks<cr>", "All marks" },
-    p = {
-        name = "Project", 
-        f = { "<cmd>Telescope find_files<cr>", "Find File" }, 
-        g = { "<cmd>Telescope git_files<cr>", "Search in git files" }, 
-        p = { "<cmd>Telescope projects<cr>", "Projects" },
-        d = { "<cmd>TroubleToggle workspace_diagnostics<cr>", "Show all diagnostics errors" },
-        q = { ":qa!<CR>", "Quit" },
-    },
-    r = { 
-        name = "Rename",
-        w = { [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]], "Replace word under cursor" },
-    },
-    s = {
-        name = "Search",
-        l = { "<cmd>Telescope live_grep<cr>", "Live grep in all files" },
-        r = { "<cmd>Telescope lsp_references<cr>", "Search references" },
-        h = { "<cmd>Telescope search_history<cr>", "Show search history" },
-        p = { function()
-                local builtin = require('telescope.builtin')
-
-                builtin.grep_string({ search = vim.fn.input("Grep in all files > ") });
-            end, "Grep in all files" }
-    },
-    u = { ':UndotreeToggle<CR>:UndoTreeFocus<CR>', 'Undo tree' },
-    w = {
-        name = "Windows",
-        c = { '<C-w>c', 'Close window' },
-        v = { '<C-w>v<C-w>l', 'Split vertically' },
-        h = { '<C-w>h<C-w>h', 'Split horizzontally' },
-        l = { '<C-w>l', 'Focus right window' },
-        h = { '<C-w>h', 'Focus left window' },
-        k = { '<C-w>k', 'Focus top window' },
-        j = { '<C-w>j', 'Focus bottom window' },
-        n = { '<C-w>w', 'Focus next window' },
-        m = { function()
-            local win_config = vim.fn.winsaveview()
-
-            vim.cmd('only')
-
-            vim.fn.winrestview(win_config)
-        end , 'Maximize current Window' },
-        x = { '<C-w>j<C-w><C-c>', 'Close bottom window' },
-    },
-    Y = { [["+Y]], "Copy line" },
-}, { prefix = "<leader>" })
-
-
+vim.api.nvim_set_keymap('n', '<leader>fs', ':w<CR>', {noremap = true, desc = 'Save file'})
 vim.api.nvim_set_keymap('i', '<Tab>', '<C-y>', {noremap = true})
 
 -- Windows
-vim.api.nvim_set_keymap('n', '<leader>1', '<C-w>h', {noremap = true})
-vim.api.nvim_set_keymap('n', '<leader>2', '<C-w>l', {noremap = true})
-vim.api.nvim_set_keymap('n', '<leader>w=', ':vertical resize 120<CR>', {noremap = true})
-vim.api.nvim_set_keymap('n', '<C-n>', '<C-w>w', {noremap = true})
-vim.api.nvim_set_keymap('n', '<C-p>', '<C-w>W', {noremap = true})
-vim.keymap.set("n", "<C-k>", vim.lsp.buf.format)
+vim.api.nvim_set_keymap('n', '<leader>w=', ':vertical resize 120<CR>', {noremap = true, desc = 'Equalize windows vertical size'})
+vim.api.nvim_set_keymap('n', '<C-n>', '<C-w>w', {noremap = true, desc = 'Focus next window'})
+vim.api.nvim_set_keymap('n', '<C-p>', '<C-w>W', {noremap = true, desc = 'Focus previous window'})
+vim.keymap.set("n", "<C-k>", vim.lsp.buf.format, { desc = 'Format file' })
+vim.api.nvim_set_keymap('n', '<leader>wm', ':lua MaximizeCurrentWindow()<CR>', {noremap = true, silent = true})
 
-vim.keymap.set("n", "<leader>ko", ":%bd|e#<CR>") -- kill other buffers
+function MaximizeCurrentWindow()
+  -- Store the current window configuration
+  local win_config = vim.fn.winsaveview()
+
+  -- Maximize the current window
+  vim.cmd('only')
+
+  -- Restore the previous window configuration
+  vim.fn.winrestview(win_config)
+end
 
 -- Move lines when selected
-vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
-vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv")
+vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv", { desc = 'Move selection down' })
+vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv", { desc = 'Move selection up' })
 
 
-vim.keymap.set("n", "<C-d>", "<C-d>zz")
-vim.keymap.set("n", "<C-u>", "<C-u>zz")
+vim.keymap.set("n", "<C-d>", "<C-d>zz", { desc = 'Page down' })
+vim.keymap.set("n", "<C-u>", "<C-u>zz", { desc = 'Page up' })
 vim.keymap.set("n", "n", "nzzzv")
 vim.keymap.set("n", "N", "Nzzzv")
 
+-- Other stuff
 vim.keymap.set("x", "<leader>p", [["_dP]])
 
 vim.keymap.set("n", "Q", "<nop>")
+vim.api.nvim_set_keymap('n', '<leader>qq', ':qa<CR>', {noremap = true, desc = 'Quit'})
 
-vim.keymap.set("n", "<leader>mr", "<cmd>CellularAutomaton make_it_rain<CR>");
+vim.keymap.set("n", "<leader>mr", "<cmd>CellularAutomaton make_it_rain<CR>", { desc = 'Make it rain' });
 
-vim.keymap.set("n", "<leader><leader>", function()
-    vim.cmd("so")
-end)
+-- Buffers
+vim.keymap.set("n", "<leader>bc", ':bdelete<CR>', { desc = 'Close current buffer' })
+vim.keymap.set("n", "<leader>bo", ":%bd|e#<CR>", { desc = 'Kill other buffers' })
 
--- Clear
-vim.keymap.set("n", "<leader>c'", "ci'")
-vim.keymap.set("n", "<leader>c2", "ci\"")
-vim.keymap.set("n", "<leader>c)", "ci)")
+-- Replace
+vim.keymap.set("n", "<leader>rw", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]], { desc = 'Replace word under cursor' })
 
+-- Git
+vim.keymap.set('n', '<leader>gw', ':G blame<CR>', { desc = 'Git praise' });
+vim.keymap.set('n', '<leader>gw', ':G pull<CR>', { desc = 'Git pull' });
+vim.keymap.set('n', '<leader>gd', ':GitGutterDiff<cr>', { desc = 'Git diff' });
+vim.keymap.set('n', '<leader>gs', vim.cmd.Git, { desc = 'Git status' });
+
+
+-- Trouble
+vim.keymap.set('n', "<leader>pd", "<cmd>TroubleToggle workspace_diagnostics<cr>", { desc = "Show all diagnostics errors" });
