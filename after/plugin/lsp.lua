@@ -1,5 +1,4 @@
 local lsp = require("lsp-zero")
-local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
 lsp.preset("recommended")
 
@@ -53,12 +52,12 @@ lsp.on_attach(function(client, bufnr)
   vim.keymap.set("i", "<C-h>", function() vim.lsp.buf.signature_help() end, opts)
 end)
 
-lsp.capabilities = capabilities
-
 lsp.setup()
 
 vim.diagnostic.config({
     virtual_text = true
 })
 
-require("luasnip.loaders.from_snipmate").lazy_load()
+local capabilities = require("cmp_nvim_lsp").default_capabilities()
+lsp.capabilities = capabilities
+

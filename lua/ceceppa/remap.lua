@@ -2,13 +2,21 @@ vim.g.mapleader = " "
 vim.keymap.set("n", "<leader>pv", vim.cmd.Ex, { desc = 'directory listing' })
 
 vim.api.nvim_set_keymap('n', '<leader>fs', ':w<CR>', {noremap = true, desc = 'Save file'})
-vim.api.nvim_set_keymap('i', '<Tab>', '<C-y>', {noremap = true})
+vim.api.nvim_set_keymap('n', '<C-y>', 'viwy', {noremap = true})
+
+-- Insert mode
+vim.api.nvim_set_keymap('i', '<C-f><C-s>', '<C-o>:w<CR>', {noremap = true, desc = 'Save file'})
+vim.api.nvim_set_keymap('i', '<Tab>', '<C-y>', {noremap = true, desc = 'Autocomplete'})
+vim.api.nvim_set_keymap('i', '<C-v>', '<C-r><C-o>*"', {noremap = true, desc = 'Paste'})
+vim.api.nvim_set_keymap('i', '<C-b>', '<C-o>diw', {noremap = true, desc = 'Delete word under cursor'})
+vim.api.nvim_set_keymap('i', '<C-q>', '<C-o>de', {noremap = true, desc = 'Delete characters after cursor'})
+
 
 -- Windows
 vim.api.nvim_set_keymap('n', '<leader>w=', ':vertical resize 120<CR>', {noremap = true, desc = 'Equalize windows vertical size'})
 vim.api.nvim_set_keymap('n', '<C-n>', '<C-w>w', {noremap = true, desc = 'Focus next window'})
 vim.api.nvim_set_keymap('n', '<C-p>', '<C-w>W', {noremap = true, desc = 'Focus previous window'})
-vim.keymap.set("n", "<C-k>", vim.lsp.buf.format, { desc = 'Format file' })
+vim.keymap.set("n", "<leader>ff", vim.lsp.buf.format, { desc = 'Format file' })
 vim.api.nvim_set_keymap('n', '<leader>wm', ':lua MaximizeCurrentWindow()<CR>', {noremap = true, silent = true})
 
 function MaximizeCurrentWindow()
@@ -46,13 +54,14 @@ vim.keymap.set("n", "<leader>bo", ":%bd|e#<CR>", { desc = 'Kill other buffers' }
 
 -- Replace
 vim.keymap.set("n", "<leader>rw", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]], { desc = 'Replace word under cursor' })
+vim.keymap.set("n", "<leader>rc", [[:%s/<C-r><C-w>/<C-r><C-w>/gI<Left><Left><Left>]], { desc = 'Replace characters under cursor' })
 
 -- Git
 vim.keymap.set('n', '<leader>gw', ':G blame<CR>', { desc = 'Git praise' });
-vim.keymap.set('n', '<leader>gw', ':G pull<CR>', { desc = 'Git pull' });
+vim.keymap.set('n', '<leader>gp', ':!git pull<CR>', { desc = 'Git pull' });
+vim.keymap.set('n', '<leader>go', ':!git push<CR>', { desc = 'Git push' });
 vim.keymap.set('n', '<leader>gd', ':GitGutterDiff<cr>', { desc = 'Git diff' });
 vim.keymap.set('n', '<leader>gs', vim.cmd.Git, { desc = 'Git status' });
-
 
 -- Trouble
 vim.keymap.set('n', "<leader>pd", "<cmd>TroubleToggle workspace_diagnostics<cr>", { desc = "Show all diagnostics errors" });

@@ -1,2 +1,48 @@
-snippet rus
-	const [${1}, set${1}] = React.useState(${3})
+snippet ir
+	import * as React from 'react';
+
+snippet ur
+	const ${1} = React.useRef(${2})
+
+snippet us
+	const [${1}, set${2}${1}] = React.useState(${3})
+
+snippet ue
+	React.useEffect(() =>{
+		${1}
+	}, []);
+
+snippet rc
+	import * as React from 'react';
+
+	export const ${1} = () => {
+		${2}
+	}
+
+snippet rfc
+	import * as React from 'react';
+
+	export const ${1}: React.FC<${2}> = () => {
+		${3}
+	}
+
+snippet rfc_type
+	import * as React from 'react';
+
+	type ${1}Props = {}
+
+	export const ${1}: React.FC<${1}Props> = ({}) => {
+		${2}
+	}
+
+snippet uas
+	const ${1} = useAnimatedStyle(() => {
+		return {
+			$2
+		};
+	});
+
+snippet usv
+	const ${1} = useSharedValue(${2});
+
+

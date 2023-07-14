@@ -7,7 +7,10 @@ return require('packer').startup(function(use)
     use {
         'nvim-telescope/telescope.nvim', tag = '0.1.1',
         -- or                            , branch = '0.1.x',
-        requires = { { 'nvim-lua/plenary.nvim' } }
+        requires = { 
+            { 'nvim-lua/plenary.nvim' },
+            { 'nvim-telescope/telescope-ui-select.nvim' },
+        }
     }
 
     use({ 'rose-pine/neovim', as = 'rose-pine' })
@@ -27,9 +30,6 @@ return require('packer').startup(function(use)
             -- LSP Support
             {
                     'neovim/nvim-lspconfig',
-                    opts = {
-                        inlay_hints = { enabled = true },
-                    },
             }, -- Required
             {                  -- Optional
                 'williamboman/mason.nvim',
@@ -39,21 +39,17 @@ return require('packer').startup(function(use)
             },
             { 'williamboman/mason-lspconfig.nvim' }, -- Optional
 
-            -- Autocompletion
-            { 'hrsh7th/nvim-cmp' }, -- Required
-            { 'hrsh7th/cmp-nvim-lsp' }, -- Required
-            { 'L3MON4D3/LuaSnip' }, -- Required
+              -- Autocompletion
+            { 'hrsh7th/nvim-cmp' },
+            { 'hrsh7th/cmp-nvim-lsp' }, 
+            { 'L3MON4D3/LuaSnip' },
             { 'saadparwaiz1/cmp_luasnip' },
         }
     }
-
-    use('eandrju/cellular-automaton.nvim')
-
     use {
         'rmagatti/auto-session',
         config = function()
             require("auto-session").setup {
-                log_level = "error",
             }
         end
     }
@@ -62,29 +58,11 @@ return require('packer').startup(function(use)
 
     use('nvim-treesitter/nvim-treesitter-context')
 
-    use({
-        "glepnir/lspsaga.nvim",
-        opt = true,
-        branch = "main",
-        event = "LspAttach",
-        config = function()
-            require("lspsaga").setup({})
-        end,
-        requires = {
-            { "nvim-tree/nvim-web-devicons" },
-            --Please make sure you install markdown and markdown_inline parser
-            { "nvim-treesitter/nvim-treesitter" }
-        }
-    })
-
     use('tpope/vim-surround')
     use {
         'nvim-lualine/lualine.nvim',
         requires = { 'nvim-tree/nvim-web-devicons', opt = true }
     }
-    use('nvim-tree/nvim-web-devicons')
-    use('dense-analysis/ale')
-    use('mrjones2014/nvim-ts-rainbow')
     use('ervandew/supertab')
     use('stsewd/fzf-checkout.vim')
     use {
@@ -95,14 +73,7 @@ return require('packer').startup(function(use)
     }
     use('tomtom/tcomment_vim')
     use('nvim-tree/nvim-tree.lua')
-    use('SirVer/ultisnips')
-    use('honza/vim-snippets')
     use('airblade/vim-gitgutter')
-    use('joaohkfaria/vim-jest-snippets')
-
-
-    use('nvim-lua/plenary.nvim')
-    use('andythigpen/nvim-coverage')
 
     use {
         'folke/trouble.nvim',
@@ -111,5 +82,19 @@ return require('packer').startup(function(use)
     }
 
     use('kshenoy/vim-signature')
-    use('nvim-telescope/telescope-ui-select.nvim')
+    use('HiPhish/rainbow-delimiters.nvim')
+
+    use ({
+        'nvimdev/lspsaga.nvim',
+        after = 'nvim-lspconfig',
+        config = function()
+            require('lspsaga').setup({})
+        end,
+    })
+
+    use('dense-analysis/ale')
+
+    vim.keymap.set('n', '<leader>ps', ':so<CR>:PackerSync<CR>')
 end)
+
+

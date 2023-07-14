@@ -137,6 +137,24 @@ local function git_status()
     return branch_col
 end
 
+function unsaved_buffers()
+    local unsaved_buffers = 0
+
+    vim.b.unsaved_buffers = ''
+
+    for _, buffer in ipairs(vim.api.nvim_list_bufs()) do
+        if vim.api.nvim_buf_get_option(buffer, "modified") then
+            unsaved_buffers = unsaved_buffers + 1
+        end
+    end
+
+    if unsaved_buffers == 0 then
+        return ''
+    end
+
+    return "󱙃 " .. unsaved_buffers
+end
+
 require('lualine').setup {
   options = {
     icons_enabled = true,
@@ -198,6 +216,10 @@ require('lualine').setup {
               "vim.b.git_state[2]",
               color = { fg = '#A4C379' },
               padding = { left = 1, right = 1 }
+          },
+          {
+              unsaved_buffers,
+              color = { fg = "#ff7070", bg = "#000" },
           },
       },
       lualine_c = {

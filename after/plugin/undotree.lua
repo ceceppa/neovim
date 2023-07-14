@@ -12,3 +12,4 @@ if vim.fn.has("persistent_undo") == 1 then
 end
 
 vim.keymap.set("n", "<leader>ut", ':UndotreeToggle<CR>:UndoTreeFocus<CR>', { desc = 'Undo tree' })
+vim.keymap.set("n", "<leader>uf", ':UndoTreeFocus<CR>', { desc = 'Undo tree focus' })
