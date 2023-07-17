@@ -14,9 +14,11 @@ vim.api.nvim_set_keymap('i', '<C-q>', '<C-o>de', {noremap = true, desc = 'Delete
 
 -- Windows
 vim.api.nvim_set_keymap('n', '<leader>w=', ':vertical resize 120<CR>', {noremap = true, desc = 'Equalize windows vertical size'})
+vim.api.nvim_set_keymap('n', '<leader>wv', '<C-w>v', {noremap = true, desc = 'Equalize windows vertical size'})
 vim.api.nvim_set_keymap('n', '<C-n>', '<C-w>w', {noremap = true, desc = 'Focus next window'})
 vim.api.nvim_set_keymap('n', '<C-p>', '<C-w>W', {noremap = true, desc = 'Focus previous window'})
-vim.keymap.set("n", "<leader>ff", vim.lsp.buf.format, { desc = 'Format file' })
+vim.keymap.set("n", "<C-f><C-f>", vim.lsp.buf.format, { desc = 'Format file' })
+vim.keymap.set("n", "<C-f><C-j>", ':%!jq .', { desc = 'Format JSON file' })
 vim.api.nvim_set_keymap('n', '<leader>wm', ':lua MaximizeCurrentWindow()<CR>', {noremap = true, silent = true})
 
 function MaximizeCurrentWindow()
@@ -58,10 +60,15 @@ vim.keymap.set("n", "<leader>rc", [[:%s/<C-r><C-w>/<C-r><C-w>/gI<Left><Left><Lef
 
 -- Git
 vim.keymap.set('n', '<leader>gw', ':G blame<CR>', { desc = 'Git praise' });
-vim.keymap.set('n', '<leader>gp', ':!git pull<CR>', { desc = 'Git pull' });
+vim.keymap.set('n', '<leader>gi', ':!git pull<CR>', { desc = 'Git pull' });
 vim.keymap.set('n', '<leader>go', ':!git push<CR>', { desc = 'Git push' });
 vim.keymap.set('n', '<leader>gd', ':GitGutterDiff<cr>', { desc = 'Git diff' });
 vim.keymap.set('n', '<leader>gs', vim.cmd.Git, { desc = 'Git status' });
+vim.keymap.set('i', '<C-;>', '<C-o>:wq<CR>', { desc = 'Write & quit' });
+
 
 -- Trouble
 vim.keymap.set('n', "<leader>pd", "<cmd>TroubleToggle workspace_diagnostics<cr>", { desc = "Show all diagnostics errors" });
+
+
+

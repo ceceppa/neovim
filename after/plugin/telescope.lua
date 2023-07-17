@@ -39,6 +39,9 @@ vim.keymap.set('n', '<leader>m', ':Telescope marks<CR>', { desc = 'Show all mark
 
 vim.keymap.set('n', '<leader>gc', ':Telescope git_commits<CR>', { desc = 'Git commits' });
 vim.keymap.set('n', '<leader>gb', ':Telescope git_branches<CR>', { desc = 'Git branches' });
+vim.keymap.set('n', 's=', ':Telescope spell_suggest<CR>', { desc = 'Spell suggest' });
+vim.keymap.set('n', '<leader>?', ':Telescope keymaps<CR>', { desc = 'Keymaps' });
+vim.keymap.set('i', '<C-e>', '<C-o>:Telescope registers<CR>', { desc = 'Registers' });
 
 -- Search
 vim.keymap.set('n', '<leader>sp', function()
