@@ -94,7 +94,22 @@ return require('packer').startup(function(use)
 
     use('dense-analysis/ale')
 
+    use({
+        "iamcco/markdown-preview.nvim",
+        run = function() vim.fn["mkdp#util#install"]() end,
+    })
+
+    use('eandrju/cellular-automaton.nvim')
+    use('ray-x/lsp_signature.nvim')
+
+    use {
+        "ThePrimeagen/refactoring.nvim",
+        requires = {
+            {"nvim-lua/plenary.nvim"},
+            {"nvim-treesitter/nvim-treesitter"}
+        }
+    }
+
     vim.keymap.set('n', '<leader>ps', ':so<CR>:PackerSync<CR>')
 end)
-
 

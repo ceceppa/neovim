@@ -6,11 +6,11 @@ vim.api.nvim_set_keymap('n', '<C-y>', 'viwy', {noremap = true})
 
 -- Insert mode
 vim.api.nvim_set_keymap('i', '<C-f><C-s>', '<C-o>:w<CR>', {noremap = true, desc = 'Save file'})
+vim.api.nvim_set_keymap('i', '<C-f>s', '<C-o>:w<CR>', {noremap = true, desc = 'Save file'})
 vim.api.nvim_set_keymap('i', '<Tab>', '<C-y>', {noremap = true, desc = 'Autocomplete'})
 vim.api.nvim_set_keymap('i', '<C-v>', '<C-r><C-o>*"', {noremap = true, desc = 'Paste'})
 vim.api.nvim_set_keymap('i', '<C-b>', '<C-o>diw', {noremap = true, desc = 'Delete word under cursor'})
 vim.api.nvim_set_keymap('i', '<C-q>', '<C-o>de', {noremap = true, desc = 'Delete characters after cursor'})
-
 
 -- Windows
 vim.api.nvim_set_keymap('n', '<leader>w=', ':vertical resize 120<CR>', {noremap = true, desc = 'Equalize windows vertical size'})
@@ -62,6 +62,7 @@ vim.keymap.set("n", "<leader>rc", [[:%s/<C-r><C-w>/<C-r><C-w>/gI<Left><Left><Lef
 vim.keymap.set('n', '<leader>gw', ':G blame<CR>', { desc = 'Git praise' });
 vim.keymap.set('n', '<leader>gi', ':!git pull<CR>', { desc = 'Git pull' });
 vim.keymap.set('n', '<leader>go', ':!git push<CR>', { desc = 'Git push' });
+vim.keymap.set('n', '<leader>gn', ':G checkout -b ', { desc = 'Git checkout new branch' });
 vim.keymap.set('n', '<leader>gd', ':GitGutterDiff<cr>', { desc = 'Git diff' });
 vim.keymap.set('n', '<leader>gs', vim.cmd.Git, { desc = 'Git status' });
 vim.keymap.set('i', '<C-;>', '<C-o>:wq<CR>', { desc = 'Write & quit' });
