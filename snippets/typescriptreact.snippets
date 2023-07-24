@@ -45,4 +45,15 @@ snippet uas
 snippet usv
 	const ${1} = useSharedValue(${2});
 
+snippet jdesc
+	describe('${1}', () => {
+		it('${2}', async () => {
+			${3}
+		});
+	});
+
+snippet jit
+	it('${1}', async () => {
+		${2}
+	});
 
