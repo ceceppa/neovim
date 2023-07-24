@@ -50,5 +50,5 @@ end, { desc = 'Grep in all files' })
 
 vim.keymap.set('n', '<leader>sw', ':Telescope grep_string<CR>', { desc = 'Search word under cursor' });
 vim.keymap.set('n', '<leader>sl', ':Telescope live_grep<CR>', { desc = 'Live grep in all files' });
-vim.keymap.set('n', '<leader>sr', ':Telescope lsp_references<CR>', { desc = 'Search reference' });
+vim.keymap.set('n', '<leader>sr', ':Telescope lsp_references<CR>', { desc = 'Search reference (Find usage)' });
 vim.keymap.set('n', '<leader>sh', ':Telescope search_history<CR>', { desc = 'Search history' });

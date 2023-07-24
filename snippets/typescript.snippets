@@ -9,3 +9,15 @@ snippet jit
 	it('${1}', async () => {
 		${2}
 	});
+
+snippet ur
+	const ${1} = React.useRef(${2})
+
+snippet us
+	const [${1}, set${2}${1}] = React.useState(${3})
+
+snippet ue
+	React.useEffect(() =>{
+		${1}
+	}, []);
+
