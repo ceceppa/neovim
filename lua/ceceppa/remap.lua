@@ -46,7 +46,7 @@ vim.keymap.set("n", "N", "Nzzzv")
 vim.keymap.set("x", "<leader>p", [["_dP]])
 
 vim.keymap.set("n", "Q", "<nop>")
-vim.api.nvim_set_keymap('n', '<leader>qq', ':qa<CR>', {noremap = true, desc = 'Quit'})
+vim.api.nvim_set_keymap('n', '<C-q><C-q>', ':qa<CR>', {noremap = true, desc = 'Quit'})
 
 vim.keymap.set("n", "<leader>mr", "<cmd>CellularAutomaton make_it_rain<CR>", { desc = 'Make it rain' });
 

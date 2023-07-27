@@ -61,7 +61,7 @@ return require('packer').startup(function(use)
     use('tpope/vim-surround')
     use {
         'nvim-lualine/lualine.nvim',
-        requires = { 'nvim-tree/nvim-web-devicons', opt = true }
+        requires = { 'nvim-tree/nvim-web-devicons' }
     }
     use('ervandew/supertab')
     use('stsewd/fzf-checkout.vim')
@@ -72,7 +72,10 @@ return require('packer').startup(function(use)
         end
     }
     use('tomtom/tcomment_vim')
-    use('nvim-tree/nvim-tree.lua')
+    use {
+        'nvim-tree/nvim-tree.lua',
+        requires = { 'nvim-tree/nvim-web-devicons' }
+    }
     use('airblade/vim-gitgutter')
 
     use {
@@ -110,6 +113,14 @@ return require('packer').startup(function(use)
         }
     }
 
-    vim.keymap.set('n', '<leader>ps', ':so<CR>:PackerSync<CR>')
+    use({
+        "kdheepak/lazygit.nvim",
+        -- optional for floating window border decoration
+        requires = {
+            "nvim-lua/plenary.nvim",
+        },
+    })
+
+   vim.keymap.set('n', '<leader>ps', ':so<CR>:PackerSync<CR>')
 end)
 

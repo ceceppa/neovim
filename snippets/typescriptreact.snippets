@@ -45,6 +45,17 @@ snippet uas
 snippet usv
 	const ${1} = useSharedValue(${2});
 
+snippet jdescbase
+	beforeEach(() => {
+		jest.clearAllMocks();
+	});
+
+	describe('${1}', () => {
+		it('${2}', async () => {
+			${3}
+		});
+	});
+
 snippet jdesc
 	describe('${1}', () => {
 		it('${2}', async () => {
@@ -57,3 +68,25 @@ snippet jit
 		${2}
 	});
 
+snippet jbe
+	beforeEach(() => {
+		${1}
+	});
+
+snippet jbeclear
+	beforeEach(() => {
+		jest.clearAllMocks();
+	});
+
+snippet asyncarrowfn
+	const ${1} = async () => {
+		${2}
+	}
+
+snippet asyncfn
+	async function() {
+		${1}
+	}
+
+snippet jfn
+	jest.fn();
