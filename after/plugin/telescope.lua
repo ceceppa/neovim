@@ -20,6 +20,22 @@ require("telescope").setup {
       --   codeactions = false,
       -- }
     }
+  },
+  pickers = {
+      current_buffer_tags = { fname_width = 100, },
+      jumplist = { fname_width = 100, },
+      loclist = { fname_width = 100, },
+      lsp_definitions = { fname_width = 100, },
+      lsp_document_symbols = { fname_width = 100, },
+      lsp_dynamic_workspace_symbols = { fname_width = 100, },
+      lsp_implementations = { fname_width = 100, },
+      lsp_incoming_calls = { fname_width = 100, },
+      lsp_outgoing_calls = { fname_width = 100, },
+      lsp_references = { fname_width = 100, },
+      lsp_type_definitions = { fname_width = 100, },
+      lsp_workspace_symbols = { fname_width = 100, },
+      quickfix = { fname_width = 100, },
+      tags = { fname_width = 100, },
   }
 }
 -- To get ui-select loaded and working with telescope, you need to call
@@ -29,7 +45,7 @@ require("telescope").load_extension("ui-select")
 local builtin = require('telescope.builtin')
 
 -- Project
-vim.keymap.set('n', '<leader>pf', builtin.find_files, { desc = 'Find files' })
+vim.keymap.set('n', '<leader>pf', ':Telescope find_files hidden=true<CR>', { desc = 'Find files' })
 vim.keymap.set('n', '<leader>pg', builtin.git_files, { desc = 'Search in git files' })
 
 vim.keymap.set('n', '<leader>bb', builtin.buffers, { desc = 'Show buffers' })
@@ -41,7 +57,7 @@ vim.keymap.set('n', '<leader>gc', ':Telescope git_commits<CR>', { desc = 'Git co
 vim.keymap.set('n', '<leader>gb', ':Telescope git_branches<CR>', { desc = 'Git branches' });
 vim.keymap.set('n', 's=', ':Telescope spell_suggest<CR>', { desc = 'Spell suggest' });
 vim.keymap.set('n', '<leader>?', ':Telescope keymaps<CR>', { desc = 'Keymaps' });
-vim.keymap.set('i', '<C-e>', '<C-o>:Telescope registers<CR>', { desc = 'Registers' });
+vim.keymap.set('i', '<C-r><C-r>', '<C-o>:Telescope registers<CR>', { desc = 'Registers' });
 
 -- Search
 vim.keymap.set('n', '<leader>sp', function()
