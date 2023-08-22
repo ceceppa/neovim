@@ -1,6 +1,5 @@
 require("ceceppa.remap")
 require("ceceppa.set")
--- require("ceceppa.vim-plug")
 
 vim.cmd([[autocmd VimEnter * set spell spelllang=en_gb]])
 vim.api.nvim_set_option("clipboard","unnamed")

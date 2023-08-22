@@ -59,9 +59,9 @@ vim.keymap.set("n", "<leader>rc", [[:%s/<C-r><C-w>/<C-r><C-w>/gI<Left><Left><Lef
 
 -- Git
 vim.keymap.set('n', '<leader>gw', ':G blame<CR>', { desc = 'Git praise' });
-vim.keymap.set('n', '<leader>gi', ':Git! pull<CR>', { desc = 'Git pull' });
-vim.keymap.set('n', '<leader>go', ':Git! push<CR>', { desc = 'Git push' });
-vim.keymap.set('n', '<leader>gu', ':Git! pull origin main<CR>', { desc = 'Git pull origin main' });
+vim.keymap.set('n', '<leader>gi', ':!git pull<CR>', { desc = 'Git pull' });
+vim.keymap.set('n', '<leader>go', ':!git push<CR>', { desc = 'Git push' });
+vim.keymap.set('n', '<leader>gu', ':!git pull origin main<CR>', { desc = 'Git pull origin main' });
 vim.keymap.set('n', '<leader>gn', ':G checkout -b ', { desc = 'Git checkout new branch' });
 vim.keymap.set('n', '<leader>gd', ':GitGutterDiff<cr>', { desc = 'Git diff' });
 vim.keymap.set('n', '<leader>gs', vim.cmd.Git, { desc = 'Git status' });

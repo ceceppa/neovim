@@ -14,10 +14,8 @@ return require('packer').startup(function(use)
     }
 
     use({ 'rose-pine/neovim', as = 'rose-pine' })
-    use { 'embark-theme/vim', as = 'embark' }
 
     use('nvim-treesitter/nvim-treesitter', { run = ':TSUpdate' })
-    use('nvim-treesitter/playground')
 
     use('ThePrimeagen/harpoon')
     use('mbbill/undotree')
@@ -63,8 +61,6 @@ return require('packer').startup(function(use)
         'nvim-lualine/lualine.nvim',
         requires = { 'nvim-tree/nvim-web-devicons' }
     }
-    use('ervandew/supertab')
-    use('stsewd/fzf-checkout.vim')
     use {
         'junegunn/fzf',
         run = function()
@@ -78,13 +74,6 @@ return require('packer').startup(function(use)
     }
     use('airblade/vim-gitgutter')
 
-    use {
-        'folke/trouble.nvim',
-        config = function()
-        end
-    }
-
-    use('kshenoy/vim-signature')
     use('HiPhish/rainbow-delimiters.nvim')
 
     use ({
@@ -105,21 +94,7 @@ return require('packer').startup(function(use)
     use('eandrju/cellular-automaton.nvim')
     use('ray-x/lsp_signature.nvim')
 
-    use {
-        "ThePrimeagen/refactoring.nvim",
-        requires = {
-            {"nvim-lua/plenary.nvim"},
-            {"nvim-treesitter/nvim-treesitter"}
-        }
-    }
-
-    use({
-        "kdheepak/lazygit.nvim",
-        -- optional for floating window border decoration
-        requires = {
-            "nvim-lua/plenary.nvim",
-        },
-    })
+   use 'chrisbra/Colorizer'
 
    vim.keymap.set('n', '<leader>ps', ':so<CR>:PackerSync<CR>')
 end)

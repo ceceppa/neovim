@@ -37,6 +37,10 @@ lsp.set_preferences({
 lsp.on_attach(function(client, bufnr)
   local opts = {buffer = bufnr, remap = false}
 
+  if client.server_capabilities.inlayHintProvider and vim.lsp.buf.inlay_hint then
+      vim.lsp.buf.inlay_hint(bufnr, true)
+  end
+
   vim.keymap.set("n", "gd", function() vim.lsp.buf.definition() end, opts)
   vim.keymap.set("n", "K", function() vim.lsp.buf.hover() end, opts)
   vim.keymap.set("n", "<leader>ws", function() vim.lsp.buf.workspace_symbol() end, opts)

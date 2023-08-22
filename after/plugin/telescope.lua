@@ -1,4 +1,5 @@
--- This is your opts table
+local builtin = require('telescope.builtin')
+
 require("telescope").setup {
   extensions = {
     ["ui-select"] = {
@@ -36,16 +37,21 @@ require("telescope").setup {
       lsp_workspace_symbols = { fname_width = 100, },
       quickfix = { fname_width = 100, },
       tags = { fname_width = 100, },
-  }
+      git_branches = {
+          mappings = {
+              i = { ["<cr>"] = builtin.git_switch_branch },
+          },
+      },
+  },
 }
 -- To get ui-select loaded and working with telescope, you need to call
 -- load_extension, somewhere after setup function:
 require("telescope").load_extension("ui-select")
 
-local builtin = require('telescope.builtin')
 
 -- Project
 vim.keymap.set('n', '<leader>pf', ':Telescope find_files hidden=true<CR>', { desc = 'Find files' })
+vim.keymap.set('n', '<C-S-p>', ':Telescope find_files hidden=true<CR>', { desc = 'Find files' })
 vim.keymap.set('n', '<leader>pg', builtin.git_files, { desc = 'Search in git files' })
 
 vim.keymap.set('n', '<leader>bb', builtin.buffers, { desc = 'Show buffers' })
