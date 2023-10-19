@@ -5,7 +5,7 @@ return require('packer').startup(function(use)
     use 'wbthomason/packer.nvim'
 
     use {
-        'nvim-telescope/telescope.nvim', tag = '0.1.1',
+        'nvim-telescope/telescope.nvim', tag = '0.1.4',
         -- or                            , branch = '0.1.x',
         requires = { 
             { 'nvim-lua/plenary.nvim' },
@@ -27,10 +27,10 @@ return require('packer').startup(function(use)
         requires = {
             -- LSP Support
             {
-                    'neovim/nvim-lspconfig',
+                'neovim/nvim-lspconfig',
             }, -- Required
             {                  -- Optional
-                'williamboman/mason.nvim',
+            'williamboman/mason.nvim',
                 run = function()
                     pcall(vim.cmd, 'MasonUpdate')
                 end,
@@ -42,6 +42,7 @@ return require('packer').startup(function(use)
             { 'hrsh7th/cmp-nvim-lsp' }, 
             { 'L3MON4D3/LuaSnip' },
             { 'saadparwaiz1/cmp_luasnip' },
+            { 'lvimuser/lsp-inlayhints.nvim' }
         }
     }
     use {
@@ -94,7 +95,7 @@ return require('packer').startup(function(use)
     use('eandrju/cellular-automaton.nvim')
     use('ray-x/lsp_signature.nvim')
 
-   use 'chrisbra/Colorizer'
+    use 'chrisbra/Colorizer'
 
    vim.keymap.set('n', '<leader>ps', ':so<CR>:PackerSync<CR>')
 end)

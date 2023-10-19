@@ -66,9 +66,16 @@ vim.keymap.set('n', '<leader>?', ':Telescope keymaps<CR>', { desc = 'Keymaps' })
 vim.keymap.set('i', '<C-r><C-r>', '<C-o>:Telescope registers<CR>', { desc = 'Registers' });
 
 -- Search
+local old_search
+
 vim.keymap.set('n', '<leader>sp', function()
-    builtin.grep_string({ search = vim.fn.input("Grep in all files > ") });
+    old_search = vim.fn.input("Grep in all files > ") 
+    builtin.grep_string({ search = old_search });
 end, { desc = 'Grep in all files' })
+
+vim.keymap.set('n', '<leader>sa', function()
+    builtin.grep_string({ search = old_search });
+end, { desc = 'Repeat last grep in all files search' })
 
 vim.keymap.set('n', '<leader>sw', ':Telescope grep_string<CR>', { desc = 'Search word under cursor' });
 vim.keymap.set('n', '<leader>sl', ':Telescope live_grep<CR>', { desc = 'Live grep in all files' });

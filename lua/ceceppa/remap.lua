@@ -3,6 +3,8 @@ vim.keymap.set("n", "<leader>pv", vim.cmd.Ex, { desc = 'directory listing' })
 
 vim.api.nvim_set_keymap('n', '<leader>fs', ':w<CR>', {noremap = true, desc = 'Save file'})
 vim.api.nvim_set_keymap('n', '<C-y>', 'viwy', {noremap = true})
+vim.api.nvim_set_keymap('n', '<C-x>', 'ciw', {noremap = true})
+vim.api.nvim_set_keymap('n', '<M-s>', 'ciw', {noremap = true})
 
 -- Insert mode
 vim.api.nvim_set_keymap('i', '<C-f><C-s>', '<C-o>:w<CR>', {noremap = true, desc = 'Save file'})
@@ -73,4 +75,15 @@ vim.keymap.set('i', '<C-;>', '<C-o>:wq<CR>', { desc = 'Write & quit' });
 vim.keymap.set('n', "<leader>pd", "<cmd>TroubleToggle workspace_diagnostics<cr>", { desc = "Show all diagnostics errors" });
 
 
+-- Surround
+
+function surround_word_with_char()
+  local word_under_cursor = vim.fn.expand("<cword>")
+  local input = vim.fn.input("Enter the surrounding string:")
+  
+  local keys = "ciw" .. input .. word_under_cursor .. input
+  vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(keys, true, false, true), 'n', {})
+end
+
+vim.api.nvim_set_keymap('n', '<C-s>', [[<Cmd>lua surround_word_with_char()<CR>]], {noremap = true, silent = true})
 

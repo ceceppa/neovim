@@ -1,4 +1,7 @@
+local ih = require('lsp-inlayhints')
 local lsp = require("lsp-zero")
+
+ih.setup()
 
 lsp.preset("recommended")
 
@@ -70,4 +73,18 @@ require "lsp_signature".setup({
     handler_opts = {
         border = "rounded"
     }
+})
+
+
+require('lspconfig').lua_ls.setup({
+  on_attach = function(client, bufnr)
+    ih.on_attach(client, bufnr)
+  end,
+  settings = {
+    Lua = {
+      hint = {
+        enable = true,
+      },
+    },
+  },
 })
