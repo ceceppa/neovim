@@ -20,11 +20,16 @@ snippet rc
 	}
 
 snippet rfc
-	import * as React from 'react';
+	type ${1}Props = {};
 
-	export const ${1}: React.FC<${2}> = () => {
-		${3}
-	}
+	export const ${1}: React.FC<${1}Props> = ({}) => {
+	  ${2}
+
+	  return (
+	    <></>
+  	  );
+	};
+
 
 snippet rfc_type
 	import * as React from 'react';
@@ -99,3 +104,18 @@ snippet styles
 		${1}
 	})
 
+snippet component
+	import * as React from "react";
+	import { StyleSheet } from "react-native";
+
+	type ${1}Props = {};
+
+	export const ${1}: React.FC<${1}Props> = ({}) => {
+	  ${2}
+
+	  return (
+	    <></>
+  	  );
+	};
+
+	const styles = StyleSheet.create({});

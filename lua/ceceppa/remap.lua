@@ -81,7 +81,17 @@ function surround_word_with_char()
   local word_under_cursor = vim.fn.expand("<cword>")
   local input = vim.fn.input("Enter the surrounding string:")
   
-  local keys = "ciw" .. input .. word_under_cursor .. input
+  local input = "("
+
+  local opposite = {
+      ["("] = ")",
+      ["["] = "]",
+      ["<"] = ">"
+  }
+
+  local closing = opposite[input] or input
+
+  local keys = "ciw" .. input .. word_under_cursor .. closing
   vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(keys, true, false, true), 'n', {})
 end
 

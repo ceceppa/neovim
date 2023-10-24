@@ -28,6 +28,9 @@ return require('packer').startup(function(use)
             -- LSP Support
             {
                 'neovim/nvim-lspconfig',
+                opts = {
+                    inlay_hints = { enabled = true },
+                },
             }, -- Required
             {                  -- Optional
             'williamboman/mason.nvim',
@@ -42,7 +45,7 @@ return require('packer').startup(function(use)
             { 'hrsh7th/cmp-nvim-lsp' }, 
             { 'L3MON4D3/LuaSnip' },
             { 'saadparwaiz1/cmp_luasnip' },
-            { 'lvimuser/lsp-inlayhints.nvim' }
+            { 'simrat39/inlay-hints.nvim' }
         }
     }
     use {

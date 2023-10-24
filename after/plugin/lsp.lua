@@ -1,5 +1,6 @@
-local ih = require('lsp-inlayhints')
+local ih = require('inlay-hints')
 local lsp = require("lsp-zero")
+local lspconfig = require("lspconfig")
 
 ih.setup()
 
@@ -40,8 +41,8 @@ lsp.set_preferences({
 lsp.on_attach(function(client, bufnr)
   local opts = {buffer = bufnr, remap = false}
 
-  if client.server_capabilities.inlayHintProvider and vim.lsp.buf.inlay_hint then
-      vim.lsp.buf.inlay_hint(bufnr, true)
+  if client.server_capabilities.inlayHintProvider and vim.lsp.inlay_hint then
+      vim.lsp.inlay_hint(bufnr, true)
   end
 
   vim.keymap.set("n", "gd", function() vim.lsp.buf.definition() end, opts)
@@ -75,16 +76,51 @@ require "lsp_signature".setup({
     }
 })
 
+lspconfig.lua_ls.setup({
+    on_attach = function(client, bufnr)
+        ih.on_attach(client, bufnr)
+    end,
+    settings = {
+        Lua = {
+            hint = {
+                enable = true,
+            },
+        },
+    }
+})
 
-require('lspconfig').lua_ls.setup({
-  on_attach = function(client, bufnr)
-    ih.on_attach(client, bufnr)
+lspconfig.tsserver.setup({
+  on_attach = function(c, b)
+    ih.on_attach(c, b)
   end,
   settings = {
-    Lua = {
-      hint = {
-        enable = true,
+      javascript = {
+          hint = {
+              enable = true
+          },
+          inlayHints = {
+              includeInlayEnumMemberValueHints = true,
+              includeInlayFunctionLikeReturnTypeHints = true,
+              includeInlayFunctionParameterTypeHints = true,
+              includeInlayParameterNameHints = "all", -- 'none' | 'literals' | 'all';
+              includeInlayParameterNameHintsWhenArgumentMatchesName = true,
+              includeInlayPropertyDeclarationTypeHints = true,
+              includeInlayVariableTypeHints = true,
+          },
       },
-    },
+      typescript = {
+          hint = {
+              enable = true
+          },
+          inlayHints = {
+              includeInlayEnumMemberValueHints = true,
+              includeInlayFunctionLikeReturnTypeHints = true,
+              includeInlayFunctionParameterTypeHints = true,
+              includeInlayParameterNameHints = "all", -- 'none' | 'literals' | 'all';
+              includeInlayParameterNameHintsWhenArgumentMatchesName = true,
+              includeInlayPropertyDeclarationTypeHints = true,
+              includeInlayVariableTypeHints = true,
+          },
+      },
   },
 })
