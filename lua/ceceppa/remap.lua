@@ -81,7 +81,6 @@ function surround_word_with_char()
   local word_under_cursor = vim.fn.expand("<cword>")
   local input = vim.fn.input("Enter the surrounding string:")
   
-  local input = "("
 
   local opposite = {
       ["("] = ")",
