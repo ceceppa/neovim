@@ -100,6 +100,24 @@ return require('packer').startup(function(use)
 
     use 'chrisbra/Colorizer'
 
+    use {'github/copilot.vim', branch = 'release' }
+
+    use {
+        'smoka7/multicursors.nvim',
+        requires = {
+            'smoka7/hydra.nvim',
+        },
+        cmd = { 'MCstart', 'MCvisual', 'MCclear', 'MCpattern', 'MCvisualPattern', 'MCunderCursor' },
+        keys = { 
+            { 'v', '<Leader>m' },
+            { 'n', '<Leader>m' }
+        },
+        config = function()
+            vim.api.nvim_set_keymap('v', '<Leader>m', '<cmd>MCstart<cr>', { noremap = true, silent = true })
+            vim.api.nvim_set_keymap('n', '<Leader>m', '<cmd>MCstart<cr>', { noremap = true, silent = true })
+        end
+    }
+
    vim.keymap.set('n', '<leader>ps', ':so<CR>:PackerSync<CR>')
 end)
 

@@ -57,7 +57,7 @@ vim.keymap.set('n', '<leader>pg', builtin.git_files, { desc = 'Search in git fil
 vim.keymap.set('n', '<leader>bb', builtin.buffers, { desc = 'Show buffers' })
 vim.keymap.set('n', '<leader>e', ':Telescope diagnostics<CR>', { desc = 'Show errors in all open buffers' });
 vim.keymap.set('n', '<leader>ds', ':Telescope lsp_document_symbols<CR>', { desc = 'Document symbols' });
-vim.keymap.set('n', '<leader>m', ':Telescope marks<CR>', { desc = 'Show all marks' });
+-- vim.keymap.set('n', '<leader>m', ':Telescope marks<CR>', { desc = 'Show all marks' });
 
 vim.keymap.set('n', '<leader>gc', ':Telescope git_commits<CR>', { desc = 'Git commits' });
 vim.keymap.set('n', '<leader>gb', ':Telescope git_branches<CR>', { desc = 'Git branches' });
