@@ -10,11 +10,24 @@ vim.api.nvim_set_keymap('n', "<C-2>", 'vi"', {noremap = true, silent = true})
 vim.api.nvim_set_keymap('n', "<C-9>", 'vi(', {noremap = true, silent = true})
 vim.api.nvim_set_keymap('n', "<C-0>", 'vi{', {noremap = true, silent = true})
 
+-- Clear content within matches
 vim.api.nvim_set_keymap('n', "<leader>'", "ci'", {noremap = true, silent = true})
 vim.api.nvim_set_keymap('n', '<leader>"', 'ci"', {noremap = true, silent = true})
 vim.api.nvim_set_keymap('n', "<leader>(", 'ci(', {noremap = true, silent = true})
 vim.api.nvim_set_keymap('n', "<leader>{", 'ci{', {noremap = true, silent = true})
 vim.api.nvim_set_keymap('n', "<leader>x", 'ciw', {noremap = true, silent = true})
+
+-- Replace content within symbols
+vim.api.nvim_set_keymap('n', "<leader>r'", "vi'p", {noremap = true, silent = true})
+vim.api.nvim_set_keymap('n', '<leader>r"', 'vi"p', {noremap = true, silent = true})
+vim.api.nvim_set_keymap('n', "<leader>r(", 'vi(p', {noremap = true, silent = true})
+vim.api.nvim_set_keymap('n', "<leader>r{", 'vi{p', {noremap = true, silent = true})
+
+-- Copy content within symbols
+vim.api.nvim_set_keymap('n', "<leader>c'", "vi'y", {noremap = true, silent = true})
+vim.api.nvim_set_keymap('n', '<leader>c"', 'vi"y', {noremap = true, silent = true})
+vim.api.nvim_set_keymap('n', "<leader>c(", 'vi(y', {noremap = true, silent = true})
+vim.api.nvim_set_keymap('n', "<leader>c{", 'vi{y', {noremap = true, silent = true})
 
 -- Insert mode
 vim.api.nvim_set_keymap('i', '<C-f><C-s>', '<C-o>:w<CR>', {noremap = true, desc = 'Save file'})
