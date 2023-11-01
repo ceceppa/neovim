@@ -22,6 +22,7 @@ vim.api.nvim_set_keymap('n', "<leader>r'", "vi'p", {noremap = true, silent = tru
 vim.api.nvim_set_keymap('n', '<leader>r"', 'vi"p', {noremap = true, silent = true})
 vim.api.nvim_set_keymap('n', "<leader>r(", 'vi(p', {noremap = true, silent = true})
 vim.api.nvim_set_keymap('n', "<leader>r{", 'vi{p', {noremap = true, silent = true})
+vim.api.nvim_set_keymap('n', "<leader>rp", 'viwp', {noremap = true, silent = true})
 
 -- Copy content within symbols
 vim.api.nvim_set_keymap('n', "<leader>c'", "vi'y", {noremap = true, silent = true})
