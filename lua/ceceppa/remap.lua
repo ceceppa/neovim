@@ -29,6 +29,12 @@ vim.api.nvim_set_keymap('n', '<leader>y"', 'vi"y', {noremap = true, silent = tru
 vim.api.nvim_set_keymap('n', "<leader>y(", 'vi(y', {noremap = true, silent = true})
 vim.api.nvim_set_keymap('n', "<leader>y{", 'vi{y', {noremap = true, silent = true})
 
+-- Select content within symbols
+vim.api.nvim_set_keymap('n', "<leader>v'", "vi'", {noremap = true, silent = true})
+vim.api.nvim_set_keymap('n', '<leader>v"', 'vi"', {noremap = true, silent = true})
+vim.api.nvim_set_keymap('n', "<leader>v(", 'vi(', {noremap = true, silent = true})
+vim.api.nvim_set_keymap('n', "<leader>v{", 'vi{', {noremap = true, silent = true})
+
 
 -- Insert mode
 vim.api.nvim_set_keymap('i', '<C-f><C-s>', '<C-o>:w<CR>', {noremap = true, desc = 'Save file'})
