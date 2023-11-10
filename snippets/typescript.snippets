@@ -23,3 +23,20 @@ snippet ue
 
 snippet info
 	console.info(${1})
+
+snippet hook
+	import * as React from 'react';
+
+	type ${1}Props = {};
+
+	export const ${1} = ({}: ${1}Props) => {
+	  ${2}
+
+	  return {
+  	  };
+	};
+
+snippet fn
+	export const ${1} = () => {
+		${2}
+	}

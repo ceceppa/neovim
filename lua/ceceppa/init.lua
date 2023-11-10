@@ -17,3 +17,19 @@ vim.cmd("highlight GitGutterAdd guifg=#73ff00 ctermfg=2")
 vim.cmd("highlight GitGutterChange guifg=#f0dbff ctermfg=3")
 vim.cmd("highlight GitGutterDelete guifg=#ffa8a8 ctermfg=1")
 
+vim.g.copilot_no_tab_map = true
+vim.api.nvim_set_keymap("i", "<C-l>", 'copilot#Accept("<CR>")', { silent = true, expr = true })
+
+vim.g.copilot_filetypes = {
+    ["*"] = true,
+    ["javascript"] = true,
+    ["typescript"] = true,
+    ["lua"] = true,
+    ["rust"] = true,
+    ["c"] = true,
+    ["c#"] = true,
+    ["c++"] = true,
+    ["go"] = true,
+    ["python"] = true,
+  }
+

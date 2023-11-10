@@ -20,6 +20,8 @@ snippet rc
 	}
 
 snippet rfc
+    import * as React from 'react';
+
 	type ${1}Props = {};
 
 	export const ${1}: React.FC<${1}Props> = ({}) => {
@@ -39,6 +41,7 @@ snippet rfc_type
 	export const ${1}: React.FC<${1}Props> = ({}) => {
 		${2}
 	}
+
 
 snippet uas
 	const ${1} = useAnimatedStyle(() => {

@@ -44,6 +44,10 @@ vim.api.nvim_set_keymap('i', '<C-v>', '<C-r><C-o>*', {noremap = true, desc = 'Pa
 vim.api.nvim_set_keymap('i', '<C-b>', '<C-o>diw', {noremap = true, desc = 'Delete word under cursor'})
 vim.api.nvim_set_keymap('i', '<C-q>', '<C-o>de', {noremap = true, desc = 'Delete characters after cursor'})
 
+-- Select word
+vim.api.nvim_set_keymap('n', "<leader>w", 'viw', {noremap = true, silent = true})
+
+
 -- Windows
 vim.api.nvim_set_keymap('n', '<leader>w=', ':vertical resize 120<CR>', {noremap = true, desc = 'Equalize windows vertical size'})
 vim.api.nvim_set_keymap('n', '<leader>wv', '<C-w>v', {noremap = true, desc = 'Equalize windows vertical size'})
@@ -99,7 +103,6 @@ vim.keymap.set('n', '<leader>gn', ':G checkout -b ', { desc = 'Git checkout new 
 vim.keymap.set('n', '<leader>gd', ':GitGutterDiff<cr>', { desc = 'Git diff' });
 vim.keymap.set('n', '<leader>gs', vim.cmd.Git, { desc = 'Git status' });
 vim.keymap.set('n', '<leader>gl', ':LazyGit<CR>', { desc = 'Git status' });
-vim.keymap.set('i', '<C-;>', '<C-o>:wq<CR>', { desc = 'Write & quit' });
 
 -- Surround
 function surround_word_with(input)
@@ -108,6 +111,7 @@ function surround_word_with(input)
   local opposite = {
       ["("] = ")",
       ["["] = "]",
+      ["{"] = "}",
       ["<"] = ">"
   }
 
