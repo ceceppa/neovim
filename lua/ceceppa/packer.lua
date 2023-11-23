@@ -7,7 +7,7 @@ return require('packer').startup(function(use)
     use {
         'nvim-telescope/telescope.nvim', tag = '0.1.4',
         -- or                            , branch = '0.1.x',
-        requires = { 
+        requires = {
             { 'nvim-lua/plenary.nvim' },
             { 'nvim-telescope/telescope-ui-select.nvim' },
         }
@@ -42,7 +42,7 @@ return require('packer').startup(function(use)
 
               -- Autocompletion
             { 'hrsh7th/nvim-cmp' },
-            { 'hrsh7th/cmp-nvim-lsp' }, 
+            { 'hrsh7th/cmp-nvim-lsp' },
             { 'L3MON4D3/LuaSnip' },
             { 'saadparwaiz1/cmp_luasnip' },
             { 'simrat39/inlay-hints.nvim' }
@@ -101,6 +101,15 @@ return require('packer').startup(function(use)
     use 'chrisbra/Colorizer'
 
     use {'github/copilot.vim', branch = 'release' }
+
+    use {
+        '~/Projects/tsc.nvim',
+        requires = {
+            { 'rcarriga/nvim-notify' },
+        }
+    }
+
+    use 'rcarriga/nvim-notify'
 
    vim.keymap.set('n', '<leader>ps', ':so<CR>:PackerSync<CR>')
 end)

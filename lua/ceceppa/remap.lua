@@ -3,18 +3,21 @@ vim.keymap.set("n", "<leader>pv", vim.cmd.Ex, { desc = 'directory listing' })
 
 vim.api.nvim_set_keymap('n', '<leader>fs', ':w<CR>', {noremap = true, desc = 'Save file'})
 vim.api.nvim_set_keymap('n', '<C-y>', 'viwy', {noremap = true})
-vim.api.nvim_set_keymap('n', '<C-x>', 'ciw', {noremap = true})
-vim.api.nvim_set_keymap('n', "<C-'>", "vi'", {noremap = true, silent = true})
-vim.api.nvim_set_keymap('n', "<C-2>", 'vi"', {noremap = true, silent = true})
-vim.api.nvim_set_keymap('n', "<C-9>", 'vi(', {noremap = true, silent = true})
-vim.api.nvim_set_keymap('n', "<C-0>", 'vi{', {noremap = true, silent = true})
 
 -- Clear content within matches
-vim.api.nvim_set_keymap('n', "<leader>'", "ci'", {noremap = true, silent = true})
-vim.api.nvim_set_keymap('n', '<leader>"', 'ci"', {noremap = true, silent = true})
-vim.api.nvim_set_keymap('n', "<leader>(", 'ci(', {noremap = true, silent = true})
-vim.api.nvim_set_keymap('n', "<leader>{", 'ci{', {noremap = true, silent = true})
-vim.api.nvim_set_keymap('n', "<leader>x", 'ciw', {noremap = true, silent = true})
+vim.api.nvim_set_keymap('n', '<C-x>', 'ciw', {noremap = true})
+vim.api.nvim_set_keymap('n', "<C-'>", "ci'", {noremap = true, silent = true})
+vim.api.nvim_set_keymap('n', "<C-2>", 'ci"', {noremap = true, silent = true})
+vim.api.nvim_set_keymap('n', "<C-9>", 'ci(', {noremap = true, silent = true})
+vim.api.nvim_set_keymap('n', "<C-0>", 'ci[', {noremap = true, silent = true})
+vim.api.nvim_set_keymap('n', "<C-}>", 'ci{', {noremap = true, silent = true})
+
+-- Clear content around matches
+vim.api.nvim_set_keymap('n', "<leader>'", "ca'", {noremap = true, silent = true})
+vim.api.nvim_set_keymap('n', '<leader>"', 'ca"', {noremap = true, silent = true})
+vim.api.nvim_set_keymap('n', "<leader>(", 'ca(', {noremap = true, silent = true})
+vim.api.nvim_set_keymap('n', "<leader>{", 'ca{', {noremap = true, silent = true})
+vim.api.nvim_set_keymap('n', "<leader>[", 'ca[', {noremap = true, silent = true})
 
 -- Replace content within symbols
 vim.api.nvim_set_keymap('n', "<leader>r'", "vi'p", {noremap = true, silent = true})
@@ -35,6 +38,8 @@ vim.api.nvim_set_keymap('n', '<leader>v"', 'vi"', {noremap = true, silent = true
 vim.api.nvim_set_keymap('n', "<leader>v(", 'vi(', {noremap = true, silent = true})
 vim.api.nvim_set_keymap('n', "<leader>v{", 'vi{', {noremap = true, silent = true})
 
+-- TypeScript
+vim.api.nvim_set_keymap('n', '<leader>tc', ':!yarn lint && yarn ts:check<CR>', {noremap = true, desc = 'TypeScript check'})
 
 -- Insert mode
 vim.api.nvim_set_keymap('i', '<C-f><C-s>', '<C-o>:w<CR>', {noremap = true, desc = 'Save file'})
@@ -93,16 +98,6 @@ vim.keymap.set("n", "<leader>boo", ":%bd|e!#<CR>", { desc = 'Kill other buffers'
 -- Replace
 vim.keymap.set("n", "<leader>rw", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]], { desc = 'Replace word under cursor' })
 vim.keymap.set("n", "<leader>rc", [[:%s/<C-r><C-w>/<C-r><C-w>/gI<Left><Left><Left>]], { desc = 'Replace characters under cursor' })
-
--- Git
-vim.keymap.set('n', '<leader>gw', ':G blame<CR>', { desc = 'Git praise' });
-vim.keymap.set('n', '<leader>gi', ':!git pull<CR>', { desc = 'Git pull' });
-vim.keymap.set('n', '<leader>go', ':!git push<CR>', { desc = 'Git push' });
-vim.keymap.set('n', '<leader>gu', ':!git pull origin main<CR>', { desc = 'Git pull origin main' });
-vim.keymap.set('n', '<leader>gn', ':G checkout -b ', { desc = 'Git checkout new branch' });
-vim.keymap.set('n', '<leader>gd', ':GitGutterDiff<cr>', { desc = 'Git diff' });
-vim.keymap.set('n', '<leader>gs', vim.cmd.Git, { desc = 'Git status' });
-vim.keymap.set('n', '<leader>gl', ':LazyGit<CR>', { desc = 'Git status' });
 
 -- Surround
 function surround_word_with(input)

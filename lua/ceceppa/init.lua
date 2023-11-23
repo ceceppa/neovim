@@ -1,5 +1,6 @@
 require("ceceppa.remap")
 require("ceceppa.set")
+require("ceceppa.git")
 
 vim.cmd([[autocmd VimEnter * set spell spelllang=en_gb]])
 vim.api.nvim_set_option("clipboard","unnamed")
@@ -18,7 +19,7 @@ vim.cmd("highlight GitGutterChange guifg=#f0dbff ctermfg=3")
 vim.cmd("highlight GitGutterDelete guifg=#ffa8a8 ctermfg=1")
 
 vim.g.copilot_no_tab_map = true
-vim.api.nvim_set_keymap("i", "<C-l>", 'copilot#Accept("<CR>")', { silent = true, expr = true })
+vim.api.nvim_set_keymap("i", "<C-.>", 'copilot#Accept("<CR>")', { silent = true, expr = true })
 
 vim.g.copilot_filetypes = {
     ["*"] = true,

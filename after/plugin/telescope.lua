@@ -47,7 +47,7 @@ require("telescope").setup {
 -- To get ui-select loaded and working with telescope, you need to call
 -- load_extension, somewhere after setup function:
 require("telescope").load_extension("ui-select")
-
+require("telescope").load_extension("notify")
 
 -- Project
 vim.keymap.set('n', '<leader>pf', ':Telescope find_files hidden=true<CR>', { desc = 'Find files' })

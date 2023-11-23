@@ -130,10 +130,10 @@ local function git_status()
     if git_num[3] ~= 0 then
         git_state[4] = ' ' .. git_num[3]
     end
-    
+
     -- save to variable
     vim.b.git_state = git_state
-    
+
     return branch_col
 end
 
@@ -154,6 +154,7 @@ function unsaved_buffers()
 
     return "󱙃 " .. unsaved_buffers
 end
+
 
 require('lualine').setup {
   options = {
@@ -179,7 +180,7 @@ require('lualine').setup {
       lualine_b = {
           {
               'branch',
-              color = 
+              color =
               function(section)
                   local gs = git_status()
                   if gs == 'd' then
@@ -192,7 +193,7 @@ require('lualine').setup {
           {
               -- head status
               "vim.b.git_state[1]",
-              color = function(section)
+              color = function()
                   if vim.b.git_state[1]:find("^ %w+ $") ~= nil then
                       return { fg = '#F49B55' }
                   end
@@ -211,7 +212,7 @@ require('lualine').setup {
               color = { fg = '#f0dbff' },
               padding = { left = 1, right = 1 }
           },
-          { 
+          {
               -- staged files
               "vim.b.git_state[2]",
               color = { fg = '#A4C379' },
@@ -247,13 +248,13 @@ require('lualine').setup {
           'diagnostics',
           {
               'diff',
-              colored = true, 
+              colored = true,
               diff_color = {
-                  added    = {fg='#73ff00'},   
-                  modified = {fg='#f0dbff'},   
+                  added    = {fg='#73ff00'},
+                  modified = {fg='#f0dbff'},
                   removed  = {fg='#ffa8a8'},
               },
-              symbols = {added = '󰐒 ', modified = '󰤀 ', removed = '󰐓 '}, 
+              symbols = {added = '󰐒 ', modified = '󰤀 ', removed = '󰐓 '},
           },
           'filetype',
       },
