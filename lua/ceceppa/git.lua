@@ -49,9 +49,9 @@ local function show_git_notification(command)
         show_notification = false
 
         if level == "error" then
-            vim.notify(" ❌ Git " .. command .. " failed: 😭😭😭", "error", { replace = notify_record.id })
+            vim.notify(" ❌ " .. command .. " failed: 😭😭😭", "error", { replace = notify_record.id })
         else
-            vim.notify(" ✅ Git " .. command .. " successful: 🎉🎉🎉", nil, { replace = notify_record.id })
+            vim.notify(" ✅ " .. command .. " successful: 🎉🎉🎉", nil, { replace = notify_record.id })
         end
     end
 
