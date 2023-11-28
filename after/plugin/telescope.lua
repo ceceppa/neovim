@@ -1,48 +1,44 @@
 local builtin = require('telescope.builtin')
 
 require("telescope").setup {
-  extensions = {
-    ["ui-select"] = {
-      require("telescope.themes").get_dropdown {
-        -- even more opts
-      }
-
-      -- pseudo code / specification for writing custom displays, like the one
-      -- for "codeactions"
-      -- specific_opts = {
-      --   [kind] = {
-      --     make_indexed = function(items) -> indexed_items, width,
-      --     make_displayer = function(widths) -> displayer
-      --     make_display = function(displayer) -> function(e)
-      --     make_ordinal = function(e) -> string
-      --   },
-      --   -- for example to disable the custom builtin "codeactions" display
-      --      do the following
-      --   codeactions = false,
-      -- }
-    }
-  },
-  pickers = {
-      current_buffer_tags = { fname_width = 100, },
-      jumplist = { fname_width = 100, },
-      loclist = { fname_width = 100, },
-      lsp_definitions = { fname_width = 100, },
-      lsp_document_symbols = { fname_width = 100, },
-      lsp_dynamic_workspace_symbols = { fname_width = 100, },
-      lsp_implementations = { fname_width = 100, },
-      lsp_incoming_calls = { fname_width = 100, },
-      lsp_outgoing_calls = { fname_width = 100, },
-      lsp_references = { fname_width = 100, },
-      lsp_type_definitions = { fname_width = 100, },
-      lsp_workspace_symbols = { fname_width = 100, },
-      quickfix = { fname_width = 100, },
-      tags = { fname_width = 100, },
-      git_branches = {
-          mappings = {
-              i = { ["<cr>"] = builtin.git_switch_branch },
-          },
-      },
-  },
+    extensions = {
+        ["ui-select"] = {
+            require("telescope.themes").get_dropdown {
+                -- even more opts
+            }
+        }
+    },
+    pickers = {
+        current_buffer_tags = { fname_width = 100, },
+        jumplist = { fname_width = 100, },
+        loclist = { fname_width = 100, },
+        lsp_definitions = { fname_width = 100, },
+        lsp_document_symbols = { fname_width = 100, },
+        lsp_dynamic_workspace_symbols = { fname_width = 100, },
+        lsp_implementations = { fname_width = 100, },
+        lsp_incoming_calls = { fname_width = 100, },
+        lsp_outgoing_calls = { fname_width = 100, },
+        lsp_references = { fname_width = 100, },
+        lsp_type_definitions = { fname_width = 100, },
+        lsp_workspace_symbols = { fname_width = 100, },
+        quickfix = { fname_width = 100, },
+        tags = { fname_width = 100, },
+        git_branches = {
+            mappings = {
+                i = { ["<cr>"] = builtin.git_switch_branch },
+            },
+        },
+        live_grep = {
+            file_ignore_patterns = { 'node_modules', '.git', '.venv' },
+            additional_args = function(_)
+                return { "--hidden" }
+            end
+        },
+        find_files = {
+            file_ignore_patterns = { 'node_modules', '.git', '.venv' },
+            hidden = true
+        }
+    },
 }
 -- To get ui-select loaded and working with telescope, you need to call
 -- load_extension, somewhere after setup function:
@@ -69,7 +65,7 @@ vim.keymap.set('i', '<C-r><C-r>', '<C-o>:Telescope registers<CR>', { desc = 'Reg
 local old_search
 
 vim.keymap.set('n', '<leader>sp', function()
-    old_search = vim.fn.input("Grep in all files > ") 
+    old_search = vim.fn.input("Grep in all files > ")
     builtin.grep_string({ search = old_search });
 end, { desc = 'Grep in all files' })
 

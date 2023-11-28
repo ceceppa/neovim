@@ -103,7 +103,7 @@ return require('packer').startup(function(use)
     use {'github/copilot.vim', branch = 'release' }
 
     use {
-        '~/Projects/tsc.nvim',
+        'dmmulroy/tsc.nvim',
         requires = {
             { 'rcarriga/nvim-notify' },
         }

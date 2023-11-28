@@ -1,11 +1,7 @@
 local Job = require'plenary.job'
 local Popup = require'plenary.popup'
 
-local show_notification = false
-local notify_record
-local hide_from_history = false
-local spinner_idx = 0
-local spinner = { "⣾", "⣽", "⣻", "⢿", "⡿", "⣟", "⣯", "⣷" }
+local spinner = {"⣷", "⣯", "⣟", "⡿", "⢿", "⣻", "⣽", "⣾"}
 
 local function format_notification_msg(msg, spinner_idx)
     if spinner_idx == 0 or spinner_idx == nil then
@@ -15,31 +11,27 @@ local function format_notification_msg(msg, spinner_idx)
     return string.format(" %s %s ", spinner[spinner_idx], msg)
 end
 
-local function get_notify_options(...)
-  local overrides = {}
-
-  for _, opts in ipairs({ ... }) do
-    for key, value in pairs(opts) do
-      overrides[key] = value
-    end
-  end
-
-  return vim.tbl_deep_extend("force", {}, DEFAULT_NOTIFY_OPTIONS, overrides)
-end
-
-
 local function show_git_notification(command)
     local run_command
+    local on_complete
+    local notify_record
+    local show_notification = true
+    local spinner_idx = 0
+    local hide_from_history = false
 
     run_command = function()
         if not show_notification then
             return
         end
 
+        local options = notify_record and { replace = notify_record.id, hide_from_history = hide_from_history } or {}
+
+        options.title = 'Git'
+
         notify_record = vim.notify(
             format_notification_msg(command, spinner_idx),
             nil,
-            notify_record and { replace = notify_record.id, hide_from_history = hide_from_history }
+            options
         )
 
         hide_from_history = true
@@ -53,10 +45,21 @@ local function show_git_notification(command)
         vim.defer_fn(run_command, 125)
     end
 
-    spinner_idx = 0
+    on_complete = function(level)
+        show_notification = false
+
+        if level == "error" then
+            vim.notify(" ❌ Git " .. command .. " failed: 😭😭😭", "error", { replace = notify_record.id })
+        else
+            vim.notify(" ✅ Git " .. command .. " successful: 🎉🎉🎉", nil, { replace = notify_record.id })
+        end
+    end
+
     hide_from_history = false
 
     run_command()
+
+    return on_complete
 end
 
 local popup_id
@@ -90,9 +93,7 @@ end
 local function execute_git_command(description, args)
     local output = {}
 
-    show_notification = true
-
-    show_git_notification("Git " .. description .. "...")
+    local on_complete = show_git_notification("Git " .. description .. "...")
 
     Job:new({
         command = 'git',
@@ -104,12 +105,10 @@ local function execute_git_command(description, args)
             table.insert(output, data)
         end,
         on_exit = function(j, return_val)
-            show_notification = false
-
             if return_val == 0 then
-                vim.notify(" ✅ Git " .. description .. " successful: 🎉🎉🎉", "info", { replace = notify_record.id })
+                on_complete("success")
             else
-                vim.notify(" ❌ Git " .. description .. " failed: 😭😭😭", "error", { replace = notify_record.id })
+                on_complete("error")
 
                 vim.schedule(function()
                     display_git_output(output)
@@ -127,4 +126,5 @@ vim.keymap.set('n', '<leader>gn', ':G checkout -b ', { desc = 'Git checkout new 
 vim.keymap.set('n', '<leader>gd', ':GitGutterDiff<cr>', { desc = 'Git diff' });
 vim.keymap.set('n', '<leader>gs', vim.cmd.Git, { desc = 'Git status' });
 vim.keymap.set('n', '<leader>gf', function() execute_git_command('fetch', {'fetch', '-a'}) end, { desc = 'Git fetch' });
+vim.keymap.set('n', '<leader>gm', function() execute_git_command('checkout main', {'checkout', 'main'}) end, { desc = 'Git checkout main' });
 vim.keymap.set('n', '<leader>gv', ':Gvdiffsplit!<CR>', { desc = 'Git diff' });
