@@ -3,5 +3,5 @@ require("notify").setup({
 })
 
 vim.opt.termguicolors = true
-vim.notify = require("notify")
+-- vim.notify = require("notify")
 

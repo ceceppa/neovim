@@ -48,10 +48,16 @@ local function show_git_notification(command)
     on_complete = function(level)
         show_notification = false
 
+        local options = notify_record and { replace = notify_record.id } or {}
+
         if level == "error" then
-            vim.notify(" ❌ " .. command .. " failed: 😭😭😭", "error", { replace = notify_record.id })
+            vim.schedule(function()
+                vim.notify(" ❌ " .. command .. " failed: 😭😭😭", "error", options)
+            end)
         else
-            vim.notify(" ✅ " .. command .. " successful: 🎉🎉🎉", nil, { replace = notify_record.id })
+            vim.schedule(function()
+                vim.notify(" ✅ " .. command .. " successful: 🎉🎉🎉", nil, options)
+            end)
         end
     end
 
