@@ -5,6 +5,7 @@ tsc.setup({
     auto_focus_qflits = false,
     flags = {
         watch = true,
-    }
+    },
+    verbose = false,
 })
 

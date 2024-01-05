@@ -26,10 +26,10 @@ local function show_git_notification(command)
 
         local options = notify_record and { replace = notify_record.id, hide_from_history = hide_from_history } or {}
 
-        options.title = 'Git'
+        options.title = 'git ' .. command
 
         notify_record = vim.notify(
-            format_notification_msg(command, spinner_idx),
+            format_notification_msg( command .. 'ing', spinner_idx),
             nil,
             options
         )
@@ -99,7 +99,7 @@ end
 local function execute_git_command(description, args)
     local output = {}
 
-    local on_complete = show_git_notification("Git " .. description .. "...")
+    local on_complete = show_git_notification(description)
 
     Job:new({
         command = 'git',
@@ -134,3 +134,23 @@ vim.keymap.set('n', '<leader>gs', vim.cmd.Git, { desc = 'Git status' });
 vim.keymap.set('n', '<leader>gf', function() execute_git_command('fetch', {'fetch', '-a'}) end, { desc = 'Git fetch' });
 vim.keymap.set('n', '<leader>gm', function() execute_git_command('checkout main', {'checkout', 'main'}) end, { desc = 'Git checkout main' });
 vim.keymap.set('n', '<leader>gv', ':Gvdiffsplit!<CR>', { desc = 'Git diff' });
+
+vim.keymap.set('n', '<leader>gg', ':LazyGit<CR>', { desc = 'Open LazyGit' });
+vim.keymap.set('n', '<leader>gh', ':LazyGitFilterCurrentFile<CR>', { desc = 'Git file history' });
+vim.keymap.set('n', '<leader>gl', ':LazyGitFilter<CR>', { desc = 'Git history' });
+
+vim.keymap.set('n', '<leader>gc', ':Telescope git_commits<CR>', { desc = 'Git commits' });
+vim.keymap.set('n', '<leader>gb', ':Telescope git_branches<CR>', { desc = 'Git branches' });
+
+function git_add_all_and_commit()
+  local input = vim.fn.input("Enter the commit message: ")
+
+  if string.len(input) == 0 then
+    return
+  end
+
+  execute_git_command("adding all and commit", { 'commit', '-am', input })
+end
+
+vim.keymap.set('n', '<leader>g.', [[<Cmd>lua git_add_all_and_commit()<CR>]], { desc = 'Git add all and commit' });
+

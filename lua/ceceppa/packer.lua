@@ -103,13 +103,24 @@ return require('packer').startup(function(use)
     use {'github/copilot.vim', branch = 'release' }
 
     use {
-        'dmmulroy/tsc.nvim',
+        '~/Projects/tsc.nvim',
         requires = {
             { 'rcarriga/nvim-notify' },
         }
     }
 
     use 'rcarriga/nvim-notify'
+
+    use({
+        "kdheepak/lazygit.nvim",
+        -- optional for floating window border decoration
+        requires = {
+            "nvim-lua/plenary.nvim",
+        },
+        config = function()
+            require("telescope").load_extension("lazygit")
+        end,
+    })
 
    vim.keymap.set('n', '<leader>ps', ':so<CR>:PackerSync<CR>')
 end)

@@ -119,6 +119,10 @@ end
 function surround_word_with_input()
   local input = vim.fn.input("Enter the surrounding string:")
 
+  if string.len(input) == 0 then
+    return
+  end
+
   surround_word_with(input)
 end
 
