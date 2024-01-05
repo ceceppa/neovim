@@ -96,7 +96,7 @@ function display_git_output(output)
     vim.api.nvim_buf_set_keymap(bufnr, "n", "q", "<cmd>lua close_git_popup()<CR>", { silent=false })
 end
 
-local function execute_git_command(description, args)
+local function execute_git_command(description, args, then_callback)
     local output = {}
 
     local on_complete = show_git_notification(description)
@@ -113,6 +113,9 @@ local function execute_git_command(description, args)
         on_exit = function(j, return_val)
             if return_val == 0 then
                 on_complete("success")
+                if then_callback then
+                    then_callback()
+                end
             else
                 on_complete("error")
 
@@ -149,8 +152,10 @@ function git_add_all_and_commit()
     return
   end
 
-  execute_git_command("adding all commit", { 'commit', '-am', input })
-execute_git_command('push', {'push'})
+  execute_git_command("adding all commit", { 'commit', '-am', input }, 
+  function()
+    execute_git_command('push', {'push'})
+  end)
 end
 
 vim.keymap.set('n', '<leader>g.', [[<Cmd>lua git_add_all_and_commit()<CR>]], { desc = 'Git add all and commit' });
