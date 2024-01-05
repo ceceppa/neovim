@@ -149,7 +149,8 @@ function git_add_all_and_commit()
     return
   end
 
-  execute_git_command("adding all and commit", { 'commit', '-am', input })
+  execute_git_command("adding all commit", { 'commit', '-am', input })
+execute_git_command('push', {'push'})
 end
 
 vim.keymap.set('n', '<leader>g.', [[<Cmd>lua git_add_all_and_commit()<CR>]], { desc = 'Git add all and commit' });
