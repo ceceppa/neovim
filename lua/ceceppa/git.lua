@@ -128,14 +128,27 @@ local function execute_git_command(description, args, then_callback)
 end
 
 vim.keymap.set('n', '<leader>gw', ':G blame<CR>', { desc = 'Git praise' });
-vim.keymap.set('n', '<leader>gi', function() execute_git_command('pull', {'pull'}) end, { desc = 'Git pull' });
-vim.keymap.set('n', '<leader>go', function() execute_git_command('push', {'push'}) end, { desc = 'Git push' });
+
+function git_pull()
+    execute_git_command('pull', {'pull'})
+end
+
+function git_push()
+    execute_git_command('push', {'push'})
+end
+
+vim.keymap.set('n', '<leader>gi', function() git_pull() end, { desc = 'Git pull' });
+vim.keymap.set('n', '<leader>go', function() git_push() end, { desc = 'Git push' });
 vim.keymap.set('n', '<leader>gu', function() execute_git_command('pull origin/main', {'pull', 'origin', 'main'}) end, { desc = 'Git pull origin main' });
 vim.keymap.set('n', '<leader>gn', ':G checkout -b ', { desc = 'Git checkout new branch' });
 vim.keymap.set('n', '<leader>gd', ':GitGutterDiff<cr>', { desc = 'Git diff' });
 vim.keymap.set('n', '<leader>gs', vim.cmd.Git, { desc = 'Git status' });
 vim.keymap.set('n', '<leader>gf', function() execute_git_command('fetch', {'fetch', '-a'}) end, { desc = 'Git fetch' });
-vim.keymap.set('n', '<leader>gm', function() execute_git_command('checkout main', {'checkout', 'main'}) end, { desc = 'Git checkout main' });
+vim.keymap.set('n', '<leader>gm', function() 
+    execute_git_command('checkout main', {'checkout', 'main'}, function()
+        git_pull()
+    end)
+end, { desc = 'Git checkout main' });
 vim.keymap.set('n', '<leader>gv', ':Gvdiffsplit!<CR>', { desc = 'Git diff' });
 
 vim.keymap.set('n', '<leader>gg', ':LazyGit<CR>', { desc = 'Open LazyGit' });
@@ -154,7 +167,7 @@ function git_add_all_and_commit()
 
   execute_git_command("adding all commit", { 'commit', '-am', input }, 
   function()
-    execute_git_command('push', {'push'})
+    git_push()
   end)
 end
 
