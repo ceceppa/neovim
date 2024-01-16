@@ -158,6 +158,8 @@ vim.keymap.set('n', '<leader>gl', ':LazyGitFilter<CR>', { desc = 'Git history' }
 vim.keymap.set('n', '<leader>gc', ':Telescope git_commits<CR>', { desc = 'Git commits' });
 vim.keymap.set('n', '<leader>gb', ':Telescope git_branches<CR>', { desc = 'Git branches' });
 
+vim.keymap.set('n', '<leader>gx', ':Telescope git_stash<CR>', { desc = 'Git branches' });
+
 function git_add_all_and_commit()
   local input = vim.fn.input("Enter the commit message: ")
 

@@ -91,7 +91,7 @@ vim.api.nvim_set_keymap('n', '<C-q><C-q>', ':qa<CR>', {noremap = true, desc = 'Q
 vim.keymap.set("n", "<leader>mr", "<cmd>CellularAutomaton make_it_rain<CR>", { desc = 'Make it rain' });
 
 -- Buffers
-vim.keymap.set("n", "<leader>bc", ':bdelete<CR>', { desc = 'Close current buffer' })
+vim.keymap.set("n", "<leader>bc", ":lua require('bufdelete').bufdelete(0, false)<CR>", { desc = 'Close current buffer' })
 vim.keymap.set("n", "<leader>bo", ":%bd|e#<CR>", { desc = 'Kill other buffers' })
 vim.keymap.set("n", "<leader>boo", ":%bd|e!#<CR>", { desc = 'Kill other buffers' })
 

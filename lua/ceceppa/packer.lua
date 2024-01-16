@@ -71,7 +71,7 @@ return require('packer').startup(function(use)
             vim.fn['fzf#install']()
         end
     }
-    use('tomtom/tcomment_vim')
+    -- use('tomtom/tcomment_vim')
     use {
         'nvim-tree/nvim-tree.lua',
         requires = { 'nvim-tree/nvim-web-devicons' }
@@ -102,13 +102,6 @@ return require('packer').startup(function(use)
 
     use {'github/copilot.vim', branch = 'release' }
 
-    use {
-        '~/Projects/tsc.nvim',
-        requires = {
-            { 'rcarriga/nvim-notify' },
-        }
-    }
-
     use 'rcarriga/nvim-notify'
 
     use({
@@ -121,6 +114,53 @@ return require('packer').startup(function(use)
             require("telescope").load_extension("lazygit")
         end,
     })
+
+    use ({ 'catppuccin/nvim', as = "catppuccin" })
+
+    use 'windwp/nvim-ts-autotag'
+    use 'famiu/bufdelete.nvim'
+
+    use {
+        'numToStr/Comment.nvim',
+        config = function()
+            require('Comment').setup()
+        end
+    }
+
+    use {
+        'JoosepAlviste/nvim-ts-context-commentstring',
+        requires = {
+            'MunifTanjim/nui.nvim',
+        },
+        config = function ()
+           require("dressing").setup() 
+        end
+    }
+
+    use {'stevearc/dressing.nvim'}
+
+    use 'windwp/nvim-spectre'
+    use {
+        'echasnovski/mini.pairs',
+        config = function(_, opts)
+            require('mini.pairs').setup(opts)
+        end
+    }
+
+    use   {
+        "lukas-reineke/indent-blankline.nvim",
+        config = function()
+            require("ibl").setup()
+        end
+    }
+
+    -- Local
+    use {
+        '~/Projects/tsc.nvim',
+        requires = {
+            { 'rcarriga/nvim-notify' },
+        }
+    }
 
    vim.keymap.set('n', '<leader>ps', ':so<CR>:PackerSync<CR>')
 end)

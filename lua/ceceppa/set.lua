@@ -1,5 +1,6 @@
 vim.opt.nu = true
 vim.opt.relativenumber = true
+vim.o.mouse = "a" -- always enable mouse mode
 
 vim.opt.tabstop = 4
 vim.opt.softtabstop = 4
@@ -26,5 +27,11 @@ vim.opt.isfname:append("@-@")
 
 vim.opt.updatetime = 50
 
--- vim.opt.colorcolumn = "90"
 vim.o.guifont = "VictorMono Nerd Font:h16"
+
+vim.o.ignorecase = true -- ignore case when searching
+vim.o.smartcase = true -- Unless we explicitly use cases in search
+
+-- Set up automatic spell checking
+vim.opt.spelllang = "en"
+vim.opt.spell = true

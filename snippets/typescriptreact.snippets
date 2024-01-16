@@ -20,8 +20,6 @@ snippet rc
 	}
 
 snippet rfc
-	import * as React from 'react';
-
 	type ${1}Props = {};
 
 	export const ${1}: React.FC<${1}Props> = ({}) => {
@@ -34,6 +32,10 @@ snippet rfc
 
 snippet fc
 	React.FC<${1}>
+
+snippet fcc
+	React.FC<React.PropsWithChildren<${1}>>
+
 
 snippet rfc_type
 	import * as React from 'react';

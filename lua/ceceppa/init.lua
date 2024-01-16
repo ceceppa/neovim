@@ -2,7 +2,6 @@ require("ceceppa.remap")
 require("ceceppa.set")
 require("ceceppa.git")
 
-vim.cmd([[autocmd VimEnter * set spell spelllang=en_gb]])
 vim.api.nvim_set_option("clipboard","unnamed")
 
 vim.g.gitgutter_sign_added = '󰐒 '
