@@ -179,14 +179,24 @@ vim.keymap.set('n', '<leader>g.', [[<Cmd>lua git_add_all_and_commit()<CR>]], { d
 local function maybe_write_and_quit()
     local current_buffer_name = vim.fn.bufname(vim.fn.bufnr('%'))
 
-    if current_buffer_name ~= "COMMIT_EDITMSG" then
+    print(current_buffer_name)
+    if current_buffer_name ~= "fugitive" then
+        local input = vim.fn.input("Enter the commit message: ")
+
+        if string.len(input) == 0 then
+            return
+        end
+
         vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<C-o>:wq<CR>', true, true, true), 'n', true)
 
-        git_push()
+        execute_git_command("commit with message", { 'commit', '-m', input }, 
+        function()
+            git_push()
+        end)
     end
 end
 
-vim.keymap.set('i', '<C-;>', function ()
+vim.keymap.set('n', '<C-;>', function ()
     maybe_write_and_quit()
 end, { desc = 'Git message: Write & quit' });
 
