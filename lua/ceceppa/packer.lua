@@ -17,7 +17,13 @@ return require('packer').startup(function(use)
 
     use('nvim-treesitter/nvim-treesitter', { run = ':TSUpdate' })
 
-    use('ThePrimeagen/harpoon')
+    use {
+        "ThePrimeagen/harpoon",
+        branch = "harpoon2",
+        requires = { {"nvim-lua/plenary.nvim"} }
+    }
+
+    -- use('ThePrimeagen/harpoon')
     use('mbbill/undotree')
     use('tpope/vim-fugitive')
 
@@ -161,6 +167,10 @@ return require('packer').startup(function(use)
             { 'rcarriga/nvim-notify' },
         }
     }
+
+    use {"akinsho/toggleterm.nvim", tag = '*', config = function()
+        require("toggleterm").setup()
+    end}
 
    vim.keymap.set('n', '<leader>ps', ':so<CR>:PackerSync<CR>')
 end)

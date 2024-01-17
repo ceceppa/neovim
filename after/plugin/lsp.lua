@@ -124,3 +124,13 @@ lspconfig.tsserver.setup({
       },
   },
 })
+
+require'lspconfig'.grammarly.setup{
+    filetypes = { "markdown", "tex", "text", },
+    on_attach = on_attach,
+    init_options = { clientId = "client_BaDkMgx4X19X9UxxYRCXZo" },
+    root_dir = function(fname)
+        return require'lspconfig'.util.find_git_ancestor(fname) or vim.loop.os_homedir()
+    end,
+    cmd = { "grammarly-languageserver", "--stdio" },
+}
