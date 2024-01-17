@@ -93,7 +93,8 @@ vim.keymap.set("n", "<leader>mr", "<cmd>CellularAutomaton make_it_rain<CR>", { d
 -- Buffers
 vim.keymap.set("n", "<leader>bc", ":lua require('bufdelete').bufdelete(0, false)<CR>", { desc = 'Close current buffer' })
 vim.keymap.set("n", "<leader>bo", ":%bd|e#<CR>", { desc = 'Kill other buffers' })
-vim.keymap.set("n", "<leader>boo", ":%bd|e!#<CR>", { desc = 'Kill other buffers' })
+vim.keymap.set("n", "<leader>bkk", ":%bd|e!#<CR>", { desc = 'Kill other buffers!!!' })
+vim.keymap.set("n", "<leader>bn", ":enew<CR>", { desc = 'New empty buffer' })
 
 -- Replace
 vim.keymap.set("n", "<leader>rw", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]], { desc = 'Replace word under cursor' })
@@ -135,4 +136,16 @@ vim.api.nvim_set_keymap('n', "<leader>s{", [[<Cmd>lua surround_word_with("{")<CR
 vim.api.nvim_set_keymap('n', "<leader>s[", [[<Cmd>lua surround_word_with("[")<CR>]], {noremap = true, silent = true})
 vim.api.nvim_set_keymap('n', "<leader>s<", [[<Cmd>lua surround_word_with("<")<CR>]], {noremap = true, silent = true})
 vim.api.nvim_set_keymap('n', '<leader>s"', [[<Cmd>lua surround_word_with('"')<CR>]], {noremap = true, silent = true})
+
+local function maybe_write_and_quit()
+    local current_buffer_name = vim.fn.bufname(vim.fn.bufnr('%'))
+
+    if current_buffer_name ~= "COMMIT_EDITMSG" then
+        vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<C-o>:wq<CR>', true, true, true), 'n', true)
+    end
+end
+
+vim.keymap.set('i', '<C-;>', function ()
+    maybe_write_and_quit()
+end, { desc = 'Git message: Write & quit' });
 

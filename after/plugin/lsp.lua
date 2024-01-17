@@ -45,8 +45,24 @@ lsp.on_attach(function(client, bufnr)
       vim.lsp.inlay_hint.enable(bufnr, true)
   end
 
+  local enabled = true
+  local function toggle_inlay_hints()
+      local bufnr = vim.api.nvim_get_current_buf()
+
+      enabled = not enabled
+
+      if not enabled then
+          print("Enabling inlay_hint")
+      else
+          print("Disabling inlay_hint")
+      end
+
+      vim.lsp.inlay_hint.enable(bufnr, enabled)
+  end
+
   vim.keymap.set("n", "gd", function() vim.lsp.buf.definition() end, opts)
   vim.keymap.set("n", "K", function() vim.lsp.buf.hover() end, opts)
+  vim.keymap.set("n", "<leader>i", toggle_inlay_hints, opts)
   vim.keymap.set("n", "<leader>ws", function() vim.lsp.buf.workspace_symbol() end, opts)
   vim.keymap.set("n", "<leader>vd", function() vim.diagnostic.open_float() end, opts)
   vim.keymap.set("v", "<C-e>n", function() vim.diagnostic.goto_next() end, opts)
