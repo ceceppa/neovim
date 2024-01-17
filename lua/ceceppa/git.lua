@@ -189,7 +189,7 @@ local function maybe_write_and_quit()
 
         vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<C-o>:wq<CR>', true, true, true), 'n', true)
 
-        execute_git_command("commit with message", { 'commit', '-m', input }, 
+        execute_git_command("commit with message: " .. input, { 'commit', '-m', input }, 
         function()
             git_push()
         end)
