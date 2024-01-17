@@ -136,16 +136,3 @@ vim.api.nvim_set_keymap('n', "<leader>s{", [[<Cmd>lua surround_word_with("{")<CR
 vim.api.nvim_set_keymap('n', "<leader>s[", [[<Cmd>lua surround_word_with("[")<CR>]], {noremap = true, silent = true})
 vim.api.nvim_set_keymap('n', "<leader>s<", [[<Cmd>lua surround_word_with("<")<CR>]], {noremap = true, silent = true})
 vim.api.nvim_set_keymap('n', '<leader>s"', [[<Cmd>lua surround_word_with('"')<CR>]], {noremap = true, silent = true})
-
-local function maybe_write_and_quit()
-    local current_buffer_name = vim.fn.bufname(vim.fn.bufnr('%'))
-
-    if current_buffer_name ~= "COMMIT_EDITMSG" then
-        vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<C-o>:wq<CR>', true, true, true), 'n', true)
-    end
-end
-
-vim.keymap.set('i', '<C-;>', function ()
-    maybe_write_and_quit()
-end, { desc = 'Git message: Write & quit' });
-
