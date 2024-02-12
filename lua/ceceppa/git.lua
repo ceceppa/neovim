@@ -1,7 +1,7 @@
-local Job = require'plenary.job'
-local Popup = require'plenary.popup'
+local Job = require 'plenary.job'
+local Popup = require 'plenary.popup'
 
-local spinner = {"⣷", "⣯", "⣟", "⡿", "⢿", "⣻", "⣽", "⣾"}
+local spinner = { "⣷", "⣯", "⣟", "⡿", "⢿", "⣻", "⣽", "⣾" }
 
 local function format_notification_msg(msg, spinner_idx)
     if spinner_idx == 0 or spinner_idx == nil then
@@ -11,7 +11,7 @@ local function format_notification_msg(msg, spinner_idx)
     return string.format(" %s %s ", spinner[spinner_idx], msg)
 end
 
-local function show_git_notification(command)
+local function show_git_notification(command, description)
     local run_command
     local on_complete
     local notify_record
@@ -26,10 +26,10 @@ local function show_git_notification(command)
 
         local options = notify_record and { replace = notify_record.id, hide_from_history = hide_from_history } or {}
 
-        options.title = 'git ' .. command
+        options.title = command .. ' ' .. description
 
         notify_record = vim.notify(
-            format_notification_msg( command .. 'ing', spinner_idx),
+            format_notification_msg(description .. 'ing', spinner_idx),
             nil,
             options
         )
@@ -52,11 +52,11 @@ local function show_git_notification(command)
 
         if level == "error" then
             vim.schedule(function()
-                vim.notify(" ❌ " .. command .. " failed: 😭😭😭", "error", options)
+                vim.notify(" ❌ " .. description .. " failed: 😭😭😭", "error", options)
             end)
         else
             vim.schedule(function()
-                vim.notify(" ✅ " .. command .. " successful: 🎉🎉🎉", nil, options)
+                vim.notify(" ✅ " .. description .. " successful: 🎉🎉🎉", nil, options)
             end)
         end
     end
@@ -73,7 +73,6 @@ local popup_id
 function close_git_popup(_, sel)
     vim.api.nvim_win_close(popup_id, true)
 end
-
 
 function display_git_output(output)
     local width = 80
@@ -93,16 +92,16 @@ function display_git_output(output)
     })
 
     local bufnr = vim.api.nvim_win_get_buf(popup_id)
-    vim.api.nvim_buf_set_keymap(bufnr, "n", "q", "<cmd>lua close_git_popup()<CR>", { silent=false })
+    vim.api.nvim_buf_set_keymap(bufnr, "n", "q", "<cmd>lua close_git_popup()<CR>", { silent = false })
 end
 
-local function execute_git_command(description, args, then_callback)
+local function execute_command(command, description, args, then_callback)
     local output = {}
 
-    local on_complete = show_git_notification(description)
+    local on_complete = show_git_notification(command, description)
 
     Job:new({
-        command = 'git',
+        command = command,
         args = args,
         on_stdout = function(_, data)
             table.insert(output, data)
@@ -114,7 +113,9 @@ local function execute_git_command(description, args, then_callback)
             if return_val == 0 then
                 on_complete("success")
                 if then_callback then
-                    then_callback()
+                    vim.schedule(function()
+                        then_callback()
+                    end)
                 end
             else
                 on_complete("error")
@@ -127,25 +128,43 @@ local function execute_git_command(description, args, then_callback)
     }):start()
 end
 
+local function execute_git_command(description, args, then_callback)
+    execute_command('git', description, args, then_callback)
+end
+
 vim.keymap.set('n', '<leader>gw', ':G blame<CR>', { desc = 'Git praise' });
 
-function git_pull()
-    execute_git_command('pull', {'pull'})
+function git_pull(description, args)
+    args = args or {}
+    description = description or 'pull'
+
+    local pull_command = { 'pull' }
+
+    for _, arg in ipairs(args) do
+        table.insert(pull_command, arg)
+    end
+
+    execute_git_command(description, pull_command, function()
+        execute_command('yarn', 'install', { 'install' })
+    end)
 end
 
 function git_push()
-    execute_git_command('push', {'push'})
+    execute_git_command('push', { 'push' })
 end
 
 vim.keymap.set('n', '<leader>gi', function() git_pull() end, { desc = 'Git pull' });
 vim.keymap.set('n', '<leader>go', function() git_push() end, { desc = 'Git push' });
-vim.keymap.set('n', '<leader>gu', function() execute_git_command('pull origin/main', {'pull', 'origin', 'main'}) end, { desc = 'Git pull origin main' });
+vim.keymap.set('n', '<leader>gu', function()
+        git_pull('pull origin/main', { 'origin', 'main' })
+    end,
+    { desc = 'Git pull origin main' });
 vim.keymap.set('n', '<leader>gn', ':G checkout -b ', { desc = 'Git checkout new branch' });
 vim.keymap.set('n', '<leader>gd', ':GitGutterDiff<cr>', { desc = 'Git diff' });
 vim.keymap.set('n', '<leader>gs', vim.cmd.Git, { desc = 'Git status' });
-vim.keymap.set('n', '<leader>gf', function() execute_git_command('fetch', {'fetch', '-a'}) end, { desc = 'Git fetch' });
-vim.keymap.set('n', '<leader>gm', function() 
-    execute_git_command('checkout main', {'checkout', 'main'}, function()
+vim.keymap.set('n', '<leader>gf', function() execute_git_command('fetch', { 'fetch', '-a' }) end, { desc = 'Git fetch' });
+vim.keymap.set('n', '<leader>gm', function()
+    execute_git_command('checkout main', { 'checkout', 'main' }, function()
         git_pull()
     end)
 end, { desc = 'Git checkout main' });
@@ -156,30 +175,38 @@ vim.keymap.set('n', '<leader>gh', ':LazyGitFilterCurrentFile<CR>', { desc = 'Git
 vim.keymap.set('n', '<leader>gl', ':LazyGitFilter<CR>', { desc = 'Git history' });
 
 vim.keymap.set('n', '<leader>gc', ':Telescope git_commits<CR>', { desc = 'Git commits' });
-vim.keymap.set('n', '<leader>gb', ':Telescope git_branches<CR>', { desc = 'Git branches' });
 
-vim.keymap.set('n', '<leader>gx', ':Telescope git_stash<CR>', { desc = 'Git branches' });
+function git_fetch_and_branches()
+    print('Git branches: Waiting for fetching...')
+
+    execute_git_command('fetch', { 'fetch', '-a' }, function()
+        vim.cmd('Telescope git_branches')
+    end)
+end
+
+vim.keymap.set('n', '<leader>gb', function() git_fetch_and_branches() end, { desc = 'Git branches' });
+
+vim.keymap.set('n', '<leader>gx', ':Telescope git_stash<CR>', { desc = 'Git stash' });
 
 function git_add_all_and_commit()
-  local input = vim.fn.input("Enter the commit message: ")
+    local input = vim.fn.input("Enter the commit message: ")
 
-  if string.len(input) == 0 then
-    return
-  end
+    if string.len(input) == 0 then
+        return
+    end
 
-  execute_git_command("adding all commit", { 'commit', '-am', input }, 
-  function()
-    git_push()
-  end)
+    execute_git_command("adding all commit", { 'commit', '-am', input },
+        function()
+            git_push()
+        end)
 end
 
 vim.keymap.set('n', '<leader>g.', [[<Cmd>lua git_add_all_and_commit()<CR>]], { desc = 'Git add all and commit' });
 
 
-local function maybe_write_and_quit()
+local function maybe_write_and_close_window()
     local current_buffer_name = vim.fn.bufname(vim.fn.bufnr('%'))
 
-    print(current_buffer_name)
     if current_buffer_name ~= "fugitive" then
         local input = vim.fn.input("Enter the commit message: ")
 
@@ -189,15 +216,13 @@ local function maybe_write_and_quit()
 
         vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<C-o>:wq<CR>', true, true, true), 'n', true)
 
-        execute_git_command("commit with message: " .. input, { 'commit', '-m', input }, 
-        function()
-            git_push()
-        end)
+        execute_git_command("commit with message: " .. input, { 'commit', '-m', input },
+            function()
+                git_push()
+            end)
     end
 end
 
-vim.keymap.set('n', '<C-;>', function ()
-    maybe_write_and_quit()
-end, { desc = 'Git message: Write & quit' });
-
-
+vim.keymap.set('n', '<C-;>', function()
+    maybe_write_and_close_window()
+end, { desc = 'Git: Write commit message and push' });
