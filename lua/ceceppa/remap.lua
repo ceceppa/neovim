@@ -157,17 +157,55 @@ function surround_word_with_input()
     surround_word_with(input)
 end
 
-vim.api.nvim_set_keymap('n', '<C-s>', [[<Cmd>lua surround_word_with_input()<CR>]], { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<C-s>', [[<Cmd>lua surround_word_with_input()<CR>]],
+    { noremap = true, silent = true, desc = 'Surround word with input' })
 
 -- Surround content within symbols
-vim.api.nvim_set_keymap('n', "<leader>s'", [[<Cmd>lua surround_word_with("'")<CR>]], { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', "<leader>s(", [[<Cmd>lua surround_word_with("(")<CR>]], { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', "<leader>s{", [[<Cmd>lua surround_word_with("{")<CR>]], { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', "<leader>s[", [[<Cmd>lua surround_word_with("[")<CR>]], { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', "<leader>s<", [[<Cmd>lua surround_word_with("<")<CR>]], { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<leader>s"', [[<Cmd>lua surround_word_with('"')<CR>]], { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', "<leader>s'", [[<Cmd>lua surround_word_with("'")<CR>]],
+    { noremap = true, silent = true, desc = 'Surround word with single quotes' })
+vim.api.nvim_set_keymap('n', "<leader>s(", [[<Cmd>lua surround_word_with("(")<CR>]],
+    { noremap = true, silent = true, desc = 'Surround word with double quotes' })
+vim.api.nvim_set_keymap('n', "<leader>s{", [[<Cmd>lua surround_word_with("{")<CR>]],
+    { noremap = true, silent = true, desc = 'Surround word with parentheses' })
+vim.api.nvim_set_keymap('n', "<leader>s[", [[<Cmd>lua surround_word_with("[")<CR>]],
+    { noremap = true, silent = true, desc = 'Surround word with square brackets' })
+vim.api.nvim_set_keymap('n', "<leader>s<", [[<Cmd>lua surround_word_with("<")<CR>]],
+    { noremap = true, silent = true, desc = 'Surround word with angle brackets' })
+vim.api.nvim_set_keymap('n', '<leader>s"', [[<Cmd>lua surround_word_with('"')<CR>]],
+    { noremap = true, silent = true, desc = 'Surround word with double quotes' })
 
 -- Insert mode
 vim.api.nvim_set_keymap('i', '<C-L>', '<Esc>$a', { noremap = true, desc = 'Move cursor to end of line' })
 vim.api.nvim_set_keymap('i', '<C-J>', '<Esc>^i', { noremap = true, desc = 'Move cursor to beginning of line' })
 vim.api.nvim_set_keymap('i', '<C-d>', '<C-o>:delete<CR>', { noremap = true, desc = 'Delete line' })
+
+-- Replace all occurrences of word under cursor
+vim.api.nvim_set_keymap('n', '<leader>rg', [[<Cmd>lua replace_globally()<CR>]],
+    { noremap = true, silent = true, desc = 'Replace all occurrences of word under cursor (globally)' })
+
+local function do_replace_globally(from, to)
+    vim.cmd('cdo s/' .. from .. '/' .. to .. '/g | update')
+
+    print("✅ Done: " .. from .. " replaced with " .. to .. " globally.")
+end
+
+function replace_globally()
+    local word_under_cursor = vim.fn.expand("<cword>")
+    local input = vim.fn.input("Replace all occurrences of '" .. word_under_cursor .. "' with: ", word_under_cursor)
+
+    if string.len(input) == 0 then
+        print("Replace operation cancelled.")
+
+        return
+    end
+
+    require('telescope.builtin').grep_string({ search = word_under_cursor })
+    vim.defer_fn(function()
+        vim.api.nvim_input('<C-q>')
+
+        vim.defer_fn(
+            function()
+                do_replace_globally(word_under_cursor, input)
+            end, 200)
+    end, 200)
+end

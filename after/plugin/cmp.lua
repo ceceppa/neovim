@@ -20,8 +20,15 @@ cmp.setup({
     sources = cmp.config.sources({
         { name = 'nvim_lsp' },
         { name = 'luasnip' }, -- For luasnip users.
-    }, {
         { name = 'buffer' },
+        {
+            name = 'spell',
+            option = {
+                keep_all_entries = false,
+                enable_in_context = function()
+                    return true
+                end,
+            },
+        },
     }),
 });
-

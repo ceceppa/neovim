@@ -20,7 +20,7 @@ return require('packer').startup(function(use)
     use {
         "ThePrimeagen/harpoon",
         branch = "harpoon2",
-        requires = { {"nvim-lua/plenary.nvim"} }
+        requires = { { "nvim-lua/plenary.nvim" } }
     }
 
     -- use('ThePrimeagen/harpoon')
@@ -38,15 +38,15 @@ return require('packer').startup(function(use)
                     inlay_hints = { enabled = true },
                 },
             }, -- Required
-            {                  -- Optional
-            'williamboman/mason.nvim',
+            {  -- Optional
+                'williamboman/mason.nvim',
                 run = function()
                     pcall(vim.cmd, 'MasonUpdate')
                 end,
             },
             { 'williamboman/mason-lspconfig.nvim' }, -- Optional
 
-              -- Autocompletion
+            -- Autocompletion
             { 'hrsh7th/nvim-cmp' },
             { 'hrsh7th/cmp-nvim-lsp' },
             { 'L3MON4D3/LuaSnip' },
@@ -86,7 +86,7 @@ return require('packer').startup(function(use)
 
     use('HiPhish/rainbow-delimiters.nvim')
 
-    use ({
+    use({
         'nvimdev/lspsaga.nvim',
         after = 'nvim-lspconfig',
         config = function()
@@ -106,7 +106,7 @@ return require('packer').startup(function(use)
 
     use 'chrisbra/Colorizer'
 
-    use {'github/copilot.vim', branch = 'release' }
+    use { 'github/copilot.vim', branch = 'release' }
 
     use 'rcarriga/nvim-notify'
 
@@ -121,7 +121,7 @@ return require('packer').startup(function(use)
         end,
     })
 
-    use ({ 'catppuccin/nvim', as = "catppuccin" })
+    use({ 'catppuccin/nvim', as = "catppuccin" })
 
     use 'windwp/nvim-ts-autotag'
     use 'famiu/bufdelete.nvim'
@@ -138,12 +138,12 @@ return require('packer').startup(function(use)
         requires = {
             'MunifTanjim/nui.nvim',
         },
-        config = function ()
-           require("dressing").setup() 
+        config = function()
+            require("dressing").setup()
         end
     }
 
-    use {'stevearc/dressing.nvim'}
+    use { 'stevearc/dressing.nvim' }
 
     use 'windwp/nvim-spectre'
     use {
@@ -153,7 +153,7 @@ return require('packer').startup(function(use)
         end
     }
 
-    use   {
+    use {
         "lukas-reineke/indent-blankline.nvim",
         config = function()
             require("ibl").setup()
@@ -168,10 +168,17 @@ return require('packer').startup(function(use)
         }
     }
 
-    use {"akinsho/toggleterm.nvim", tag = '*', config = function()
+    use { "akinsho/toggleterm.nvim", tag = '*', config = function()
         require("toggleterm").setup()
-    end}
+    end }
 
-   vim.keymap.set('n', '<leader>ps', ':so<CR>:PackerSync<CR>')
+    use {
+        "folke/which-key.nvim",
+        config = function()
+            vim.o.timeout = true
+            vim.o.timeoutlen = 300
+        end
+    }
+
+    vim.keymap.set('n', '<leader>ps', ':so<CR>:PackerSync<CR>')
 end)
-
