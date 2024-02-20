@@ -132,7 +132,7 @@ local function execute_git_command(description, args, then_callback)
     execute_command('git', description, args, then_callback)
 end
 
-vim.keymap.set('n', '<leader>gw', ':G blame<CR>', { desc = 'Git praise' });
+vim.keymap.set('n', '<leader>gw', ':G blame<CR>', { desc = '@: Git praise' });
 
 function git_pull(description, args)
     args = args or {}
@@ -153,28 +153,28 @@ function git_push()
     execute_git_command('push', { 'push' })
 end
 
-vim.keymap.set('n', '<leader>gi', function() git_pull() end, { desc = 'Git pull' });
-vim.keymap.set('n', '<leader>go', function() git_push() end, { desc = 'Git push' });
+vim.keymap.set('n', '<leader>gi', function() git_pull() end, { desc = '@: Git pull' });
+vim.keymap.set('n', '<leader>go', function() git_push() end, { desc = '@: Git push' });
 vim.keymap.set('n', '<leader>gu', function()
         git_pull('pull origin/main', { 'origin', 'main' })
     end,
-    { desc = 'Git pull origin main' });
-vim.keymap.set('n', '<leader>gn', ':G checkout -b ', { desc = 'Git checkout new branch' });
-vim.keymap.set('n', '<leader>gd', ':GitGutterDiff<cr>', { desc = 'Git diff' });
-vim.keymap.set('n', '<leader>gs', vim.cmd.Git, { desc = 'Git status' });
-vim.keymap.set('n', '<leader>gf', function() execute_git_command('fetch', { 'fetch', '-a' }) end, { desc = 'Git fetch' });
+    { desc = '@: Git pull origin main' });
+vim.keymap.set('n', '<leader>gn', ':G checkout -b ', { desc = '@: Git checkout new branch' });
+vim.keymap.set('n', '<leader>gd', ':GitGutterDiff<cr>', { desc = '@: Git diff' });
+vim.keymap.set('n', '<leader>gs', vim.cmd.Git, { desc = '@: Git status' });
+vim.keymap.set('n', '<leader>gf', function() execute_git_command('fetch', { 'fetch', '-a' }) end, { desc = '@: Git fetch' });
 vim.keymap.set('n', '<leader>gm', function()
     execute_git_command('checkout main', { 'checkout', 'main' }, function()
         git_pull()
     end)
-end, { desc = 'Git checkout main' });
-vim.keymap.set('n', '<leader>gv', ':Gvdiffsplit!<CR>', { desc = 'Git diff' });
+end, { desc = '@: Git checkout main' });
+vim.keymap.set('n', '<leader>gv', ':Gvdiffsplit!<CR>', { desc = '@: Git diff' });
 
-vim.keymap.set('n', '<leader>gg', ':LazyGit<CR>', { desc = 'Open LazyGit' });
-vim.keymap.set('n', '<leader>gh', ':LazyGitFilterCurrentFile<CR>', { desc = 'Git file history' });
-vim.keymap.set('n', '<leader>gl', ':LazyGitFilter<CR>', { desc = 'Git history' });
+vim.keymap.set('n', '<leader>gg', ':LazyGit<CR>', { desc = '@: Open LazyGit' });
+vim.keymap.set('n', '<leader>gh', ':LazyGitFilterCurrentFile<CR>', { desc = '@: Git file history' });
+vim.keymap.set('n', '<leader>gl', ':LazyGitFilter<CR>', { desc = '@: Git history' });
 
-vim.keymap.set('n', '<leader>gc', ':Telescope git_commits<CR>', { desc = 'Git commits' });
+vim.keymap.set('n', '<leader>gc', ':Telescope git_commits<CR>', { desc = '@: Git commits' });
 
 function git_fetch_and_branches()
     print('Git branches: Waiting for fetching...')
@@ -184,9 +184,9 @@ function git_fetch_and_branches()
     end)
 end
 
-vim.keymap.set('n', '<leader>gb', function() git_fetch_and_branches() end, { desc = 'Git branches' });
+vim.keymap.set('n', '<leader>gb', function() git_fetch_and_branches() end, { desc = '@: Git branches' });
 
-vim.keymap.set('n', '<leader>gx', ':Telescope git_stash<CR>', { desc = 'Git stash' });
+vim.keymap.set('n', '<leader>gx', ':Telescope git_stash<CR>', { desc = '@: Git stash' });
 
 function git_add_all_and_commit()
     local input = vim.fn.input("Enter the commit message: ")
@@ -201,7 +201,7 @@ function git_add_all_and_commit()
         end)
 end
 
-vim.keymap.set('n', '<leader>g.', [[<Cmd>lua git_add_all_and_commit()<CR>]], { desc = 'Git add all and commit' });
+vim.keymap.set('n', '<leader>g.', [[<Cmd>lua git_add_all_and_commit()<CR>]], { desc = '@: Git add all and commit' });
 
 
 local function maybe_write_and_close_window()
@@ -225,4 +225,4 @@ end
 
 vim.keymap.set('n', '<C-;>', function()
     maybe_write_and_close_window()
-end, { desc = 'Git: Write commit message and push' });
+end, { desc = '@: Git: Write commit message and push' });

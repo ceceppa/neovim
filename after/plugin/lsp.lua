@@ -60,18 +60,18 @@ lsp.on_attach(function(client, bufnr)
         vim.lsp.inlay_hint.enable(bufnr, enabled)
     end
 
-    vim.keymap.set("n", "gd", function() vim.lsp.buf.definition() end, { desc = 'Go to definition' })
-    vim.keymap.set("n", "K", function() vim.lsp.buf.hover() end, { desc = 'Show hover' })
-    vim.keymap.set("n", "<leader>i", toggle_inlay_hints, { desc = 'Toggle inlay hints' })
-    vim.keymap.set("n", "<leader>ws", function() vim.lsp.buf.workspace_symbol() end, { desc = 'Search workspace symbols' })
-    vim.keymap.set("n", "<leader>vd", function() vim.diagnostic.open_float() end, { desc = 'Open diagnostic float' })
-    vim.keymap.set("n", "]e", function() vim.diagnostic.goto_next() end, { desc = 'Go to next diagnostic/error' })
-    vim.keymap.set("n", "[e", function() vim.diagnostic.goto_prev() end, { desc = 'Go to previous diagnostic/error' })
-    vim.keymap.set("n", "<leader>ca", function() vim.lsp.buf.code_action() end, { desc = 'Code action' })
-    vim.keymap.set("n", "<C-a>", function() vim.lsp.buf.code_action() end, { desc = 'Code action' })
-    vim.keymap.set("n", "<leader>rr", function() vim.lsp.buf.references() end, { desc = 'Show references' })
-    vim.keymap.set("n", "<leader>rn", function() vim.lsp.buf.rename() end, { desc = 'Rename variable' })
-    vim.keymap.set("i", "<C-h>", function() vim.lsp.buf.signature_help() end, { desc = 'Show signature help' })
+    vim.keymap.set("n", "gd", function() vim.lsp.buf.definition() end, { desc = '@: Go to definition' })
+    vim.keymap.set("n", "K", function() vim.lsp.buf.hover() end, { desc = '@: Show hover' })
+    vim.keymap.set("n", "<leader>i", toggle_inlay_hints, { desc = '@: Toggle inlay hints' })
+    vim.keymap.set("n", "<leader>ws", function() vim.lsp.buf.workspace_symbol() end, { desc = '@: Search workspace symbols' })
+    vim.keymap.set("n", "<leader>vd", function() vim.diagnostic.open_float() end, { desc = '@: Open diagnostic float' })
+    vim.keymap.set("n", "]e", function() vim.diagnostic.goto_next() end, { desc = '@: Go to next diagnostic/error' })
+    vim.keymap.set("n", "[e", function() vim.diagnostic.goto_prev() end, { desc = '@: Go to previous diagnostic/error' })
+    vim.keymap.set("n", "<leader>ca", function() vim.lsp.buf.code_action() end, { desc = '@: Code action' })
+    vim.keymap.set("n", "<C-a>", function() vim.lsp.buf.code_action() end, { desc = '@: Code action' })
+    vim.keymap.set("n", "<leader>rr", function() vim.lsp.buf.references() end, { desc = '@: Show references' })
+    vim.keymap.set("n", "<leader>rn", function() vim.lsp.buf.rename() end, { desc = '@: Rename variable' })
+    vim.keymap.set("i", "<C-h>", function() vim.lsp.buf.signature_help() end, { desc = '@: Show signature help' })
 end)
 
 lsp.setup()
@@ -148,22 +148,3 @@ require 'lspconfig'.grammarly.setup {
     end,
     cmd = { "grammarly-languageserver", "--stdio" },
 }
-
--- local capabilities = vim.lsp.protocol.make_client_capabilities()
--- capabilities.textDocument.foldingRange = {
---     dynamicRegistration = false,
---     lineFoldingOnly = true
--- }
--- local language_servers = require("lspconfig").util.available_servers() -- or list servers manually like {'gopls', 'clangd'}
--- for _, ls in ipairs(language_servers) do
---     require('lspconfig')[ls].setup({
---         capabilities = capabilities
---         -- you can add other fields for setting up lsp server in this table
---     })
--- end
--- require('ufo').setup()
---
--- vim.o.foldcolumn = '1' -- '0' is not bad
--- vim.o.foldlevel = 10 -- Using ufo provider need a large value, feel free to decrease the value
--- vim.o.foldlevelstart = 1
--- vim.o.foldenable = false

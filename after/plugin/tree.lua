@@ -25,6 +25,6 @@ require("nvim-tree").setup({
     -- },
 })
 
-vim.api.nvim_set_keymap('n', '<leader>ft', ':NvimTreeFindFile<CR>', { noremap = true, desc = 'Show file tree' })
-vim.api.nvim_set_keymap('n', '<leader>fc', ':NvimTreeClose<CR>', { noremap = true, desc = 'Close file tree' })
-vim.api.nvim_set_keymap('n', '<leader>ff', ':NvimTreeFindFile<CR>', { noremap = true, desc = 'Focus current file' })
+vim.api.nvim_set_keymap('n', '<leader>ft', ':NvimTreeFindFile<CR>', { noremap = true, desc = '@: Show file tree' })
+vim.api.nvim_set_keymap('n', '<leader>fc', ':NvimTreeClose<CR>', { noremap = true, desc = '@: Close file tree' })
+vim.api.nvim_set_keymap('n', '<leader>ff', ':NvimTreeFindFile<CR>', { noremap = true, desc = '@: Focus current file' })
