@@ -207,7 +207,7 @@ vim.keymap.set('n', '<leader>g.', [[<Cmd>lua git_add_all_and_commit()<CR>]], { d
 local function maybe_write_and_close_window()
     local current_buffer_name = vim.fn.bufname(vim.fn.bufnr('%'))
 
-    if current_buffer_name ~= "fugitive" then
+    if string.find(current_buffer_name, "fugitive") then
         local input = vim.fn.input("Enter the commit message: ")
 
         if string.len(input) == 0 then

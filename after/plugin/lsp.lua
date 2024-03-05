@@ -51,7 +51,7 @@ lsp.on_attach(function(client, bufnr)
 
         enabled = not enabled
 
-        if not enabled then
+        if enabled then
             print("Enabling inlay_hint")
         else
             print("Disabling inlay_hint")

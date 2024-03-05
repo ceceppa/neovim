@@ -180,5 +180,7 @@ return require('packer').startup(function(use)
         end
     }
 
+    use "yuchanns/phpfmt.nvim"
+
     vim.keymap.set('n', '<leader>ps', ':so<CR>:PackerSync<CR>')
 end)

@@ -55,7 +55,7 @@ local function git_status()
         return 'u'
     end
     -- capture git status call
-    local cmd = "git -C " .. file_dir .. " status --porcelain -b 2> /dev/null"
+    local cmd = "git -C '" .. file_dir .. "' status --porcelain -b 2> /dev/null"
     local handle = assert(io.popen(cmd, 'r'), '')
     -- output contains empty line at end (removed by iterlines)
     local output = assert(handle:read('*a'))

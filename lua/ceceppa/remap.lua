@@ -1,8 +1,10 @@
 vim.g.mapleader = " "
 vim.keymap.set("n", "<leader>pv", vim.cmd.Ex, { desc = '@: directory listing' })
 
-vim.api.nvim_set_keymap('n', '<leader>fs', ':w<CR>', { noremap = true, desc = '@: Save file' })
+vim.api.nvim_set_keymap('n', '<C-S-S>', ':w<CR>', { noremap = true, desc = '@: Save file' })
 vim.api.nvim_set_keymap('n', '<C-y>', 'viwy', { noremap = true })
+vim.api.nvim_set_keymap('n', '<C-S-y>', 'Vy', { noremap = true, desc = 'Yank line' })
+vim.api.nvim_set_keymap('n', '<C-S-p>', 'Vp', { noremap = true, desc = 'Replace line with yanked', silent = true })
 
 -- Clear content within matches
 vim.api.nvim_set_keymap('n', '<C-x>', 'ciw', { noremap = true, desc = '@: Clear word under cursor' })
@@ -69,7 +71,8 @@ vim.api.nvim_set_keymap('n', '<leader>tc', ':!yarn lint && yarn ts:check<CR>',
     { noremap = true, desc = '@: TypeScript check' })
 
 -- Insert mode
-vim.api.nvim_set_keymap('i', '<C-f><C-s>', '<C-o>:w<CR>', { noremap = true, desc = '@: Save file' })
+vim.api.nvim_set_keymap('i', '<C-S-d>', '<C-o>dd', { noremap = true, desc = '@: Save file' })
+vim.api.nvim_set_keymap('i', '<C-S-s>', '<C-o>:w<CR>', { noremap = true, desc = '@: Save file' })
 vim.api.nvim_set_keymap('i', '<C-f>s', '<C-o>:w<CR>', { noremap = true, desc = '@: Save file' })
 vim.api.nvim_set_keymap('i', '<Tab>', '<C-y>', { noremap = true, desc = '@: Autocomplete' })
 vim.api.nvim_set_keymap('i', '<C-v>', '<C-r><C-o>*', { noremap = true, desc = '@: Paste' })
@@ -80,14 +83,14 @@ vim.api.nvim_set_keymap('i', '<C-q>', '<C-o>de', { noremap = true, desc = '@: De
 vim.api.nvim_set_keymap('n', "<leader>w", 'viw', { noremap = true, silent = true,  desc = '@: Select word' })
 
 -- Custom Insert
-vim.api.nvim_set_keymap('n', "<C-i>", 'wi', { noremap = true, silent = true, desc = '@: Insert after the word' })
+vim.api.nvim_set_keymap('n', "<C-S-i>", 'wi', { noremap = true, silent = true, desc = '@: Insert after the word' })
 
 -- Windows
 vim.api.nvim_set_keymap('n', '<leader>w=', ':vertical resize 120<CR>',
     { noremap = true, desc = '@: Equalize windows vertical size' })
 vim.api.nvim_set_keymap('n', '<leader>wv', '<C-w>v', { noremap = true, desc = '@: Equalize windows vertical size' })
 vim.api.nvim_set_keymap('n', '<C-n>', '<C-w>w', { noremap = true, desc = '@: Focus next window' })
-vim.api.nvim_set_keymap('n', '<C-p>', '<C-w>W', { noremap = true, desc = '@: Focus previous window' })
+vim.api.nvim_set_keymap('n', '<C-S-n>', '<C-w>W', { noremap = true, desc = '@: Focus previous window' })
 vim.keymap.set("n", "<C-f><C-f>", vim.lsp.buf.format, { desc = '@: Format file' })
 vim.keymap.set("n", "<C-f><C-j>", ':%!jq .', { desc = '@: Format JSON file' })
 vim.api.nvim_set_keymap('n', '<leader>wm', ':lua MaximizeCurrentWindow()<CR>', { noremap = true, silent = true })
