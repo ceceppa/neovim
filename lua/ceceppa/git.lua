@@ -24,7 +24,13 @@ local function show_git_notification(command, description)
             return
         end
 
-        local options = notify_record and { replace = notify_record.id, hide_from_history = hide_from_history } or {}
+        local options = notify_record and { 
+            replace = notify_record.id,
+            hide_from_history = hide_from_history,
+            on_close = function()
+                notify_record = nil
+            end
+        } or {}
 
         options.title = command .. ' ' .. description
 

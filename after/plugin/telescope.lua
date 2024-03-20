@@ -53,7 +53,6 @@ vim.keymap.set('n', '<leader>pg', builtin.git_files, { desc = '@: Search in git 
 vim.keymap.set('n', '<leader>bb', builtin.buffers, { desc = '@: Show buffers' })
 vim.keymap.set('n', '<leader>e', ':Telescope diagnostics<CR>', { desc = '@: Show errors in all open buffers' });
 vim.keymap.set('n', '<leader>ds', ':Telescope lsp_document_symbols<CR>', { desc = '@: Document symbols' });
--- vim.keymap.set('n', '<leader>m', ':Telescope marks<CR>', { desc = '@: Show all marks' });
 
 vim.keymap.set('n', 'zz', ':Telescope spell_suggest<CR>', { desc = '@: Spell suggest' });
 vim.keymap.set('n', '<leader>?', ':Telescope keymaps<CR>', { desc = '@: Keymaps' });
@@ -72,6 +71,7 @@ vim.keymap.set('n', '<leader>sa', function()
 end, { desc = '@: Repeat last grep in all files search' })
 
 vim.keymap.set('n', '<leader>sw', ':Telescope grep_string<CR>', { desc = '@: Search word under cursor' });
+vim.keymap.set('n', '<C-S-F>', ':Telescope live_grep<CR>', { desc = '@: Live grep in all files' });
 vim.keymap.set('n', '<leader>sl', ':Telescope live_grep<CR>', { desc = '@: Live grep in all files' });
 vim.keymap.set('n', '<leader>sr', ':Telescope lsp_references<CR>', { desc = '@: Search reference (Find usage)' });
 vim.keymap.set('n', '<leader>sh', ':Telescope search_history<CR>', { desc = '@: Search history' });

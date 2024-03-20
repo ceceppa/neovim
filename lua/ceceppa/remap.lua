@@ -187,6 +187,8 @@ vim.api.nvim_set_keymap('i', '<C-d>', '<C-o>:delete<CR>', { noremap = true, desc
 -- Replace all occurrences of word under cursor
 vim.api.nvim_set_keymap('n', '<leader>rg', [[<Cmd>lua replace_globally()<CR>]],
     { noremap = true, silent = true, desc = '@: Replace all occurrences of word under cursor (globally)' })
+vim.api.nvim_set_keymap('n', '<C-S-R>', [[<Cmd>lua replace_globally()<CR>]],
+    { noremap = true, silent = true, desc = '@: Replace all occurrences of word under cursor (globally)' })
 
 local function do_replace_globally(from, to)
     vim.cmd('cdo s/' .. from .. '/' .. to .. '/g | update')
@@ -196,7 +198,7 @@ end
 
 function replace_globally()
     local word_under_cursor = vim.fn.expand("<cword>")
-    local from = vim.fn.input("Replace all occurrences of: ", word_under_cursor)
+    local from = vim.fn.input("Replace (globally) all occurrences of: ", word_under_cursor)
 
     if string.len(from) == 0 then
         print("Replace operation cancelled.")
@@ -222,3 +224,7 @@ function replace_globally()
             end, 200)
     end, 200)
 end
+
+vim.keymap.set("n", "<leader>do", "<cmd>AerialToggle!<CR>", { desc = '@: Aerial toggle (document outline)' })
+vim.keymap.set("n", "<C-S-X>", "ddi", { desc = '@: Delete entire line' })
+

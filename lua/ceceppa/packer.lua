@@ -183,4 +183,11 @@ return require('packer').startup(function(use)
     use "yuchanns/phpfmt.nvim"
 
     vim.keymap.set('n', '<leader>ps', ':so<CR>:PackerSync<CR>')
+
+    use({
+        "stevearc/aerial.nvim",
+        config = function()
+            require("aerial").setup()
+        end,
+    })
 end)
