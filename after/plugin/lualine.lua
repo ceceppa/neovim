@@ -247,8 +247,11 @@ require('lualine').setup {
         lualine_y = {
             {
                 function()
-                    return 'Lines'
+                    return 'Lines changed:'
                 end,
+                separator = {
+                    right = '',
+                },
             },
             {
                 'diff',
@@ -258,7 +261,7 @@ require('lualine').setup {
                     modified = { fg = '#f0dbff' },
                     removed  = { fg = '#ffa8a8' },
                 },
-                symbols = { added = '󰐒  added: ', modified = '• 󰤀 modified: ', removed = '• 󰐓 removed: ' },
+                symbols = { added = '󰐒  Added: ', modified = '• 󰤀 Modified: ', removed = '• 󰐓 Removed: ' },
             },
         },
         lualine_z = { 'progress', 'location' }
@@ -273,6 +276,14 @@ require('lualine').setup {
     },
     tabline = {
         lualine_a = {
+            {
+                function()
+                    return vim.fn.fnamemodify(vim.fn.getcwd(), ':t')
+                end,
+                separator = {
+                    right = '',
+                },
+            },
             {
                 'filename',
                 file_status = true,     -- Displays file status (readonly status, modified status)
