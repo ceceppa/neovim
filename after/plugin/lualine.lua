@@ -133,6 +133,7 @@ local function git_status()
 
     -- save to variable
     vim.b.git_state = git_state
+    vim.b.git_show = git_state[0] or git_state[1] or git_state[2] or git_state[3] or git_state[4]
 
     return branch_col
 end
@@ -332,6 +333,10 @@ require('lualine').setup {
         lualine_x = {
             {
                 function()
+                    if vim.b.git_state == nil then
+                        return ''
+                    end
+
                     return 'Git'
                 end,
                 color = { fg = '#f00', bg = '#00575a' },
