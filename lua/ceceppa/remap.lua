@@ -52,7 +52,7 @@ vim.api.nvim_set_keymap('n', "<leader>y(", 'vi(y',
     { noremap = true, silent = true, desc = '@: Copy content inside parentheses (' })
 vim.api.nvim_set_keymap('n', "<leader>y{", 'vi{y',
     { noremap = true, silent = true, desc = '@: Copy content inside curly brackets {' })
-vim.api.nvim_set_keymap('n', "<leader>yy", 'yyp', { noremap = true, silent = true, desc = '@: Duplicate ine' })
+vim.api.nvim_set_keymap('n', "<C-S-D>", 'yyp', { noremap = true, silent = true, desc = '@: Duplicate ine' })
 vim.api.nvim_set_keymap('n', "<leader>v$", 'v$y',
     { noremap = true, silent = true, desc = '@: Copy content from cursor until end of line' })
 
@@ -71,7 +71,7 @@ vim.api.nvim_set_keymap('n', '<leader>tc', ':!yarn lint && yarn ts:check<CR>',
     { noremap = true, desc = '@: TypeScript check' })
 
 -- Insert mode
-vim.api.nvim_set_keymap('i', '<C-S-d>', '<C-o>dd', { noremap = true, desc = '@: Save file' })
+vim.api.nvim_set_keymap('i', '<C-S-x>', '<C-o>dd', { noremap = true, desc = '@: Save file' })
 vim.api.nvim_set_keymap('i', '<C-S-s>', '<C-o>:w<CR>', { noremap = true, desc = '@: Save file' })
 vim.api.nvim_set_keymap('i', '<C-f>s', '<C-o>:w<CR>', { noremap = true, desc = '@: Save file' })
 vim.api.nvim_set_keymap('i', '<Tab>', '<C-y>', { noremap = true, desc = '@: Autocomplete' })
@@ -227,4 +227,7 @@ end
 
 vim.keymap.set("n", "<leader>do", "<cmd>AerialToggle!<CR>", { desc = '@: Aerial toggle (document outline)' })
 vim.keymap.set("n", "<C-S-X>", "ddi", { desc = '@: Delete entire line' })
+
+vim.keymap.set("n", "<C-.>", "V>", { desc = '@: Indent entire line' })
+vim.keymap.set("n", "<C-S-.>", "V<", { desc = '@: Deintend entire line' })
 

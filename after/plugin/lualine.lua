@@ -204,7 +204,7 @@ end
 require('lualine').setup {
     options = {
         icons_enabled = true,
-        theme = 'ruvbox_dark',
+        theme = 'everforest',
         component_separators = { left = '', right = '' },
         section_separators = { left = '', right = '' },
         disabled_filetypes = {
@@ -226,7 +226,7 @@ require('lualine').setup {
             {
                 'branch',
                 color =
-                    function(section)
+                    function()
                         local gs = git_status()
                         if gs == 'd' then
                             return { fg = '#BFAAEE' }
@@ -242,7 +242,19 @@ require('lualine').setup {
             },
         },
         lualine_x = {
-            'diagnostics',
+            {
+                function()
+                    return 'Diagnostics'
+                end,
+                separator = {
+                    right = '',
+                },
+            },
+            {
+                'diagnostics',
+                      sections = { 'error', 'warn', 'info', 'hint' },
+                 symbols = {error = ' Error(s):', warn = '•   Warning(s): ', info = '•  Info: ', hint = '•  Hint: '},
+             },
         },
         lualine_y = {
             {
