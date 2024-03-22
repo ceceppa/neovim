@@ -337,7 +337,7 @@ require('lualine').setup {
                         return 'Git'
                     end
 
-                    return nil
+                    return ''
                 end,
                 color = { fg = '#f00', bg = '#00575a' },
                 separator = {
