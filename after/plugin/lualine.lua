@@ -91,10 +91,10 @@ local function git_status()
         ahead = tonumber(ahead)
         behind = tonumber(behind)
         if behind ~= nil then
-            git_state[1] = '󰶹 To pull: ' .. tostring(behind) .. ' '
+            git_state[1] = '• 󰶹 To pull: ' .. tostring(behind) .. ' '
         end
         if ahead ~= nil then
-            git_state[1] = git_state[1] .. '󰶼 To push: ' .. tostring(ahead) .. ' '
+            git_state[1] = git_state[1] .. '• 󰶼 To push: ' .. tostring(ahead) .. ' '
         end
     end
 
@@ -122,13 +122,13 @@ local function git_status()
 
     -- build output string
     if git_num[1] ~= 0 then
-        git_state[2] = '󱣫 Staged: ' .. git_num[1]
+        git_state[2] = '• 󱣫 Staged: ' .. git_num[1]
     end
     if git_num[2] ~= 0 then
-        git_state[3] = '󰷉 Modified: ' .. git_num[2]
+        git_state[3] = '• 󰷉 Modified: ' .. git_num[2]
     end
     if git_num[3] ~= 0 then
-        git_state[4] = ' Untracked: ' .. git_num[3]
+        git_state[4] = '•  Untracked: ' .. git_num[3]
     end
 
     -- save to variable
@@ -249,6 +249,7 @@ require('lualine').setup {
                 separator = {
                     right = '',
                 },
+                padding = { left = 1, right = 0 },
             },
             {
                 'diagnostics',
@@ -265,6 +266,7 @@ require('lualine').setup {
                     right = '',
                     left = '',
                 },
+                padding = { left = 1, right = 0 },
             },
             {
                 'diff',
@@ -274,7 +276,7 @@ require('lualine').setup {
                     modified = { fg = '#f0dbff' },
                     removed  = { fg = '#ffa8a8' },
                 },
-                symbols = { added = '󰐒  Added: ', modified = '• 󰤀 Modified: ', removed = '• 󰐓 Removed: ' },
+                symbols = { added = '• 󰐒  Added: ', modified = '• 󰤀 Modified: ', removed = '• 󰐓 Removed: ' },
             },
         },
         lualine_z = { 'progress', 'location' }
@@ -332,37 +334,34 @@ require('lualine').setup {
                 function()
                     return 'Git'
                 end,
-                color = { fg = '#f00', bg = '#44475a' },
+                color = { fg = '#f00', bg = '#00575a' },
                 separator = {
                     left = '',
                 },
+                padding = { left = 1, right = 0 },
             },
             {
                 -- head status
                 "vim.b.git_state[1]",
-                color = function()
-                    if vim.b and vim.b.git_state[1]:find("^ %w+ $") ~= nil then
-                        return { fg = '#F49B55', bg = '#44475a' }
-                    end
-                end,
+                color = { fg = '#f00', bg = '#00575a' },
                 padding = { left = 1, right = 0 },
             },
             {
                 -- untracked files
                 "vim.b.git_state[4]",
-                color = { fg = '#F6B11E', bg = '#44475a' },
+                color = { fg = '#f00', bg = '#00575a' },
                 padding = { left = 1, right = 1 }
             },
             {
                 -- modified files
                 "vim.b.git_state[3]",
-                color = { fg = '#f0dbff', bg = '#44475a' },
+                color = { fg = '#f00', bg = '#00575a' },
                 padding = { left = 1, right = 1 }
             },
             {
                 -- staged files
                 "vim.b.git_state[2]",
-                color = { fg = '#A4C379', bg = '#44475a' },
+                color = { fg = '#f00', bg = '#00575a' },
                 padding = { left = 1, right = 1 }
             },
         },
