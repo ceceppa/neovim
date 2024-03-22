@@ -91,10 +91,10 @@ local function git_status()
         ahead = tonumber(ahead)
         behind = tonumber(behind)
         if behind ~= nil then
-            git_state[1] = '󰶹 behind:' .. tostring(behind) .. ' '
+            git_state[1] = '󰶹 To pull: ' .. tostring(behind) .. ' '
         end
         if ahead ~= nil then
-            git_state[1] = git_state[1] .. '󰶼 ahead:' .. tostring(ahead) .. ' '
+            git_state[1] = git_state[1] .. '󰶼 To push: ' .. tostring(ahead) .. ' '
         end
     end
 
