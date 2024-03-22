@@ -91,10 +91,10 @@ local function git_status()
         ahead = tonumber(ahead)
         behind = tonumber(behind)
         if behind ~= nil then
-            git_state[1] = '󰶹 ' .. tostring(behind) .. ' '
+            git_state[1] = '󰶹 behind:' .. tostring(behind) .. ' '
         end
         if ahead ~= nil then
-            git_state[1] = git_state[1] .. '󰶼 ' .. tostring(ahead) .. ' '
+            git_state[1] = git_state[1] .. '󰶼 ahead:' .. tostring(ahead) .. ' '
         end
     end
 
@@ -259,10 +259,11 @@ require('lualine').setup {
         lualine_y = {
             {
                 function()
-                    return 'Lines changed:'
+                    return 'Lines changed'
                 end,
                 separator = {
                     right = '',
+                    left = '',
                 },
             },
             {
@@ -301,13 +302,7 @@ require('lualine').setup {
                 file_status = true,     -- Displays file status (readonly status, modified status)
                 newfile_status = false, -- Display new file status (new file means no write after created)
                 path = 1,               -- 0: Just the filename
-                -- 1: Relative path
-                -- 2: Absolute path
-                -- 3: Absolute path, with tilde as the home directory
-                -- 4: Filename and parent dir, with tilde as the home directory
-
                 shorting_target = 40, -- Shortens path to leave 40 spaces in the window
-                -- for other components. (terrible name, any suggestions?)
                 symbols = {
                     modified = '( modified) ', -- Text to show when the file is modified.
                     readonly = '( readonly)', -- Text to show when the file is non-modifiable or readonly.
