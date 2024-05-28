@@ -190,4 +190,6 @@ return require('packer').startup(function(use)
             require("aerial").setup()
         end,
     })
+
+    use 'stephpy/vim-php-cs-fixer'
 end)

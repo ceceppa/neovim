@@ -41,24 +41,21 @@ lsp.set_preferences({
 lsp.on_attach(function(client, bufnr)
     local opts = { buffer = bufnr, remap = false }
 
-    if client.server_capabilities.inlayHintProvider and vim.lsp.inlay_hint then
-        vim.lsp.inlay_hint.enable(bufnr, false)
-    end
-
-    local enabled = true
     local function toggle_inlay_hints()
-        local bufnr = vim.api.nvim_get_current_buf()
+        local enabled = vim.lsp.inlay_hint.is_enabled()
 
-        enabled = not enabled
-
-        if enabled then
+        if not enabled then
             print("Enabling inlay_hint")
         else
             print("Disabling inlay_hint")
         end
 
-        vim.lsp.inlay_hint.enable(bufnr, enabled)
+        vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
     end
+
+    -- if client.server_capabilities.inlayHintProvider and vim.lsp.inlay_hint then
+    --     toggle_inlay_hints()
+    -- end
 
     vim.keymap.set("n", "gd", function() vim.lsp.buf.definition() end, { desc = '@: Go to definition' })
     vim.keymap.set("n", "K", function() vim.lsp.buf.hover() end, { desc = '@: Show hover' })

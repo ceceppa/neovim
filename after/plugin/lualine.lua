@@ -254,9 +254,14 @@ require('lualine').setup {
             },
             {
                 'diagnostics',
-                      sections = { 'error', 'warn', 'info', 'hint' },
-                 symbols = {error = ' Error(s):', warn = '•   Warning(s): ', info = '•  Info: ', hint = '•  Hint: '},
-             },
+                sections = { 'error', 'warn', 'info', 'hint' },
+                symbols = {
+                    error = ' Error(s):',
+                    warn = '•   Warning(s): ',
+                    info = '•  Info: ',
+                    hint = '•  Hint: '
+                },
+            },
         },
         lualine_y = {
             {
@@ -302,9 +307,9 @@ require('lualine').setup {
             },
             {
                 'filename',
-                file_status = true,     -- Displays file status (readonly status, modified status)
+                file_status = true, -- Displays file status (readonly status, modified status)
                 newfile_status = false, -- Display new file status (new file means no write after created)
-                path = 1,               -- 0: Just the filename
+                path = 1, -- 0: Just the filename
                 shorting_target = 40, -- Shortens path to leave 40 spaces in the window
                 symbols = {
                     modified = '( modified) ', -- Text to show when the file is modified.
@@ -314,12 +319,12 @@ require('lualine').setup {
                 },
                 color = {
                     bg = '#5f6a8e', -- Background color
-                    fg = '#fff', -- Text color
+                    fg = '#fff',    -- Text color
                 },
                 separator = {
                     right = '',
                 },
-            }
+            },
         },
         lualine_b = {
             {
@@ -337,7 +342,7 @@ require('lualine').setup {
                         return 'Git'
                     end
 
-                    return ''
+                    return 'Git:   '
                 end,
                 color = { fg = '#f00', bg = '#00575a' },
                 separator = {
@@ -371,7 +376,15 @@ require('lualine').setup {
             },
         },
         lualine_y = {
-            'encoding', 'fileformat', 'filetype',
+            'encoding',
+            'fileformat',
+            {
+                'filetype',
+                color = { fg = '#fff', bg = '#2a2a2a' },
+                separator = {
+                    left = '',
+                },
+            }
         },
         lualine_z = {
             "os.date('%A, %d %B')", 'data', "require'lsp-status'.status()"

@@ -1,6 +1,7 @@
 require("ceceppa.remap")
 require("ceceppa.set")
 require("ceceppa.git")
+require("ceceppa.autocmd")
 
 vim.api.nvim_set_option("clipboard","unnamed")
 
