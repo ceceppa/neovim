@@ -105,6 +105,7 @@ local function execute_command(command, description, args, then_callback)
     local output = {}
 
     local on_complete = show_git_notification(command, description)
+    local should_ignore_error = false
 
     Job:new({
         command = command,
@@ -113,7 +114,11 @@ local function execute_command(command, description, args, then_callback)
             table.insert(output, data)
         end,
         on_stderr = function(_, data)
-            table.insert(output, data)
+           if not string.find(data, "packageManager") and not string.find(data, "Corepack must") then
+               table.insert(output, data)
+           else
+               should_ignore_error = true
+           end
         end,
         on_exit = function(j, return_val)
             if return_val == 0 then
@@ -124,6 +129,11 @@ local function execute_command(command, description, args, then_callback)
                     end)
                 end
             else
+                if should_ignore_error then
+                    on_complete("success")
+                    return
+                end
+
                 on_complete("error")
 
                 vim.schedule(function()
@@ -151,7 +161,10 @@ function git_pull(description, args)
     end
 
     execute_git_command(description, pull_command, function()
-        execute_command('yarn', 'install', { 'install' })
+        -- if package.json exists
+        if vim.fn.filereadable('package.json') == 1 then
+            execute_command('yarn', 'install', { 'install' })
+        end
     end)
 end
 
