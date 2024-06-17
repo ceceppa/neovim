@@ -237,11 +237,6 @@ require('lualine').setup {
                     end
             },
         },
-        lualine_c = {
-            {
-                get_current_diagnostic_value,
-            },
-        },
         lualine_x = {
             {
                 function()
