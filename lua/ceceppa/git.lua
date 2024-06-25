@@ -24,7 +24,7 @@ local function show_git_notification(command, description)
             return
         end
 
-        local options = notify_record and { 
+        local options = notify_record and {
             replace = notify_record.id,
             hide_from_history = hide_from_history,
             on_close = function()
@@ -114,11 +114,11 @@ local function execute_command(command, description, args, then_callback)
             table.insert(output, data)
         end,
         on_stderr = function(_, data)
-           if not string.find(data, "packageManager") and not string.find(data, "Corepack must") then
-               table.insert(output, data)
-           else
-               should_ignore_error = true
-           end
+            if not string.find(data, "packageManager") and not string.find(data, "Corepack must") then
+                table.insert(output, data)
+            else
+                should_ignore_error = true
+            end
         end,
         on_exit = function(j, return_val)
             if return_val == 0 then
@@ -145,7 +145,39 @@ local function execute_command(command, description, args, then_callback)
 end
 
 local function execute_git_command(description, args, then_callback)
-    execute_command('git', 'git ' .. description, args, then_callback)
+    execute_command('git', description, args, then_callback)
+end
+
+local function get_commit_message()
+    local prompt = "Prepend: ! = Force push | ~ = Push with no verify | ? = Push with no verify and force push"
+    local input = vim.fn.input(prompt .. "\nEnter the commit message: ")
+
+    if string.len(input) == 0 then
+        return nil
+    end
+
+    return input
+end
+
+local function get_push_params(input)
+    local git_params = { 'commit', '-m' }
+
+    if input:sub(1, 1) == '!' then
+        table.insert(git_params, input:sub(2))
+        table.insert(git_params, '--force')
+        input = input:sub(2)
+    elseif input:sub(1, 1) == '~' then
+        table.insert(git_params, input:sub(2))
+        table.insert(git_params, '--no-verify')
+    elseif input:sub(1, 1) == '?' then
+        table.insert(git_params, input:sub(2))
+        table.insert(git_params, '--no-verify')
+        table.insert(git_params, '--force')
+    else
+        table.insert(git_params, input)
+    end
+
+    return git_params
 end
 
 vim.keymap.set('n', '<leader>gw', ':G blame<CR>', { desc = '@: Git praise' });
@@ -168,8 +200,14 @@ function git_pull(description, args)
     end)
 end
 
-function git_push()
-    execute_git_command('push', { 'push' })
+function git_push(extra_params)
+    local push_command = { 'push' }
+
+    if extra_params then
+        push_command.concat(extra_params)
+    end
+
+    execute_git_command('push', push_command)
 end
 
 vim.keymap.set('n', '<leader>gi', function() git_pull() end, { desc = '@: Git pull' });
@@ -181,7 +219,8 @@ vim.keymap.set('n', '<leader>gu', function()
 vim.keymap.set('n', '<leader>gn', ':G checkout -b ', { desc = '@: Git checkout new branch' });
 vim.keymap.set('n', '<leader>gd', ':GitGutterDiff<cr>', { desc = '@: Git diff' });
 vim.keymap.set('n', '<leader>gs', vim.cmd.Git, { desc = '@: Git status' });
-vim.keymap.set('n', '<leader>gf', function() execute_git_command('fetch', { 'fetch', '-a' }) end, { desc = '@: Git fetch' });
+vim.keymap.set('n', '<leader>gf', function() execute_git_command('fetch', { 'fetch', '-a' }) end,
+    { desc = '@: Git fetch' });
 vim.keymap.set('n', '<leader>gm', function()
     execute_git_command('checkout main', { 'checkout', 'main' }, function()
         git_pull()
@@ -208,64 +247,39 @@ vim.keymap.set('n', '<leader>gb', function() git_fetch_and_branches() end, { des
 vim.keymap.set('n', '<leader>gx', ':Telescope git_stash<CR>', { desc = '@: Git stash' });
 
 function git_add_all_and_commit()
-    local git_params = get_git_params_and_commit_message()
-
-    if type(next(git_params)) == "nil" then
+    local input = get_commit_message()
+    
+    if not input then
         return
     end
 
+    local push_params = get_push_params(input)
 
-    execute_git_command("adding all commit", git_params,
+
+    execute_git_command("adding all commit", { 'commit', '-am', input},
         function()
-            git_push()
+            git_push(push_params)
         end)
 end
 
 vim.keymap.set('n', '<leader>g.', [[<Cmd>lua git_add_all_and_commit()<CR>]], { desc = '@: Git add all and commit' });
 
-local function get_git_params_and_commit_message()
-    local prompt = "Prepend: ! = Force push | ~ = Push with no verify | ? = Push with no verify and force push"
-    local input = vim.fn.input(prompt .. "\nEnter the commit message: ")
-
-    if string.len(input) == 0 then
-        return {}
-    end
-
-    local git_params = { 'commit', '-m' }
-
-    if input:sub(1, 1) == '!' then
-        table.insert(git_params, input:sub(2))
-        table.insert(git_params, '--force')
-        input = input:sub(2)
-    elseif input:sub(1, 1) == '~' then
-        table.insert(git_params, input:sub(2))
-        table.insert(git_params, '--no-verify')
-    elseif input:sub(1, 1) == '?' then
-        table.insert(git_params, input:sub(2))
-        table.insert(git_params, '--no-verify')
-        table.insert(git_params, '--force')
-    else
-        table.insert(git_params, input)
-    end
-
-    return git_params
-end
-
 local function maybe_write_and_close_window()
     local current_buffer_name = vim.fn.bufname(vim.fn.bufnr('%'))
 
     if string.find(current_buffer_name, "fugitive") then
-        local git_params = get_git_params_and_commit_message()
+        local input = get_commit_message()
 
-        if type(next(git_params)) == "nil" then
+        if not input then
             return
         end
 
+        local push_params = get_push_params(input)
         vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<C-o>:wq<CR>', true, true, true), 'n', true)
 
-        execute_git_command("commit with message", git_params,
+        execute_git_command("commit with message", { 'commit', '-m', input },
             function()
-                git_push()
+                git_push(push_params)
             end)
     end
 end
