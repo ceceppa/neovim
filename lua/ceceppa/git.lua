@@ -156,25 +156,23 @@ local function get_commit_message()
         return nil
     end
 
+    if input:sub(1, 1) == '!' or input:sub(1, 1) == '~' or input:sub(1, 1) == '?' then
+        input = input:sub(2)
+    end
+
     return input
 end
 
 local function get_push_params(input)
-    local git_params = { 'commit', '-m' }
+    local git_params = { 'push' }
 
     if input:sub(1, 1) == '!' then
-        table.insert(git_params, input:sub(2))
         table.insert(git_params, '--force')
-        input = input:sub(2)
     elseif input:sub(1, 1) == '~' then
-        table.insert(git_params, input:sub(2))
         table.insert(git_params, '--no-verify')
     elseif input:sub(1, 1) == '?' then
-        table.insert(git_params, input:sub(2))
         table.insert(git_params, '--no-verify')
         table.insert(git_params, '--force')
-    else
-        table.insert(git_params, input)
     end
 
     return git_params
@@ -200,14 +198,10 @@ function git_pull(description, args)
     end)
 end
 
-function git_push(extra_params)
-    local push_command = { 'push' }
+function git_push(input)
+    local push_params = get_push_params(input)
 
-    if extra_params then
-        table.concat(push_command, extra_params)
-    end
-
-    execute_git_command('push', push_command)
+    execute_git_command('push', push_params)
 end
 
 vim.keymap.set('n', '<leader>gi', function() git_pull() end, { desc = '@: Git pull' });
@@ -248,17 +242,15 @@ vim.keymap.set('n', '<leader>gx', ':Telescope git_stash<CR>', { desc = '@: Git s
 
 function git_add_all_and_commit()
     local input = get_commit_message()
-    
+
     if not input then
         return
     end
 
-    local push_params = get_push_params(input)
 
-
-    execute_git_command("adding all commit", { 'commit', '-am', input},
+    execute_git_command("adding all commit", { 'commit', '-am', input },
         function()
-            git_push(push_params)
+            git_push(input)
         end)
 end
 
@@ -274,12 +266,11 @@ local function maybe_write_and_close_window()
             return
         end
 
-        local push_params = get_push_params(input)
         vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<C-o>:wq<CR>', true, true, true), 'n', true)
 
         execute_git_command("commit with message", { 'commit', '-m', input },
             function()
-                git_push(push_params)
+                git_push(input)
             end)
     end
 end
