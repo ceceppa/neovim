@@ -166,6 +166,10 @@ end
 local function get_push_params(input)
     local git_params = { 'push' }
 
+    if not input then
+        return git_params
+    end
+
     if input:sub(1, 1) == '!' then
         table.insert(git_params, '--force')
     elseif input:sub(1, 1) == '~' then
