@@ -38,29 +38,47 @@ lsp.set_preferences({
     }
 })
 
-lsp.on_attach(function(client, bufnr)
-    local opts = { buffer = bufnr, remap = false }
+lsp.on_attach(function(client)
+    enabled = vim.lsp.inlay_hint.is_enabled()
+    are_inlay_hints_available = are_inlay_hints_available or client.server_capabilities.inlayHintProvider and vim.lsp.inlay_hint
+
+    local function enable_inlay_hints()
+        if are_inlay_hints_available then
+            -- print("Enabling inlay_hint")
+
+            vim.lsp.inlay_hint.enable(true)
+
+            enabled = true
+        end
+    end
+
+    local function disable_inlay_hints()
+        if are_inlay_hints_available then
+            print("Disabling inlay_hint")
+
+            vim.lsp.inlay_hint.enable(false)
+
+            enabled = false
+        end
+    end
 
     local function toggle_inlay_hints()
         local enabled = vim.lsp.inlay_hint.is_enabled()
 
         if not enabled then
-            print("Enabling inlay_hint")
+            enable_inlay_hints()
         else
-            print("Disabling inlay_hint")
+            disable_inlay_hints()
         end
-
-        vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
     end
 
-    -- if client.server_capabilities.inlayHintProvider and vim.lsp.inlay_hint then
-    --     toggle_inlay_hints()
-    -- end
+    enable_inlay_hints()
 
     vim.keymap.set("n", "gd", function() vim.lsp.buf.definition() end, { desc = '@: Go to definition' })
     vim.keymap.set("n", "K", function() vim.lsp.buf.hover() end, { desc = '@: Show hover' })
     vim.keymap.set("n", "<leader>i", toggle_inlay_hints, { desc = '@: Toggle inlay hints' })
-    vim.keymap.set("n", "<leader>ws", function() vim.lsp.buf.workspace_symbol() end, { desc = '@: Search workspace symbols' })
+    vim.keymap.set("n", "<leader>ws", function() vim.lsp.buf.workspace_symbol() end,
+        { desc = '@: Search workspace symbols' })
     vim.keymap.set("n", "<leader>vd", function() vim.diagnostic.open_float() end, { desc = '@: Open diagnostic float' })
     vim.keymap.set("n", "]e", function() vim.diagnostic.goto_next() end, { desc = '@: Go to next diagnostic/error' })
     vim.keymap.set("n", "[e", function() vim.diagnostic.goto_prev() end, { desc = '@: Go to previous diagnostic/error' })
@@ -69,6 +87,36 @@ lsp.on_attach(function(client, bufnr)
     vim.keymap.set("n", "<leader>rr", function() vim.lsp.buf.references() end, { desc = '@: Show references' })
     vim.keymap.set("n", "<leader>rn", function() vim.lsp.buf.rename() end, { desc = '@: Rename variable' })
     vim.keymap.set("i", "<C-h>", function() vim.lsp.buf.signature_help() end, { desc = '@: Show signature help' })
+
+    -- Insert Mode changed
+    vim.api.nvim_create_autocmd("ModeChanged", {
+        pattern = { "*:[iI\x16]*" },
+        callback = function()
+            disable_inlay_hints()
+        end,
+    })
+
+    vim.api.nvim_create_autocmd("ModeChanged", {
+        pattern = { "[iI\x16]*:*" },
+        callback = function()
+            enable_inlay_hints()
+        end,
+    })
+
+    -- Visual mode changed
+    vim.api.nvim_create_autocmd("ModeChanged", {
+        pattern = { "*:[vV\x16]*" },
+        callback = function()
+            disable_inlay_hints()
+        end,
+    })
+
+    vim.api.nvim_create_autocmd("ModeChanged", {
+        pattern = { "[vV\x16]*:*" },
+        callback = function()
+            enable_inlay_hints()
+        end,
+    })
 end)
 
 lsp.setup()
@@ -127,7 +175,7 @@ lspconfig.tsserver.setup({
                 includeInlayEnumMemberValueHints = true,
                 includeInlayFunctionLikeReturnTypeHints = true,
                 includeInlayFunctionParameterTypeHints = true,
-                includeInlayParameterNameHints = "all", -- 'none' | 'literals' | 'all';
+                includeInlayParameterNameHints = "literals", -- 'none' | 'literals' | 'all';
                 includeInlayParameterNameHintsWhenArgumentMatchesName = true,
                 includeInlayPropertyDeclarationTypeHints = true,
                 includeInlayVariableTypeHints = true,
@@ -146,7 +194,7 @@ require 'lspconfig'.grammarly.setup {
     cmd = { "grammarly-languageserver", "--stdio" },
 }
 
-require'lspconfig'.phpactor.setup{
+require 'lspconfig'.phpactor.setup {
     on_attach = on_attach,
     init_options = {
         ["language_server_phpstan.enabled"] = false,
