@@ -32,10 +32,10 @@ local function show_git_notification(command, description)
             end,
         } or {}
 
-        options.title = command .. ' ' .. description
+        options.title = command
 
         notify_record = vim.notify(
-            format_notification_msg(description .. 'ing', spinner_idx),
+            format_notification_msg(description, spinner_idx),
             nil,
             options
         )
@@ -145,7 +145,7 @@ local function execute_command(command, description, args, then_callback)
 end
 
 local function execute_git_command(description, args, then_callback)
-    execute_command('git', description, args, then_callback)
+    execute_command('git', 'git ' .. description, args, then_callback)
 end
 
 vim.keymap.set('n', '<leader>gw', ':G blame<CR>', { desc = '@: Git praise' });
@@ -208,13 +208,14 @@ vim.keymap.set('n', '<leader>gb', function() git_fetch_and_branches() end, { des
 vim.keymap.set('n', '<leader>gx', ':Telescope git_stash<CR>', { desc = '@: Git stash' });
 
 function git_add_all_and_commit()
-    local input = vim.fn.input("Enter the commit message: ")
+    local git_params = get_git_params_and_commit_message()
 
-    if string.len(input) == 0 then
+    if type(next(git_params)) == "nil" then
         return
     end
 
-    execute_git_command("adding all commit", { 'commit', '-am', input },
+
+    execute_git_command("adding all commit", git_params,
         function()
             git_push()
         end)
@@ -224,7 +225,7 @@ vim.keymap.set('n', '<leader>g.', [[<Cmd>lua git_add_all_and_commit()<CR>]], { d
 
 local function get_git_params_and_commit_message()
     local prompt = "Prepend: ! = Force push | ~ = Push with no verify | ? = Push with no verify and force push"
-    local input = vim.fn.input(prompt .. "\nEnter the commit message:")
+    local input = vim.fn.input(prompt .. "\nEnter the commit message: ")
 
     if string.len(input) == 0 then
         return {}
