@@ -104,7 +104,7 @@ end
 local function execute_command(command, description, args, then_callback)
     local output = {}
 
-    local on_complete = show_git_notification(command, description)
+    local on_complete = show_git_notification(command .. " " .. table.concat(args, ' ') , description)
     local should_ignore_error = false
 
     Job:new({
@@ -148,9 +148,10 @@ local function execute_git_command(description, args, then_callback)
     execute_command('git', description, args, then_callback)
 end
 
-local function get_commit_message()
+ function get_commit_message()
     local prompt = "Prepend: ! = Force push | ~ = Push with no verify | ? = Push with no verify and force push"
     local input = vim.fn.input(prompt .. "\nEnter the commit message: ")
+    local original_input = input
 
     if string.len(input) == 0 then
         return nil
@@ -160,7 +161,7 @@ local function get_commit_message()
         input = input:sub(2)
     end
 
-    return input
+    return { input, original_input }
 end
 
 local function get_push_params(input)
@@ -204,9 +205,6 @@ end
 
 function git_push(input)
     local push_params = get_push_params(input)
-
-    print("debug")
-    print(vim.inspect(push_params))
 
     execute_git_command('push', push_params)
 end
@@ -255,9 +253,9 @@ function git_add_all_and_commit()
     end
 
 
-    execute_git_command("adding all commit", { 'commit', '-am', input },
+    execute_git_command("adding all commit", { 'commit', '-am', input[1] },
         function()
-            git_push(input)
+            git_push(input[2])
         end)
 end
 
@@ -275,9 +273,9 @@ local function maybe_write_and_close_window()
 
         vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<C-o>:wq<CR>', true, true, true), 'n', true)
 
-        execute_git_command("commit with message", { 'commit', '-m', input },
+        execute_git_command("commit with message", { 'commit', '-m', input[1] },
             function()
-                git_push(input)
+                git_push(input[2])
             end)
     end
 end
