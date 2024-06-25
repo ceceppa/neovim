@@ -205,6 +205,9 @@ end
 function git_push(input)
     local push_params = get_push_params(input)
 
+    print("debug")
+    print(vim.inspect(push_params))
+
     execute_git_command('push', push_params)
 end
 
