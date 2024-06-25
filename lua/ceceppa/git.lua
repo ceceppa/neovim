@@ -35,7 +35,7 @@ local function show_git_notification(command, description)
         options.title = command
 
         notify_record = vim.notify(
-            format_notification_msg(description .. '(ing...)', spinner_idx),
+            format_notification_msg(description .. 'ing...', spinner_idx),
             nil,
             options
         )
