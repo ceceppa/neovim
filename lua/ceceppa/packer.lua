@@ -192,14 +192,16 @@ return require('packer').startup(function(use)
     })
 
     use 'stephpy/vim-php-cs-fixer'
-    use { "LintaoAmons/bookmarks.nvim",
-    config = function ()
-        require("bookmarks").setup( {
-            json_db_path = vim.fs.normalize(vim.fn.stdpath("config") .. "/bookmarks.db.json"),
-            signs = {
-                mark = { icon = "", color = "grey" },
-            },
-        })
-    end
-}
+    use { 
+        "LintaoAmons/bookmarks.nvim",
+        config = function ()
+            require("bookmarks").setup( {
+                json_db_path = vim.fs.normalize(vim.fn.stdpath("config") .. "/bookmarks.db.json"),
+                signs = {
+                    mark = { icon = "", color = "grey" },
+                },
+            })
+        end
+    }
+
 end)

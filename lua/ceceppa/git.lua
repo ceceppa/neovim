@@ -29,7 +29,7 @@ local function show_git_notification(command, description)
             hide_from_history = hide_from_history,
             on_close = function()
                 notify_record = nil
-            end
+            end,
         } or {}
 
         options.title = command .. ' ' .. description
@@ -222,25 +222,53 @@ end
 
 vim.keymap.set('n', '<leader>g.', [[<Cmd>lua git_add_all_and_commit()<CR>]], { desc = '@: Git add all and commit' });
 
+local function get_git_params_and_commit_message()
+    local prompt = "Prepend: ! = Force push | ~ = Push with no verify | ? = Push with no verify and force push"
+    local input = vim.fn.input(prompt .. "\nEnter the commit message:")
+
+    if string.len(input) == 0 then
+        return {}
+    end
+
+    local git_params = { 'commit', '-m' }
+
+    if input:sub(1, 1) == '!' then
+        table.insert(git_params, input:sub(2))
+        table.insert(git_params, '--force')
+        input = input:sub(2)
+    elseif input:sub(1, 1) == '~' then
+        table.insert(git_params, input:sub(2))
+        table.insert(git_params, '--no-verify')
+    elseif input:sub(1, 1) == '?' then
+        table.insert(git_params, input:sub(2))
+        table.insert(git_params, '--no-verify')
+        table.insert(git_params, '--force')
+    else
+        table.insert(git_params, input)
+    end
+
+    return git_params
+end
 
 local function maybe_write_and_close_window()
     local current_buffer_name = vim.fn.bufname(vim.fn.bufnr('%'))
 
     if string.find(current_buffer_name, "fugitive") then
-        local input = vim.fn.input("Enter the commit message: ")
+        local git_params = get_git_params_and_commit_message()
 
-        if string.len(input) == 0 then
+        if type(next(git_params)) == "nil" then
             return
         end
 
         vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<C-o>:wq<CR>', true, true, true), 'n', true)
 
-        execute_git_command("commit with message: " .. input, { 'commit', '-m', input },
+        execute_git_command("commit with message", git_params,
             function()
                 git_push()
             end)
     end
 end
+
 
 vim.keymap.set('n', '<C-;>', function()
     maybe_write_and_close_window()
