@@ -204,7 +204,7 @@ function git_push(extra_params)
     local push_command = { 'push' }
 
     if extra_params then
-        push_command.concat(extra_params)
+        table.concat(push_command, extra_params)
     end
 
     execute_git_command('push', push_command)
