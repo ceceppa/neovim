@@ -211,6 +211,7 @@ end
 
 vim.keymap.set('n', '<leader>gi', function() git_pull() end, { desc = '@: Git pull' });
 vim.keymap.set('n', '<leader>go', function() git_push() end, { desc = '@: Git push' });
+vim.keymap.set('n', '<leader>gO', function() git_push('~') end, { desc = '@: Git push --no-verify' });
 vim.keymap.set('n', '<leader>gu', function()
         git_pull('pull origin/main', { 'origin', 'main' })
     end,
