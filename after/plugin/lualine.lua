@@ -218,7 +218,7 @@ require('lualine').setup {
         refresh = {
             statusline = 5000,
             tabline = 5000,
-            winbar = 5000,
+            winbar = 1000,
         }
     },
     sections = {
@@ -273,9 +273,9 @@ require('lualine').setup {
                 'diff',
                 colored = true,
                 diff_color = {
-                    added    = { fg = '#73ff00' },
-                    modified = { fg = '#f0dbff' },
-                    removed  = { fg = '#ffa8a8' },
+                    added    = { fg = '#73ff00', bg = '#2a2a2a' },
+                    modified = { fg = '#f0dbff', bg = '#2a2a2a' },
+                    removed  = { fg = '#ffa8a8', bg = '#2a2a2a' },
                 },
                 symbols = { added = '• 󰐒  Added: ', modified = '• 󰤀 Modified: ', removed = '• 󰐓 Removed: ' },
             },
@@ -294,10 +294,15 @@ require('lualine').setup {
         lualine_a = {
             {
                 function()
+                    -- path
                     return vim.fn.fnamemodify(vim.fn.getcwd(), ':t')
                 end,
                 separator = {
                     right = '',
+                },
+                color = {
+                    bg = '#2a2a2a',
+                    fg = '#ffffff',
                 },
             },
             {
@@ -314,7 +319,7 @@ require('lualine').setup {
                 },
                 color = {
                     bg = '#5f6a8e', -- Background color
-                    fg = '#fff',    -- Text color
+                    fg = '#ffffff', -- Text color
                 },
                 separator = {
                     right = '',
@@ -339,7 +344,7 @@ require('lualine').setup {
 
                     return 'Git:   '
                 end,
-                color = { fg = '#f00', bg = '#00575a' },
+                color = { fg = '#ffffff', bg = '#00575a' },
                 separator = {
                     left = '',
                 },
@@ -348,34 +353,41 @@ require('lualine').setup {
             {
                 -- head status
                 "vim.b.git_state[1]",
-                color = { fg = '#f00', bg = '#00575a' },
+                color = { fg = '#ffffff', bg = '#00575a' },
                 padding = { left = 1, right = 0 },
             },
             {
                 -- untracked files
                 "vim.b.git_state[4]",
-                color = { fg = '#f00', bg = '#00575a' },
+                color = { fg = '#ffffff', bg = '#00575a' },
                 padding = { left = 1, right = 1 }
             },
             {
                 -- modified files
                 "vim.b.git_state[3]",
-                color = { fg = '#f00', bg = '#00575a' },
+                color = { fg = '#ffffff', bg = '#00575a' },
                 padding = { left = 1, right = 1 }
             },
             {
                 -- staged files
                 "vim.b.git_state[2]",
-                color = { fg = '#f00', bg = '#00575a' },
+                color = { fg = '#ffffff', bg = '#00575a' },
                 padding = { left = 1, right = 1 }
             },
         },
         lualine_y = {
-            'encoding',
-            'fileformat',
+            {
+                'encoding',
+                color = { fg = '#ffffff', bg = '#505a60' },
+            },
+            {
+                'fileformat',
+                color = { fg = '#ffffff', bg = '#505a60' },
+
+            },
             {
                 'filetype',
-                color = { fg = '#fff', bg = '#2a2a2a' },
+                color = { fg = '#ffffff', bg = '#2a2a2a' },
                 separator = {
                     left = '',
                 },
