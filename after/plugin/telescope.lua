@@ -43,7 +43,7 @@ require("telescope").setup {
 -- To get ui-select loaded and working with telescope, you need to call
 -- load_extension, somewhere after setup function:
 require("telescope").load_extension("ui-select")
-require("telescope").load_extension("notify")
+-- require("telescope").load_extension("notify")
 
 -- Project
 vim.keymap.set('n', '<leader>pf', ':Telescope find_files hidden=true<CR>', { desc = '@: Find files' })
@@ -70,7 +70,7 @@ vim.keymap.set('n', '<leader>sa', function()
     builtin.grep_string({ search = old_search });
 end, { desc = '@: Repeat last grep in all files search' })
 
-vim.keymap.set('n', '<leader>sw', ':Telescope grep_string<CR>', { desc = '@: Search word under cursor' });
+-- vim.keymap.set('n', '<leader>sw', ':Telescope grep_string<CR>', { desc = '@: Search word under cursor' });
 vim.keymap.set('n', '<C-S-F>', ':Telescope live_grep<CR>', { desc = '@: Live grep in all files' });
 vim.keymap.set('n', '<leader>sl', ':Telescope live_grep<CR>', { desc = '@: Live grep in all files' });
 vim.keymap.set('n', '<leader>sr', ':Telescope lsp_references<CR>', { desc = '@: Search reference (Find usage)' });

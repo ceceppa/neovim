@@ -46,7 +46,20 @@ function find_dir(d)
 end
 
 -- get git status
+local latest_check_datetime = nil
+local old_branch_col = nil
+local CACHE_TIMEOUT = 5 * 1000 -- 5 seconds
+
 local function git_status()
+    local now = os.time()
+
+    -- This function is called every time the statusline is updated, so we cache the result
+    -- to avoid performance issues by calling git status every time
+    if latest_check_datetime ~= nil and now - latest_check_datetime < CACHE_TIMEOUT then
+        return old_branch_col
+    end
+    latest_check_datetime = now
+
     vim.b.git_state = { '', '', '' }
     -- get & check file directory
     file_dir = find_dir(vim.fn.expand("%:p:h"))
@@ -65,6 +78,7 @@ local function git_status()
     local git_state = { '', '', '', '' }
     -- branch coloring: 'o': up to date with origin; 'd': head detached; 'm': not up to date with origin
     local branch_col = 'o'
+    old_branch_col = branch_col
 
     -- check if git repo
     if output == '' then
@@ -135,6 +149,7 @@ local function git_status()
     vim.b.git_state = git_state
     vim.b.git_show = git_state[1] ~= '' or git_state[2] ~= '' or git_state[3] ~= '' or git_state[4] ~= ''
 
+    old_branch_col = branch_col
     return branch_col
 end
 
@@ -154,52 +169,6 @@ local function unsaved_buffers()
     end
 
     return "󱙃  Not saved: " .. unsaved_buffers
-end
-
-local function get_current_diagnostic()
-    bufnr = 0
-    line_nr = vim.api.nvim_win_get_cursor(0)[1] - 1
-    opts = { ["lnum"] = line_nr }
-
-    local line_diagnostics = vim.diagnostic.get(bufnr, opts)
-    if vim.tbl_isempty(line_diagnostics) then
-        return
-    end
-
-    local best_diagnostic = nil
-
-    for _, diagnostic in ipairs(line_diagnostics) do
-        if
-            best_diagnostic == nil or diagnostic.severity < best_diagnostic.severity
-        then
-            best_diagnostic = diagnostic
-        end
-    end
-
-    return best_diagnostic
-end
-
-local function get_current_diagnostic_value()
-    local diagnostic = get_current_diagnostic()
-
-    if not diagnostic or not diagnostic.message then
-        return ""
-    end
-
-    local message = vim.split(diagnostic.message, "\n")[1]
-    local max_width = vim.api.nvim_win_get_width(0) - 35
-
-    local prefix = " Warning: "
-
-    if diagnostic.severity == 1 then
-        prefix = " Error: "
-    end
-
-    if string.len(message) < max_width then
-        return prefix .. ": " .. message
-    else
-        return string.sub(message, 1, max_width) .. "..."
-    end
 end
 
 require('lualine').setup {
@@ -237,49 +206,28 @@ require('lualine').setup {
                     end
             },
         },
+        lualine_c = {
+        },
         lualine_x = {
             {
-                function()
-                    return 'Diagnostics'
-                end,
-                separator = {
-                    right = '',
-                },
-                padding = { left = 1, right = 0 },
-            },
-            {
                 'diagnostics',
+                    left = '',
                 sections = { 'error', 'warn', 'info', 'hint' },
                 symbols = {
-                    error = ' Error(s):',
-                    warn = '•   Warning(s): ',
+                    error = ' Err:',
+                    warn = '•   Warn: ',
                     info = '•  Info: ',
                     hint = '•  Hint: '
                 },
-            },
-        },
-        lualine_y = {
-            {
-                function()
-                    return 'Lines changed'
-                end,
+                color = {
+                    bg = '#000000'
+                },
                 separator = {
-                    right = '',
                     left = '',
                 },
-                padding = { left = 1, right = 1 },
-            },
-            {
-                'diff',
-                colored = true,
-                diff_color = {
-                    added    = { fg = '#73ff00', bg = '#2a2a2a' },
-                    modified = { fg = '#f0dbff', bg = '#2a2a2a' },
-                    removed  = { fg = '#ffa8a8', bg = '#2a2a2a' },
-                },
-                symbols = { added = '• 󰐒  Added: ', modified = '• 󰤀 Modified: ', removed = '• 󰐓 Removed: ' },
             },
         },
+        lualine_y = {},
         lualine_z = { 'progress', 'location' }
     },
     inactive_sections = {
@@ -394,7 +342,7 @@ require('lualine').setup {
             }
         },
         lualine_z = {
-            "os.date('%A, %d %B')", 'data', "require'lsp-status'.status()"
+            -- "os.date('%A, %d %B')", 'data', "require'lsp-status'.status()"
         }
     },
     winbar = {},

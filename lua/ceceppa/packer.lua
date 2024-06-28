@@ -1,19 +1,17 @@
 vim.cmd [[packadd packer.nvim]]
 
 return require('packer').startup(function(use)
-    -- Packer can manage itself
     use 'wbthomason/packer.nvim'
 
     use {
         'nvim-telescope/telescope.nvim', tag = '0.1.4',
-        -- or                            , branch = '0.1.x',
         requires = {
             { 'nvim-lua/plenary.nvim' },
             { 'nvim-telescope/telescope-ui-select.nvim' },
         }
     }
 
-    use({ 'rose-pine/neovim', as = 'rose-pine' })
+    -- use({ 'rose-pine/neovim', as = 'rose-pine' })
 
     use('nvim-treesitter/nvim-treesitter', { run = ':TSUpdate' })
 
@@ -23,7 +21,6 @@ return require('packer').startup(function(use)
         requires = { { "nvim-lua/plenary.nvim" } }
     }
 
-    -- use('ThePrimeagen/harpoon')
     use('mbbill/undotree')
     use('tpope/vim-fugitive')
 
@@ -31,20 +28,19 @@ return require('packer').startup(function(use)
         'VonHeikemen/lsp-zero.nvim',
         branch = 'v2.x',
         requires = {
-            -- LSP Support
             {
                 'neovim/nvim-lspconfig',
                 opts = {
                     inlay_hints = { enabled = true },
                 },
-            }, -- Required
-            {  -- Optional
+            },
+            {  
                 'williamboman/mason.nvim',
                 run = function()
                     pcall(vim.cmd, 'MasonUpdate')
                 end,
             },
-            { 'williamboman/mason-lspconfig.nvim' }, -- Optional
+            { 'williamboman/mason-lspconfig.nvim' }, 
 
             -- Autocompletion
             { 'hrsh7th/nvim-cmp' },
@@ -67,6 +63,9 @@ return require('packer').startup(function(use)
     use('nvim-treesitter/nvim-treesitter-context')
 
     use('tpope/vim-surround')
+    use('tpope/vim-repeat')
+    use('tpope/vim-abolish')
+
     use {
         'nvim-lualine/lualine.nvim',
         requires = { 'nvim-tree/nvim-web-devicons' }
@@ -77,13 +76,14 @@ return require('packer').startup(function(use)
             vim.fn['fzf#install']()
         end
     }
-    -- use('tomtom/tcomment_vim')
+    use('tpope/vim-commentary')
+
     use {
         'nvim-tree/nvim-tree.lua',
         requires = { 'nvim-tree/nvim-web-devicons' }
     }
     use('airblade/vim-gitgutter')
-
+    --
     use('HiPhish/rainbow-delimiters.nvim')
 
     use({
@@ -94,7 +94,7 @@ return require('packer').startup(function(use)
         end,
     })
 
-    use('dense-analysis/ale')
+    -- use('dense-analysis/ale')
 
     use({
         "iamcco/markdown-preview.nvim",
@@ -104,7 +104,7 @@ return require('packer').startup(function(use)
     use('eandrju/cellular-automaton.nvim')
     use('ray-x/lsp_signature.nvim')
 
-    use 'chrisbra/Colorizer'
+    -- use 'chrisbra/Colorizer'
 
     use { 'github/copilot.vim', branch = 'release' }
 
@@ -112,7 +112,6 @@ return require('packer').startup(function(use)
 
     use({
         "kdheepak/lazygit.nvim",
-        -- optional for floating window border decoration
         requires = {
             "nvim-lua/plenary.nvim",
         },
@@ -127,31 +126,17 @@ return require('packer').startup(function(use)
     use 'famiu/bufdelete.nvim'
 
     use {
-        'numToStr/Comment.nvim',
+        'numtostr/comment.nvim',
         config = function()
             require('Comment').setup()
         end
     }
 
-    use {
-        'JoosepAlviste/nvim-ts-context-commentstring',
-        requires = {
-            'MunifTanjim/nui.nvim',
-        },
-        config = function()
-            require("dressing").setup()
-        end
-    }
+    use 'jiangmiao/auto-pairs'
 
     use { 'stevearc/dressing.nvim' }
 
     use 'windwp/nvim-spectre'
-    use {
-        'echasnovski/mini.pairs',
-        config = function(_, opts)
-            require('mini.pairs').setup(opts)
-        end
-    }
 
     use {
         "lukas-reineke/indent-blankline.nvim",
@@ -163,14 +148,10 @@ return require('packer').startup(function(use)
     -- Local
     use {
         '~/Projects/tsc.nvim',
-        requires = {
-            { 'rcarriga/nvim-notify' },
-        }
+        -- requires = {
+        --     { 'rcarriga/nvim-notify' },
+        -- }
     }
-
-    use { "akinsho/toggleterm.nvim", tag = '*', config = function()
-        require("toggleterm").setup()
-    end }
 
     use {
         "folke/which-key.nvim",
@@ -204,4 +185,20 @@ return require('packer').startup(function(use)
         end
     }
 
+    use {
+        'gbprod/phpactor.nvim',
+        build = function()
+            require("phpactor.handler.update")()
+        end,
+        dependencies = {
+            "nvim-lua/plenary.nvim",
+            "neovim/nvim-lspconfig"
+        },
+    }
+
+    use 'easymotion/vim-easymotion'
+    use 'maxmx03/solarized.nvim'
+    use 'stsewd/fzf-checkout.vim'
+
 end)
+
