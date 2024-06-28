@@ -39,26 +39,43 @@ lsp.set_preferences({
 })
 
 lsp.on_attach(function(client)
-    enabled = vim.lsp.inlay_hint.is_enabled()
-    are_inlay_hints_available = are_inlay_hints_available or client.server_capabilities.inlayHintProvider and vim.lsp.inlay_hint
+    was_enabled = vim.lsp.inlay_hint.is_enabled()
+    are_inlay_hints_available = are_inlay_hints_available or
+        client.server_capabilities.inlayHintProvider and vim.lsp.inlay_hint
 
-    local function enable_inlay_hints()
-        if are_inlay_hints_available then
-            -- print("Enabling inlay_hint")
+    local function enable_inlay_hints(is_change_mode)
+        local is_enabled = vim.lsp.inlay_hint.is_enabled()
+
+        if is_enabled then
+            return
+        end
+
+        local should_enable = true
+
+        if is_change_mode and not was_enabled then
+            should_enable = false
+        end
+
+        if are_inlay_hints_available and should_enable then
+            print("🕵️: Enabling inlay_hint")
 
             vim.lsp.inlay_hint.enable(true)
 
-            enabled = true
+            if is_change_mode then
+                was_enabled = true
+            end
         end
     end
 
-    local function disable_inlay_hints()
+    local function disable_inlay_hints(is_change_mode)
         if are_inlay_hints_available then
-            print("Disabling inlay_hint")
+            print("🫥: Disabling inlay_hint")
 
             vim.lsp.inlay_hint.enable(false)
 
-            enabled = false
+            if is_change_mode then
+                was_enabled = false
+            end
         end
     end
 
@@ -92,14 +109,26 @@ lsp.on_attach(function(client)
     vim.api.nvim_create_autocmd("ModeChanged", {
         pattern = { "*:[iI\x16]*" },
         callback = function()
-            disable_inlay_hints()
+            local current_buffer_name = vim.fn.bufname(vim.fn.bufnr('%'))
+
+            if current_buffer_name == "" then
+                return
+            end
+
+            disable_inlay_hints(true)
         end,
     })
 
     vim.api.nvim_create_autocmd("ModeChanged", {
         pattern = { "[iI\x16]*:*" },
         callback = function()
-            enable_inlay_hints()
+            local current_buffer_name = vim.fn.bufname(vim.fn.bufnr('%'))
+
+            if current_buffer_name == "" then
+                return
+            end
+
+            enable_inlay_hints(true)
         end,
     })
 
@@ -107,14 +136,14 @@ lsp.on_attach(function(client)
     vim.api.nvim_create_autocmd("ModeChanged", {
         pattern = { "*:[vV\x16]*" },
         callback = function()
-            disable_inlay_hints()
+            disable_inlay_hints(true)
         end,
     })
 
     vim.api.nvim_create_autocmd("ModeChanged", {
         pattern = { "[vV\x16]*:*" },
         callback = function()
-            enable_inlay_hints()
+            enable_inlay_hints(true)
         end,
     })
 end)

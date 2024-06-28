@@ -222,7 +222,7 @@ function replace_globally()
             function()
                 do_replace_globally(from, to)
             end, 200)
-    end, 200)
+    end, 2000)
 end
 
 vim.keymap.set("n", "<leader>do", "<cmd>AerialToggle!<CR>", { desc = '@: Aerial toggle (document outline)' })
