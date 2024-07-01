@@ -204,7 +204,7 @@ lspconfig.tsserver.setup({
                 includeInlayEnumMemberValueHints = true,
                 includeInlayFunctionLikeReturnTypeHints = true,
                 includeInlayFunctionParameterTypeHints = true,
-                includeInlayParameterNameHints = "literals", -- 'none' | 'literals' | 'all';
+                includeInlayParameterNameHints = "all", -- 'none' | 'literals' | 'all';
                 includeInlayParameterNameHintsWhenArgumentMatchesName = true,
                 includeInlayPropertyDeclarationTypeHints = true,
                 includeInlayVariableTypeHints = true,

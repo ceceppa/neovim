@@ -94,7 +94,7 @@ return require('packer').startup(function(use)
         end,
     })
 
-    -- use('dense-analysis/ale')
+    use('dense-analysis/ale')
 
     use({
         "iamcco/markdown-preview.nvim",
