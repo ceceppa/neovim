@@ -70,7 +70,7 @@ vim.keymap.set('n', '<leader>sa', function()
     builtin.grep_string({ search = old_search });
 end, { desc = '@: Repeat last grep in all files search' })
 
--- vim.keymap.set('n', '<leader>sw', ':Telescope grep_string<CR>', { desc = '@: Search word under cursor' });
+vim.keymap.set('n', '<leader>sw', ':Telescope grep_string<CR>', { desc = '@: Search word under cursor' });
 vim.keymap.set('n', '<C-S-F>', ':Telescope live_grep<CR>', { desc = '@: Live grep in all files' });
 vim.keymap.set('n', '<leader>sl', ':Telescope live_grep<CR>', { desc = '@: Live grep in all files' });
 vim.keymap.set('n', '<leader>sr', ':Telescope lsp_references<CR>', { desc = '@: Search reference (Find usage)' });

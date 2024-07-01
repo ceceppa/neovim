@@ -226,6 +226,7 @@ function replace_globally()
 end
 
 vim.keymap.set("n", "<leader>do", "<cmd>AerialToggle!<CR>", { desc = '@: Aerial toggle (document outline)' })
+vim.keymap.set("n", "<leader>db", "<cmd>AerialGo<CR>", { desc = '@: AerialGo (jump to the beginning of component)' })
 vim.keymap.set("n", "<C-S-X>", "ddi", { desc = '@: Delete entire line' })
 
 vim.keymap.set("n", "<C-.>", "V>", { desc = '@: Indent entire line' })
