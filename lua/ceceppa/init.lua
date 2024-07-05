@@ -2,6 +2,8 @@ require("ceceppa.remap")
 require("ceceppa.set")
 require("ceceppa.git")
 require("ceceppa.autocmd")
+require("ceceppa.lint")
+require("ceceppa.projects")
 
 vim.api.nvim_set_option("clipboard","unnamed")
 
@@ -34,3 +36,7 @@ vim.g.copilot_filetypes = {
     ["python"] = true,
   }
 
+vim.o.guicursor = 'n-v-i-sm:block,c-ci-ve-i:ver25,r-cr-o:hor20,a:blinkwait700-blinkoff400-blinkon250-Cursor/lCursor'
+
+vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+vim.opt.foldtext = "v:lua.vim.treesitter.foldtext()"

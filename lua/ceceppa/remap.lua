@@ -1,3 +1,4 @@
+
 vim.g.mapleader = " "
 vim.keymap.set("n", "<leader>pv", vim.cmd.Ex, { desc = '@: directory listing' })
 
@@ -66,9 +67,6 @@ vim.api.nvim_set_keymap('n', "<leader>v(", 'vi(',
 vim.api.nvim_set_keymap('n', "<leader>v{", 'vi{',
     { noremap = true, silent = true, desc = '@: Select content inside curly brackets {' })
 
--- TypeScript
-vim.api.nvim_set_keymap('n', '<leader>tc', ':!yarn lint && yarn ts:check<CR>',
-    { noremap = true, desc = '@: TypeScript check' })
 
 -- Insert mode
 vim.api.nvim_set_keymap('i', '<C-S-x>', '<C-o>dd', { noremap = true, desc = '@: Save file' })
@@ -78,9 +76,19 @@ vim.api.nvim_set_keymap('i', '<Tab>', '<C-y>', { noremap = true, desc = '@: Auto
 vim.api.nvim_set_keymap('i', '<C-v>', '<C-r><C-o>*', { noremap = true, desc = '@: Paste' })
 vim.api.nvim_set_keymap('i', '<C-b>', '<C-o>diw', { noremap = true, desc = '@: Delete word under cursor' })
 vim.api.nvim_set_keymap('i', '<C-q>', '<C-o>de', { noremap = true, desc = '@: Delete characters after cursor' })
+vim.api.nvim_set_keymap('i', "<C-2>", '<C-o>ci"',
+    { noremap = true, silent = true, desc = '@: Clear content inside double quotes' })
+vim.api.nvim_set_keymap('i', "<C-'>", "<C-o>ci'",
+    { noremap = true, silent = true, desc = '@: Clear content inside single quotes' })
+vim.api.nvim_set_keymap('i', "<C-9>", '<C-o>ci(',
+    { noremap = true, silent = true, desc = '@: Clear content inside parentheses (' })
+vim.api.nvim_set_keymap('i', "<C-0>", '<C-o>ci[',
+    { noremap = true, silent = true, desc = '@: Clear content inside square brackets [' })
+vim.api.nvim_set_keymap('i', "<C-8>", '<C-o>ci{',
+    { noremap = true, silent = true, desc = '@: Clear content inside curly brackets {' })
 
 -- Select word
-vim.api.nvim_set_keymap('n', "<leader>w", 'viw', { noremap = true, silent = true,  desc = '@: Select word' })
+vim.api.nvim_set_keymap('n', "<leader>w", 'viw', { noremap = true, silent = true, desc = '@: Select word' })
 
 -- Custom Insert
 vim.api.nvim_set_keymap('n', "<C-S-i>", 'wi', { noremap = true, silent = true, desc = '@: Insert after the word' })
@@ -124,7 +132,8 @@ vim.api.nvim_set_keymap('n', '<C-q><C-q>', ':qa<CR>', { noremap = true, desc = '
 vim.keymap.set("n", "<leader>mr", "<cmd>CellularAutomaton make_it_rain<CR>", { desc = '@: Make it rain' });
 
 -- Buffers
-vim.keymap.set("n", "<leader>bc", ":lua require('bufdelete').bufdelete(0, false)<CR>", { desc = '@: Close current buffer' })
+vim.keymap.set("n", "<leader>bc", ":lua require('bufdelete').bufdelete(0, false)<CR>",
+    { desc = '@: Close current buffer' })
 vim.keymap.set("n", "<leader>bo", ":%bd|e#<CR>", { desc = '@: Kill other buffers' })
 vim.keymap.set("n", "<leader>bkk", ":%bd|e!#<CR>", { desc = '@: Kill other buffers!!!' })
 vim.keymap.set("n", "<leader>bn", ":enew<CR>", { desc = '@: New empty buffer' })
@@ -191,7 +200,7 @@ vim.api.nvim_set_keymap('n', '<C-S-R>', [[<Cmd>lua replace_globally()<CR>]],
     { noremap = true, silent = true, desc = '@: Replace all occurrences of word under cursor (globally)' })
 
 local function do_replace_globally(from, to)
-    vim.cmd('cdo s/' .. from .. '/' .. to .. '/g | update')
+    vim.cmd('cdo s/' .. from .. '/' .. to .. '/g | update | bd')
 
     print("✅ Done: " .. from .. " replaced with " .. to .. " globally.")
 end
@@ -226,9 +235,9 @@ function replace_globally()
 end
 
 vim.keymap.set("n", "<leader>do", "<cmd>AerialToggle!<CR>", { desc = '@: Aerial toggle (document outline)' })
-vim.keymap.set("n", "<leader>db", "<cmd>AerialGo<CR>", { desc = '@: AerialGo (jump to the beginning of component)' })
+
+vim.keymap.set("n", "[t", "<cmd>AerialGo<CR>", { desc = '@: AerialGo (jump to the beginning of component)' })
 vim.keymap.set("n", "<C-S-X>", "ddi", { desc = '@: Delete entire line' })
 
 vim.keymap.set("n", "<C-.>", "V>", { desc = '@: Indent entire line' })
 vim.keymap.set("n", "<C-S-.>", "V<", { desc = '@: Deintend entire line' })
-
