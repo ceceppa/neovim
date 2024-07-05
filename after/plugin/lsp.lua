@@ -44,6 +44,12 @@ lsp.on_attach(function(client)
         client.server_capabilities.inlayHintProvider and vim.lsp.inlay_hint
 
     local function enable_inlay_hints(is_change_mode)
+        local current_buffer_name = vim.fn.bufname(vim.fn.bufnr('%'))
+
+        if current_buffer_name == "" then
+            return
+        end
+
         local is_enabled = vim.lsp.inlay_hint.is_enabled()
 
         if is_enabled then
@@ -57,9 +63,13 @@ lsp.on_attach(function(client)
         end
 
         if are_inlay_hints_available and should_enable then
-            print("🕵️: Enabling inlay_hint")
+            -- print("🕵️: Enabling inlay_hint")
 
-            vim.lsp.inlay_hint.enable(true)
+            local ok, result = pcall(vim.lsp.inlay_hint.enable, true)
+
+            if not ok then
+                print("😔: Error enabling inlay_hint", result)
+            end
 
             if is_change_mode then
                 was_enabled = true
@@ -68,9 +78,13 @@ lsp.on_attach(function(client)
     end
 
     local function disable_inlay_hints(is_change_mode)
-        if are_inlay_hints_available then
-            print("🫥: Disabling inlay_hint")
+        local current_buffer_name = vim.fn.bufname(vim.fn.bufnr('%'))
 
+        if current_buffer_name == "" then
+            return
+        end
+
+        if are_inlay_hints_available then
             vim.lsp.inlay_hint.enable(false)
 
             if is_change_mode then
@@ -89,7 +103,10 @@ lsp.on_attach(function(client)
         end
     end
 
-    enable_inlay_hints()
+    -- By default, enable inlay hints for TypeScript and JavaScript only
+    if filetype == 'typescript' or filetype == 'javascript' then
+        enable_inlay_hints()
+    end
 
     vim.keymap.set("n", "gd", function() vim.lsp.buf.definition() end, { desc = '@: Go to definition' })
     vim.keymap.set("n", "K", function() vim.lsp.buf.hover() end, { desc = '@: Show hover' })
@@ -109,12 +126,6 @@ lsp.on_attach(function(client)
     vim.api.nvim_create_autocmd("ModeChanged", {
         pattern = { "*:[iI\x16]*" },
         callback = function()
-            local current_buffer_name = vim.fn.bufname(vim.fn.bufnr('%'))
-
-            if current_buffer_name == "" then
-                return
-            end
-
             disable_inlay_hints(true)
         end,
     })
@@ -122,12 +133,6 @@ lsp.on_attach(function(client)
     vim.api.nvim_create_autocmd("ModeChanged", {
         pattern = { "[iI\x16]*:*" },
         callback = function()
-            local current_buffer_name = vim.fn.bufname(vim.fn.bufnr('%'))
-
-            if current_buffer_name == "" then
-                return
-            end
-
             enable_inlay_hints(true)
         end,
     })
@@ -230,3 +235,16 @@ require 'lspconfig'.phpactor.setup {
         ["language_server_psalm.enabled"] = false,
     }
 }
+
+local capabilities = vim.lsp.protocol.make_client_capabilities()
+capabilities.textDocument.foldingRange = {
+    dynamicRegistration = false,
+    lineFoldingOnly = true
+}
+local language_servers = require("lspconfig").util.available_servers() -- or list servers manually like {'gopls', 'clangd'}
+for _, ls in ipairs(language_servers) do
+    require('lspconfig')[ls].setup({
+        capabilities = capabilities
+        -- you can add other fields for setting up lsp server in this table
+    })
+end

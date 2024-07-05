@@ -11,8 +11,6 @@ return require('packer').startup(function(use)
         }
     }
 
-    -- use({ 'rose-pine/neovim', as = 'rose-pine' })
-
     use('nvim-treesitter/nvim-treesitter', { run = ':TSUpdate' })
 
     use {
@@ -34,13 +32,13 @@ return require('packer').startup(function(use)
                     inlay_hints = { enabled = true },
                 },
             },
-            {  
+            {
                 'williamboman/mason.nvim',
                 run = function()
                     pcall(vim.cmd, 'MasonUpdate')
                 end,
             },
-            { 'williamboman/mason-lspconfig.nvim' }, 
+            { 'williamboman/mason-lspconfig.nvim' },
 
             -- Autocompletion
             { 'hrsh7th/nvim-cmp' },
@@ -50,6 +48,7 @@ return require('packer').startup(function(use)
             { 'simrat39/inlay-hints.nvim' }
         }
     }
+
     use {
         'rmagatti/auto-session',
         config = function()
@@ -58,13 +57,10 @@ return require('packer').startup(function(use)
         end
     }
 
-    use('vim-airline/vim-airline-themes')
-
     use('nvim-treesitter/nvim-treesitter-context')
 
     use('tpope/vim-surround')
     use('tpope/vim-repeat')
-    use('tpope/vim-abolish')
 
     use {
         'nvim-lualine/lualine.nvim',
@@ -82,8 +78,8 @@ return require('packer').startup(function(use)
         'nvim-tree/nvim-tree.lua',
         requires = { 'nvim-tree/nvim-web-devicons' }
     }
+
     use('airblade/vim-gitgutter')
-    --
     use('HiPhish/rainbow-delimiters.nvim')
 
     use({
@@ -103,8 +99,6 @@ return require('packer').startup(function(use)
 
     use('eandrju/cellular-automaton.nvim')
     use('ray-x/lsp_signature.nvim')
-
-    -- use 'chrisbra/Colorizer'
 
     use { 'github/copilot.vim', branch = 'release' }
 
@@ -148,9 +142,9 @@ return require('packer').startup(function(use)
     -- Local
     use {
         '~/Projects/tsc.nvim',
-        -- requires = {
-        --     { 'rcarriga/nvim-notify' },
-        -- }
+        requires = {
+            { 'rcarriga/nvim-notify' },
+        }
     }
 
     use {
@@ -173,10 +167,10 @@ return require('packer').startup(function(use)
     })
 
     use 'stephpy/vim-php-cs-fixer'
-    use { 
+    use {
         "LintaoAmons/bookmarks.nvim",
-        config = function ()
-            require("bookmarks").setup( {
+        config = function()
+            require("bookmarks").setup({
                 json_db_path = vim.fs.normalize(vim.fn.stdpath("config") .. "/bookmarks.db.json"),
                 signs = {
                     mark = { icon = "", color = "grey" },
@@ -196,9 +190,14 @@ return require('packer').startup(function(use)
         },
     }
 
-    use 'easymotion/vim-easymotion'
     use 'maxmx03/solarized.nvim'
     use 'stsewd/fzf-checkout.vim'
 
+    use {
+        'dmmulroy/ts-error-translator.nvim',
+        config = function()
+            require("ts-error-translator").setup {
+            }
+        end
+    }
 end)
-

@@ -171,6 +171,18 @@ local function unsaved_buffers()
     return "󱙃  Not saved: " .. unsaved_buffers
 end
 
+local function inlay_hints_status()
+    local is_enabled = vim.lsp.inlay_hint.is_enabled()
+
+    local label = 'Inlay hints: '
+
+    if not is_enabled then
+        return label .. '🫥 Disabled'
+    end
+
+    return label .. '🕵️ Enabled '
+end
+
 require('lualine').setup {
     options = {
         icons_enabled = true,
@@ -205,13 +217,22 @@ require('lualine').setup {
                         end
                     end
             },
+            {
+            }
         },
         lualine_c = {
         },
         lualine_x = {
+            { 
+                inlay_hints_status,
+                color = { fg = '#ffffff', bg = '#2a2a2a' },
+                separator = {
+                    left = '',
+                },
+            },
             {
                 'diagnostics',
-                    left = '',
+                left = '',
                 sections = { 'error', 'warn', 'info', 'hint' },
                 symbols = {
                     error = ' Err:',
@@ -220,7 +241,7 @@ require('lualine').setup {
                     hint = '•  Hint: '
                 },
                 color = {
-                    bg = '#000000'
+                    bg = '#aaffff'
                 },
                 separator = {
                     left = '',
