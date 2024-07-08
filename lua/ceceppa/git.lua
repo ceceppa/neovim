@@ -104,7 +104,7 @@ end
 
 vim.keymap.set('n', '<leader>gb', function() git_fetch_and_branches() end, { desc = '@: Git branches' });
 
-vim.keymap.set('n', '<leader>gx', ':Telescope git_stash<CR>', { desc = '@: Git stash' });
+vim.keymap.set('n', '<leader>gsl', ':Telescope git_stash<CR>', { desc = '@: Git stash' });
 
 function git_add_all_and_commit()
     local input = get_commit_message()
@@ -134,6 +134,7 @@ local function maybe_write_and_close_window()
 
         vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<C-o>:wq<CR>', true, true, true), 'n', true)
 
+        return
         execute_git_command("commit with message", { 'commit', '-m', input[1] },
             function()
                 git_push(input[2])
