@@ -1,12 +1,12 @@
 local ensure_packer = function()
-  local fn = vim.fn
-  local install_path = fn.stdpath('data')..'/site/pack/packer/start/packer.nvim'
-  if fn.empty(fn.glob(install_path)) > 0 then
-    fn.system({'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim', install_path})
-    vim.cmd [[packadd packer.nvim]]
-    return true
-  end
-  return false
+    local fn = vim.fn
+    local install_path = fn.stdpath('data') .. '/site/pack/packer/start/packer.nvim'
+    if fn.empty(fn.glob(install_path)) > 0 then
+        fn.system({ 'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim', install_path })
+        vim.cmd [[packadd packer.nvim]]
+        return true
+    end
+    return false
 end
 
 local packer_bootstrap = ensure_packer()
@@ -23,7 +23,14 @@ return require('packer').startup(function(use)
         }
     }
 
-    use('nvim-treesitter/nvim-treesitter', { run = ':TSUpdate' })
+    use('nvim-treesitter/nvim-treesitter', {
+        run = function()
+            local ts_update = require('nvim-treesitter.install').update({ with_sync = true })
+            ts_update.prefer_git = true
+
+            ts_update()
+        end
+    })
 
     use {
         "ThePrimeagen/harpoon",
@@ -36,7 +43,7 @@ return require('packer').startup(function(use)
 
     use {
         'VonHeikemen/lsp-zero.nvim',
-        branch = 'v2.x',
+        branch = 'v3.x',
         requires = {
             {
                 'neovim/nvim-lspconfig',
@@ -193,10 +200,10 @@ return require('packer').startup(function(use)
 
     use {
         'gbprod/phpactor.nvim',
-        build = function()
+        run = function()
             require("phpactor.handler.update")()
         end,
-        dependencies = {
+        require = {
             "nvim-lua/plenary.nvim",
             "neovim/nvim-lspconfig"
         },
@@ -211,5 +218,10 @@ return require('packer').startup(function(use)
             require("ts-error-translator").setup {
             }
         end
+    }
+
+    use {
+        'nvim-neo-tree/neo-tree.nvim',
+        requires = { 'MunifTanjim/nui.nvim' }
     }
 end)

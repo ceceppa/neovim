@@ -96,13 +96,14 @@ require("telescope").setup {
             },
         },
         live_grep = {
-            file_ignore_patterns = { 'node_modules', '.git', '.venv' },
+            file_ignore_patterns = { 'node_modules', '^.git/', '.venv' },
             additional_args = function(_)
                 return { "--hidden" }
             end
         },
         find_files = {
-            file_ignore_patterns = { 'node_modules', '.git', '.venv' },
+            file_ignore_patterns = { 'node_modules', '^.git/', '.venv' },
+            find_command = { 'rg', '--files', '--hidden' },
             hidden = true
         }
     },
@@ -110,7 +111,7 @@ require("telescope").setup {
 -- To get ui-select loaded and working with telescope, you need to call
 -- load_extension, somewhere after setup function:
 require("telescope").load_extension("ui-select")
--- require("telescope").load_extension("notify")
+require("telescope").load_extension("notify")
 
 -- Project
 vim.keymap.set('n', '<leader>pf', ':Telescope find_files hidden=true<CR>', { desc = '@: Find files' })
@@ -123,7 +124,6 @@ vim.keymap.set('n', '<leader>ds', ':Telescope lsp_document_symbols<CR>', { desc 
 
 vim.keymap.set('n', 'zz', ':Telescope spell_suggest<CR>', { desc = '@: Spell suggest' });
 vim.keymap.set('n', '<leader>?', ':Telescope keymaps<CR>', { desc = '@: Keymaps' });
-vim.keymap.set('i', '<C-r><C-r>', '<C-o>:Telescope registers<CR>', { desc = '@: Registers' });
 
 -- Search
 local old_search

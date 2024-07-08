@@ -1,40 +1,28 @@
-local ih = require('inlay-hints')
+local inlay = require('inlay-hints')
 local lsp = require("lsp-zero")
 local lspconfig = require("lspconfig")
 
-ih.setup()
+require("mason").setup({
+    ui = {
+        icons = {
+            package_installed = "✓",
+            package_pending = "➜",
+            package_uninstalled = "✗"
+        }
+    }
+})
+
+inlay.setup()
 
 lsp.preset("recommended")
-
-lsp.ensure_installed({
-    'tsserver',
-    'eslint',
-    'rust_analyzer',
-})
-
--- Fix Undefined global 'vim'
-lsp.nvim_workspace()
-
-local cmp = require('cmp')
-local cmp_select = { behavior = cmp.SelectBehavior.Select }
-local cmp_mappings = lsp.defaults.cmp_mappings({
-    ['<C-p>'] = cmp.mapping.select_prev_item(cmp_select),
-    ['<C-n>'] = cmp.mapping.select_next_item(cmp_select),
-    ['<CR>'] = cmp.mapping.confirm({ select = true }),
-    ["<C-Space>"] = cmp.mapping.complete(),
-})
-
-lsp.setup_nvim_cmp({
-    mapping = cmp_mappings
-})
 
 lsp.set_preferences({
     suggest_lsp_servers = false,
     sign_icons = {
-        error = 'E',
-        warn = 'W',
-        hint = 'H',
-        info = 'I'
+        error = '',
+        warn = '',
+        hint = '⚑',
+        info = ''
     }
 })
 
@@ -94,13 +82,6 @@ lsp.on_attach(function(client)
     end
 
     local function toggle_inlay_hints()
-        local available = client.server_capabilities.inlayHintProvider and vim.lsp.inlay_hint
-        if not available then
-            vim.notify("Inlay hints are not available for this language server", "error")
-
-            return
-        end
-
         local enabled = vim.lsp.inlay_hint.is_enabled()
 
         if not enabled then
@@ -111,8 +92,11 @@ lsp.on_attach(function(client)
     end
 
     -- By default, enable inlay hints for TypeScript and JavaScript only
+    local filetype = vim.bo.filetype
     if filetype == 'typescript' or filetype == 'javascript' then
-        enable_inlay_hints()
+        vim.defer_fn(function()
+            enable_inlay_hints()
+        end, 100)
     end
 
     vim.keymap.set("n", "gd", function() vim.lsp.buf.definition() end, { desc = '@: Go to definition' })
@@ -178,11 +162,14 @@ require "lsp_signature".setup({
 
 lspconfig.lua_ls.setup({
     on_attach = function(client, bufnr)
-        ih.on_attach(client, bufnr)
+        inlay.on_attach(client, bufnr)
     end,
     settings = {
         Lua = {
             hint = {
+                enable = true,
+            },
+            lens = {
                 enable = true,
             },
         },
@@ -191,12 +178,15 @@ lspconfig.lua_ls.setup({
 
 lspconfig.tsserver.setup({
     on_attach = function(c, b)
-        ih.on_attach(c, b)
+        inlay.on_attach(c, b)
     end,
     settings = {
         javascript = {
             hint = {
                 enable = true
+            },
+            lens = {
+                enable = true,
             },
             inlayHints = {
                 includeInlayEnumMemberValueHints = true,
@@ -212,11 +202,14 @@ lspconfig.tsserver.setup({
             hint = {
                 enable = true
             },
+            lens = {
+                enable = true,
+            },
             inlayHints = {
                 includeInlayEnumMemberValueHints = true,
                 includeInlayFunctionLikeReturnTypeHints = true,
                 includeInlayFunctionParameterTypeHints = true,
-                includeInlayParameterNameHints = "all", -- 'none' | 'literals' | 'all';
+                includeInlayParameterNameHints = "none", -- 'none' | 'literals' | 'all';
                 includeInlayParameterNameHintsWhenArgumentMatchesName = true,
                 includeInlayPropertyDeclarationTypeHints = true,
                 includeInlayVariableTypeHints = true,
@@ -225,16 +218,6 @@ lspconfig.tsserver.setup({
     },
 })
 
-require 'lspconfig'.grammarly.setup {
-    filetypes = { "markdown", "tex", "text", },
-    on_attach = on_attach,
-    init_options = { clientId = "client_BaDkMgx4X19X9UxxYRCXZo" },
-    root_dir = function(fname)
-        return require 'lspconfig'.util.find_git_ancestor(fname) or vim.loop.os_homedir()
-    end,
-    cmd = { "grammarly-languageserver", "--stdio" },
-}
-
 require 'lspconfig'.phpactor.setup {
     on_attach = on_attach,
     init_options = {
@@ -242,16 +225,3 @@ require 'lspconfig'.phpactor.setup {
         ["language_server_psalm.enabled"] = false,
     }
 }
-
-local capabilities = vim.lsp.protocol.make_client_capabilities()
-capabilities.textDocument.foldingRange = {
-    dynamicRegistration = false,
-    lineFoldingOnly = true
-}
-local language_servers = require("lspconfig").util.available_servers() -- or list servers manually like {'gopls', 'clangd'}
-for _, ls in ipairs(language_servers) do
-    require('lspconfig')[ls].setup({
-        capabilities = capabilities
-        -- you can add other fields for setting up lsp server in this table
-    })
-end

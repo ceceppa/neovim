@@ -1,6 +1,10 @@
 local utils = require('ceceppa.utils')
 local tsc_utils = require('tsc.utils')
 
+vim.ceceppa = {
+    errors = {}
+}
+
 local function parse_lint_output(output)
     local errors = {}
 
@@ -79,3 +83,4 @@ end
 
 vim.api.nvim_set_keymap('n', '<leader>tc', ':lua do_yarn_lint()<CR>',
     { noremap = true, desc = '@: Linting & TypeScript check' })
+

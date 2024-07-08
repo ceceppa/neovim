@@ -141,7 +141,22 @@ local function maybe_write_and_close_window()
     end
 end
 
+local function git_stash_with_name()
+    local input = vim.fn.input("Stash name: ")
+
+    if string.len(input) == 0 then
+        return
+    end
+
+    execute_git_command("stash with name", { 'stash', 'push', '-m', input })
+end
+
 
 vim.keymap.set('n', '<C-;>', function()
     maybe_write_and_close_window()
 end, { desc = '@: Git: Write commit message and push' });
+
+vim.keymap.set('n', '<leader>gss', function()
+    git_stash_with_name()
+end, { desc = '@: Git: stash with name' });
+

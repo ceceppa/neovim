@@ -51,15 +51,6 @@ local old_branch_col = nil
 local CACHE_TIMEOUT = 5 * 1000 -- 5 seconds
 
 local function git_status()
-    local now = os.time()
-
-    -- This function is called every time the statusline is updated, so we cache the result
-    -- to avoid performance issues by calling git status every time
-    if latest_check_datetime ~= nil and now - latest_check_datetime < CACHE_TIMEOUT then
-        return old_branch_col
-    end
-    latest_check_datetime = now
-
     vim.b.git_state = { '', '', '' }
     -- get & check file directory
     file_dir = find_dir(vim.fn.expand("%:p:h"))
@@ -142,7 +133,7 @@ local function git_status()
         git_state[3] = '• 󰷉 Modified: ' .. git_num[2]
     end
     if git_num[3] ~= 0 then
-        git_state[4] = '•  Untracked: ' .. git_num[3]
+        git_state[4] = '•  New: ' .. git_num[3]
     end
 
     -- save to variable
@@ -150,8 +141,13 @@ local function git_status()
     vim.b.git_show = git_state[1] ~= '' or git_state[2] ~= '' or git_state[3] ~= '' or git_state[4] ~= ''
 
     old_branch_col = branch_col
-    return branch_col
+
+    vim.defer_fn(function()
+        git_status()
+    end, CACHE_TIMEOUT)
 end
+
+git_status()
 
 local function unsaved_buffers()
     local unsaved_buffers = 0
@@ -209,21 +205,19 @@ require('lualine').setup {
                 'branch',
                 color =
                     function()
-                        local gs = git_status()
-                        if gs == 'd' then
+                        if old_branch_col == 'd' then
                             return { fg = '#BFAAEE' }
-                        elseif gs == 'm' then
+                        elseif old_branch_col == 'm' then
                             return { fg = '#f0dbff' }
                         end
                     end
+
             },
-            {
-            }
         },
         lualine_c = {
         },
         lualine_x = {
-            { 
+            {
                 inlay_hints_status,
                 color = { fg = '#ffffff', bg = '#2a2a2a' },
                 separator = {
