@@ -1,5 +1,3 @@
-
-vim.g.mapleader = " "
 vim.keymap.set("n", "<leader>pv", vim.cmd.Ex, { desc = '@: directory listing' })
 
 vim.api.nvim_set_keymap('n', '<C-S-S>', ':w<CR>', { noremap = true, desc = '@: Save file' })

@@ -172,6 +172,27 @@ require "lsp_signature".setup({
 lspconfig.lua_ls.setup({
     on_attach = function(client, bufnr)
         ih.on_attach(client, bufnr)
+
+        -- client.config.settings.Lua = vim.tbl_deep_extend('force', client.config.settings.Lua, {
+        --     runtime = {
+        --         version = 'LuaJIT',
+        --     },
+        --     diagnostics = {
+        --         -- Get the language server to recognize the `vim` global
+        --         globals = { 'vim' },
+        --     },
+        --     -- Make the server aware of Neovim runtime files
+        --     workspace = {
+        --         checkThirdParty = false,
+        --         library = {
+        --             vim.env.VIMRUNTIME
+        --             -- vim.fn.expand('$VIMRUNTIME/lua'),
+        --             -- vim.fn.stdpath('config') .. '/lua',
+        --         },
+        --     },
+        -- })
+        --
+        -- client.notify("workspace/didChangeConfiguration", { settings = client.config.settings })
     end,
     settings = {
         Lua = {

@@ -1,31 +1,30 @@
-vim.cmd [[packadd packer.nvim]]
+return {
+    'wbthomason/packer.nvim',
 
-return require('packer').startup(function(use)
-    use 'wbthomason/packer.nvim'
-
-    use {
-        'nvim-telescope/telescope.nvim', tag = '0.1.4',
-        requires = {
+    {
+        'nvim-telescope/telescope.nvim',
+        tag = '0.1.4',
+        dependencies = {
             { 'nvim-lua/plenary.nvim' },
             { 'nvim-telescope/telescope-ui-select.nvim' },
         }
-    }
+    },
 
-    use('nvim-treesitter/nvim-treesitter', { run = ':TSUpdate' })
+    { 'nvim-treesitter/nvim-treesitter' },
 
-    use {
+    {
         "ThePrimeagen/harpoon",
         branch = "harpoon2",
-        requires = { { "nvim-lua/plenary.nvim" } }
-    }
+        dependencies = { { "nvim-lua/plenary.nvim" } }
+    },
 
-    use('mbbill/undotree')
-    use('tpope/vim-fugitive')
+    'mbbill/undotree',
+    'tpope/vim-fugitive',
 
-    use {
+    {
         'VonHeikemen/lsp-zero.nvim',
         branch = 'v2.x',
-        requires = {
+        dependencies = {
             {
                 'neovim/nvim-lspconfig',
                 opts = {
@@ -34,7 +33,7 @@ return require('packer').startup(function(use)
             },
             {
                 'williamboman/mason.nvim',
-                run = function()
+                build = function()
                     pcall(vim.cmd, 'MasonUpdate')
                 end,
             },
@@ -47,127 +46,111 @@ return require('packer').startup(function(use)
             { 'saadparwaiz1/cmp_luasnip' },
             { 'simrat39/inlay-hints.nvim' }
         }
-    }
+    },
 
-    use {
+    {
         'rmagatti/auto-session',
         config = function()
             require("auto-session").setup {
             }
         end
-    }
+    },
 
-    use('nvim-treesitter/nvim-treesitter-context')
+    'nvim-treesitter/nvim-treesitter-context',
 
-    use('tpope/vim-surround')
-    use('tpope/vim-repeat')
+    'tpope/vim-surround',
+    'tpope/vim-repeat',
 
-    use {
+    {
         'nvim-lualine/lualine.nvim',
-        requires = { 'nvim-tree/nvim-web-devicons' }
-    }
-    use {
+        dependencies = { 'nvim-tree/nvim-web-devicons' }
+    },
+    {
         'junegunn/fzf',
-        run = function()
+        build = function()
             vim.fn['fzf#install']()
         end
-    }
-    use('tpope/vim-commentary')
+    },
+    'tpope/vim-commentary',
 
-    use {
+    {
         'nvim-tree/nvim-tree.lua',
-        requires = { 'nvim-tree/nvim-web-devicons' }
-    }
+        dependencies = { 'nvim-tree/nvim-web-devicons' }
+    },
 
-    use('airblade/vim-gitgutter')
-    use('HiPhish/rainbow-delimiters.nvim')
+    'airblade/vim-gitgutter',
+    'HiPhish/rainbow-delimiters.nvim',
 
-    use({
+    {
         'nvimdev/lspsaga.nvim',
-        after = 'nvim-lspconfig',
+        dependencies = { 'nvim-lspconfig' },
         config = function()
             require('lspsaga').setup({})
         end,
-    })
+    },
 
-    use('dense-analysis/ale')
+    'dense-analysis/ale',
 
-    use({
-        "iamcco/markdown-preview.nvim",
-        run = function() vim.fn["mkdp#util#install"]() end,
-    })
+    'eandrju/cellular-automaton.nvim',
+    'ray-x/lsp_signature.nvim',
 
-    use('eandrju/cellular-automaton.nvim')
-    use('ray-x/lsp_signature.nvim')
+    { 'github/copilot.vim',              branch = 'release' },
 
-    use { 'github/copilot.vim', branch = 'release' }
+    'rcarriga/nvim-notify',
 
-    use 'rcarriga/nvim-notify'
-
-    use({
+    {
         "kdheepak/lazygit.nvim",
-        requires = {
+        dependencies = {
             "nvim-lua/plenary.nvim",
         },
         config = function()
             require("telescope").load_extension("lazygit")
         end,
-    })
+    },
 
-    use({ 'catppuccin/nvim', as = "catppuccin" })
+    'windwp/nvim-ts-autotag',
+    'famiu/bufdelete.nvim',
 
-    use 'windwp/nvim-ts-autotag'
-    use 'famiu/bufdelete.nvim'
-
-    use {
+    {
         'numtostr/comment.nvim',
         config = function()
             require('Comment').setup()
         end
-    }
+    },
 
-    use 'jiangmiao/auto-pairs'
+    'jiangmiao/auto-pairs',
 
-    use { 'stevearc/dressing.nvim' }
+    { 'stevearc/dressing.nvim' },
 
-    use 'windwp/nvim-spectre'
+    'windwp/nvim-spectre',
 
-    use {
+    {
         "lukas-reineke/indent-blankline.nvim",
         config = function()
             require("ibl").setup()
         end
-    }
+    },
 
-    -- Local
-    use {
-        '~/Projects/tsc.nvim',
-        requires = {
-            { 'rcarriga/nvim-notify' },
-        }
-    }
 
-    use {
+    {
         "folke/which-key.nvim",
         config = function()
             vim.o.timeout = true
             vim.o.timeoutlen = 300
         end
-    }
+    },
 
-    use "yuchanns/phpfmt.nvim"
+    "yuchanns/phpfmt.nvim",
 
-    vim.keymap.set('n', '<leader>ps', ':so<CR>:PackerSync<CR>')
-
-    use({
+    {
         "stevearc/aerial.nvim",
         config = function()
             require("aerial").setup()
         end,
-    })
+    },
 
-    use 'stephpy/vim-php-cs-fixer'
-    use {
+    'stephpy/vim-php-cs-fixer',
+    {
         "LintaoAmons/bookmarks.nvim",
         config = function()
             require("bookmarks").setup({
@@ -177,9 +160,9 @@ return require('packer').startup(function(use)
                 },
             })
         end
-    }
+    },
 
-    use {
+    {
         'gbprod/phpactor.nvim',
         build = function()
             require("phpactor.handler.update")()
@@ -188,16 +171,19 @@ return require('packer').startup(function(use)
             "nvim-lua/plenary.nvim",
             "neovim/nvim-lspconfig"
         },
-    }
+    },
 
-    use 'maxmx03/solarized.nvim'
-    use 'stsewd/fzf-checkout.vim'
+    'maxmx03/solarized.nvim',
+    'stsewd/fzf-checkout.vim',
 
-    use {
+    {
         'dmmulroy/ts-error-translator.nvim',
         config = function()
             require("ts-error-translator").setup {
             }
         end
-    }
-end)
+    },
+
+    'folke/lazydev.nvim',
+    { dir = '~/Projects/tsc.nvim' },
+}
