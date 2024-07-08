@@ -94,6 +94,13 @@ lsp.on_attach(function(client)
     end
 
     local function toggle_inlay_hints()
+        local available = client.server_capabilities.inlayHintProvider and vim.lsp.inlay_hint
+        if not available then
+            vim.notify("Inlay hints are not available for this language server", "error")
+
+            return
+        end
+
         local enabled = vim.lsp.inlay_hint.is_enabled()
 
         if not enabled then
