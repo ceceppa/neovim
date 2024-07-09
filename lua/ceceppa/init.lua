@@ -4,6 +4,7 @@ require("ceceppa.git")
 require("ceceppa.autocmd")
 require("ceceppa.lint")
 require("ceceppa.projects")
+require("ceceppa.runner")
 
 vim.api.nvim_set_option("clipboard","unnamed")
 

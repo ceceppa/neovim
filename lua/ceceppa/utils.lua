@@ -202,7 +202,7 @@ M.execute_command = function(command, description, args, then_callback, formatte
     }):start()
 end
 
-function ExecAsync(command)
+M.exec_async = function(command)
     local parts = vim.split(command, " ")
 
     M.execute_command(parts[1], parts[1], vim.list_slice(parts, 2, #parts), nil, nil, false)

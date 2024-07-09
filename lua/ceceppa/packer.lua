@@ -91,13 +91,7 @@ return require('packer').startup(function(use)
             vim.fn['fzf#install']()
         end
     }
-    use('tpope/vim-commentary')
-
-    use {
-        'nvim-tree/nvim-tree.lua',
-        requires = { 'nvim-tree/nvim-web-devicons' }
-    }
-
+    -- use('tpope/vim-commentary')
     use('airblade/vim-gitgutter')
     use('HiPhish/rainbow-delimiters.nvim')
 
@@ -122,19 +116,6 @@ return require('packer').startup(function(use)
     use { 'github/copilot.vim', branch = 'release' }
 
     use 'rcarriga/nvim-notify'
-
-    use({
-        "kdheepak/lazygit.nvim",
-        requires = {
-            "nvim-lua/plenary.nvim",
-        },
-        config = function()
-            require("telescope").load_extension("lazygit")
-        end,
-    })
-
-    use({ 'catppuccin/nvim', as = "catppuccin" })
-
     use 'windwp/nvim-ts-autotag'
     use 'famiu/bufdelete.nvim'
 
@@ -186,6 +167,7 @@ return require('packer').startup(function(use)
     })
 
     use 'stephpy/vim-php-cs-fixer'
+
     use {
         "LintaoAmons/bookmarks.nvim",
         config = function()
@@ -210,7 +192,6 @@ return require('packer').startup(function(use)
     }
 
     use 'maxmx03/solarized.nvim'
-    use 'stsewd/fzf-checkout.vim'
 
     use {
         'dmmulroy/ts-error-translator.nvim',
