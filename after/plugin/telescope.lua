@@ -2,27 +2,7 @@ local builtin = require('telescope.builtin')
 
 local h_pct = 0.90
 local w_pct = 0.90
-local w_limit = 75
 
-local standard_setup = {
-    borderchars = { '─', '│', '─', '│', '┌', '┐', '┘', '└' },
-    preview = { hide_on_startup = true },
-    layout_strategy = 'vertical',
-    layout_config = {
-        vertical = {
-            mirror = true,
-            prompt_position = 'top',
-            width = function(_, cols, _)
-                return math.min(math.floor(w_pct * cols), w_limit)
-            end,
-            height = function(_, _, rows)
-                return math.floor(rows * h_pct)
-            end,
-            preview_cutoff = 10,
-            preview_height = 0.4,
-        },
-    },
-}
 local fullscreen_setup = {
     borderchars = { " ", " ", " ", " ", " ", " ", " ", " " },
     color_devicons = true,
@@ -108,8 +88,6 @@ require("telescope").setup {
         }
     },
 }
--- To get ui-select loaded and working with telescope, you need to call
--- load_extension, somewhere after setup function:
 require("telescope").load_extension("ui-select")
 require("telescope").load_extension("notify")
 
@@ -119,7 +97,6 @@ vim.keymap.set('n', '<C-p>', function() builtin.find_files({ hidden = true }) en
 vim.keymap.set('n', '<leader>pg', builtin.git_files, { desc = '@: Search in git files' })
 
 vim.keymap.set('n', '<leader>bb', builtin.buffers, { desc = '@: Show buffers' })
-vim.keymap.set('n', '<leader>e', ':Telescope diagnostics<CR>', { desc = '@: Show errors in all open buffers' });
 vim.keymap.set('n', '<leader>ds', ':Telescope lsp_document_symbols<CR>', { desc = '@: Document symbols' });
 
 vim.keymap.set('n', 'zz', ':Telescope spell_suggest<CR>', { desc = '@: Spell suggest' });

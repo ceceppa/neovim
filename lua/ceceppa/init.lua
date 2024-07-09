@@ -5,6 +5,7 @@ require("ceceppa.autocmd")
 require("ceceppa.lint")
 require("ceceppa.projects")
 require("ceceppa.runner")
+require("ceceppa.diagnostics")
 
 vim.api.nvim_set_option("clipboard","unnamed")
 

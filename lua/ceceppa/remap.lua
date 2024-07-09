@@ -66,6 +66,9 @@ vim.api.nvim_set_keymap('n', "<leader>v(", 'vi(',
     { noremap = true, silent = true, desc = '@: Select content inside parentheses (' })
 vim.api.nvim_set_keymap('n', "<leader>v{", 'vi{',
     { noremap = true, silent = true, desc = '@: Select content inside curly brackets {' })
+vim.api.nvim_set_keymap('n', "<C-S-_>", '_i',
+    { noremap = true, silent = true, desc = '@: Move cursor to first non-blank character and insert mode' })
+
 
 
 -- Insert mode

@@ -179,6 +179,17 @@ local function inlay_hints_status()
     return label .. '🕵️ Enabled '
 end
 
+local function custom_diagnostics()
+    local lint = ' '
+    local tsc = #vim.ceceppa.errors.tsc
+ 
+    if not vim.ceceppa.running then
+        lint = #vim.ceceppa.errors.lint
+    end
+
+   return '  /  Lint: ' .. lint .. ' TSC: ' .. tsc
+end
+
 require('lualine').setup {
     options = {
         icons_enabled = true,
@@ -241,6 +252,13 @@ require('lualine').setup {
                     left = '',
                 },
             },
+            {
+                custom_diagnostics,
+                color = {
+                    bg = '#aaffff',
+                    fg = '#000000',
+                }
+            }
         },
         lualine_y = {},
         lualine_z = { 'progress', 'location' }

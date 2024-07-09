@@ -122,7 +122,7 @@ local function show_notification(command, description, is_silent)
     return on_complete
 end
 
-M.execute_command = function(command, description, args, then_callback, formatter, silent)
+M.execute_command = function(command, description, args, then_callback, should_return, silent)
     local output = {}
 
     local on_complete = show_notification(command .. " " .. table.concat(args, ' '), description, silent)
@@ -141,28 +141,29 @@ M.execute_command = function(command, description, args, then_callback, formatte
                 should_ignore_error = true
             end
         end,
-        on_exit = function(j, return_val)
-            if formatter then
-                vim.schedule(function()
-                    local formatted_output = formatter(output)
-
-                    if #formatted_output > 0 then
-                        show_qflist(command, formatted_output)
-                    elseif #formatted_output == 0 then
-                        if then_callback then
-                            vim.schedule(function()
-                                then_callback()
-                            end)
-                        end
-
-                        vim.schedule(function()
-                            vim.cmd("cclose")
-                            is_showing_qflist = false
-                        end)
-                    else
-                        show_popup(command, output)
-                    end
-                end)
+        on_exit = function(_, return_val)
+            if should_return then
+                then_callback(output)
+                -- vim.schedule(function()
+                --     local formatted_output = should_return(output)
+                --
+                --     if #formatted_output > 0 then
+                --         show_qflist(command, formatted_output)
+                --     elseif #formatted_output == 0 then
+                --         if then_callback then
+                --             vim.schedule(function()
+                --                 then_callback()
+                --             end)
+                --         end
+                --
+                --         vim.schedule(function()
+                --             vim.cmd("cclose")
+                --             is_showing_qflist = false
+                --         end)
+                --     else
+                --         show_popup(command, output)
+                --     end
+                -- end)
             else
                 if return_val == 0 then
                     on_complete("success")
@@ -188,7 +189,7 @@ M.execute_command = function(command, description, args, then_callback, formatte
                     on_complete("error")
 
                     vim.schedule(function()
-                        local formatted_output = formatter and formatter(output) or {}
+                        local formatted_output = should_return and should_return(output) or {}
 
                         if #formatted_output > 0 then
                             show_qflist(command, formatted_output)

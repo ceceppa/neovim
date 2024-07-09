@@ -7,7 +7,7 @@ local utils = require("ceceppa.utils")
 
 local NVIM_COMMANDS_FILE = vim.fn.expand("~/.nvim.commands.json")
 
-local commands_history = { "[new]" }
+local commands_history = {}
 
 local save_command = function(data)
     local json = vim.fn.json_encode(data)
@@ -31,19 +31,16 @@ function ceceppa_command_picker()
         attach_mappings = function(prompt_bufnr, map)
             local run_command = function()
                 local selection = action_state.get_selected_entry(prompt_bufnr)
+                local picker = action_state.get_current_picker(prompt_bufnr)
+                local prompt = picker:_get_prompt()
+
                 actions.close(prompt_bufnr)
 
-                local command_to_run = nil
+                local command_to_run = selection and selection.value or prompt
 
-                if selection.value == "[new]" then
-                    command_to_run = vim.fn.input("Command: ")
-
-                    if string.len(command_to_run) > 0 then
-                        table.insert(commands_history, command_to_run)
-                        save_command(commands_history)
-                    end
-                else
-                    command_to_run = selection.value
+                if not selection then
+                    table.insert(commands_history, command_to_run)
+                    save_command(commands_history)
                 end
 
                 if command_to_run and string.len(command_to_run) > 0 then
@@ -55,7 +52,6 @@ function ceceppa_command_picker()
 
             local remove_command_from_history = function()
                 local selection = action_state.get_selected_entry(prompt_bufnr)
-                actions.close(prompt_bufnr)
 
                 for i, command in ipairs(commands_history) do
                     if command == selection.value then
