@@ -48,7 +48,6 @@ end
 -- get git status
 local latest_check_datetime = nil
 local old_branch_col = nil
-local CACHE_TIMEOUT = 5 * 1000 -- 5 seconds
 
 local function git_status()
     vim.b.git_state = { '', '', '' }
@@ -141,13 +140,26 @@ local function git_status()
     vim.b.git_show = git_state[1] ~= '' or git_state[2] ~= '' or git_state[3] ~= '' or git_state[4] ~= ''
 
     old_branch_col = branch_col
-
-    vim.defer_fn(function()
-        git_status()
-    end, CACHE_TIMEOUT)
 end
 
-git_status()
+local is_git_repo = false
+
+-- if .git directory exists, update git status
+if vim.fn.isdirectory('.git') == 1 then
+    is_git_repo = true
+    git_status()
+
+    vim.api.nvim_create_autocmd("BufWritePre", {
+        pattern = "*.*",
+        desc = "Update git status",
+        callback = function()
+            git_status()
+        end,
+    })
+else
+    vim.b.git_state = { '', '', '', '' }
+    vim.b.git_show = false
+end
 
 local function unsaved_buffers()
     local unsaved_buffers = 0
@@ -216,7 +228,7 @@ local function update_diagnostics()
 
     local status = '  '
 
-    if vim.ceceppa.running then
+    if vim.ceceppa.errors.running then
         status = HOURGLASSES[hourglass] .. ' '
     end
 
@@ -352,6 +364,10 @@ require('lualine').setup {
         lualine_x = {
             {
                 function()
+                    if not is_git_repo then
+                        return 'No git repo'
+                    end
+
                     if vim.b.git_show then
                         return 'Git'
                     end

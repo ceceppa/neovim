@@ -3,14 +3,12 @@ local tsc_utils = require('tsc.utils')
 
 local LINT_INTERVAL = 60000
 
-vim.ceceppa = {
-    _waiting = 0,
+vim.ceceppa.errors = {
+    errors._waiting = 0,
     show_errors = false,
-    running = false,
-    errors = {
-        lint = {},
-        tsc = {},
-    }
+    errors.running = false,
+    lint = {},
+    tsc = {},
 }
 
 local function parse_lint_output(output)
@@ -48,23 +46,23 @@ local function parse_lint_output(output)
 end
 
 local function process_completed()
-    vim.ceceppa._waiting = vim.ceceppa._waiting - 1
+    vim.ceceppa.errors._waiting = vim.ceceppa.errors._waiting - 1
 
-    if vim.ceceppa._waiting == 0 then
-        vim.ceceppa.running = false
+    if vim.ceceppa.errors._waiting == 0 then
+        vim.ceceppa.errors.running = false
     end
 end
 
 local function do_command(command, description, args, callback, is_watch)
-    vim.ceceppa.running = true
+    vim.ceceppa.errors.running = true
 
-    vim.ceceppa._waiting = vim.ceceppa._waiting + 1
+    vim.ceceppa.errors._waiting = vim.ceceppa.errors._waiting + 1
 
     utils.execute_command(command, description, args, callback, true, is_watch)
 end
 
 function do_yarn_lint(is_watch)
-    if vim.fn.filereadable('package.json') ~= 1 or vim.ceceppa.running then
+    if vim.fn.filereadable('package.json') ~= 1 or vim.ceceppa.errors.running then
         return
     end
 
@@ -77,6 +75,12 @@ function do_yarn_lint(is_watch)
 end
 
 if vim.fn.filereadable('package.json') == 1 then
+    local scripts = vim.fn.json_decode(vim.fn.readfile('package.json'))['scripts']
+
+    if scripts == nil then
+        return
+    end
+
     -- Check if there is a "lint" command in the package.json
     local lint_command = vim.fn.json_decode(vim.fn.readfile('package.json'))['scripts']['lint']
 

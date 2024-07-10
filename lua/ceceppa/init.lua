@@ -1,3 +1,5 @@
+vim.ceceppa = { }
+
 require("ceceppa.remap")
 require("ceceppa.set")
 require("ceceppa.git")
