@@ -202,6 +202,7 @@ end
 
 local custom_diagnostics = nil
 local hourglass = 1
+local bufnr_name_map = {}
 
 local function update_diagnostics()
     local vim_diagnostic = vim.diagnostic.get()
@@ -211,10 +212,20 @@ local function update_diagnostics()
     }
 
     for _, value in ipairs(vim_diagnostic) do
-        if value.severity == 1 then
-            values.errors = values.errors + 1
-        elseif value.severity == 2 then
-            values.warnings = values.warnings + 1
+        if bufnr_name_map[value.bufnr] == nil then
+            bufnr_name_map[value.bufnr] = vim.api.nvim_buf_get_name(value.bufnr)
+        end
+
+        local filename = bufnr_name_map[value.bufnr]
+
+        -- ignore warnings from files outside the project
+        -- this can happen when switching between projects
+        if filename:find(vim.fn.getcwd()) ~= nil then
+            if value.severity == 1 then
+                values.errors = values.errors + 1
+            elseif value.severity == 2 then
+                values.warnings = values.warnings + 1
+            end
         end
     end
 
