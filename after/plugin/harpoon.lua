@@ -1,4 +1,5 @@
 local harpoon = require("harpoon")
+local actions = require "telescope.actions"
 
 harpoon:setup({
     settings = {
@@ -22,15 +23,17 @@ local function toggle_telescope(harpoon_files)
         }),
         previewer = conf.file_previewer({}),
         sorter = conf.generic_sorter({}),
-        mappings = {
-            i = {
-                ["<C-x>"] = function(prompt_bufnr)
-                    harpoon:list():remove_at(
-                        require("telescope.actions.state").get_selected_entry(prompt_bufnr).index
-                    )
-                end,
-            },
-        },
+        attach_mappings = function(prompt_bufnr, map)
+            map("i", "<C-x>", function()
+                actions.close(prompt_bufnr)
+
+                harpoon_files:remove_at(
+                    require("telescope.actions.state").get_selected_entry(prompt_bufnr).index
+                )
+            end)
+
+            return true
+        end,
     }):find()
 end
 
@@ -38,8 +41,6 @@ vim.keymap.set("n", "<leader>a", function() harpoon:list():add() end, { desc = '
 
 vim.keymap.set("n", "<C-e>", function() toggle_telescope(harpoon:list()) end,
     { desc = '@: Show harpoon quick menu (Telescope)' })
-vim.keymap.set("n", "<leader>hh", function() harpoon.ui:toggle_quick_menu(harpoon:list()) end,
-    { desc = '@: Show harpoon quick menu' })
 vim.keymap.set("n", "<C-t>", function() harpoon:list():select(1) end, { desc = '@: Open harpoon mark #1' })
 vim.keymap.set("n", "<C-g>", function() harpoon:list():select(2) end, { desc = '@: Open harpoon mark #1' })
 vim.keymap.set("n", "<C-h>", function() harpoon:list():select(3) end, { desc = '@: Open harpoon mark #1' })
