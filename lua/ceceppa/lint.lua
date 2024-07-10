@@ -85,7 +85,7 @@ if vim.fn.filereadable('package.json') == 1 then
     end
 
     vim.api.nvim_create_autocmd("BufWritePre", {
-        pattern = "*.{ts,tsx,.js,.jsx}",
+        pattern = "*.{ts,tsx,js,jsx}",
         desc = "Run lint on save",
         callback = function()
             do_yarn_lint(true)
