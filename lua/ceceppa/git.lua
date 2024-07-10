@@ -6,13 +6,15 @@ end
 
 local function execute_git_command(description, args, then_callback)
     utils.execute_command('git', description, args, function()
-        then_callback()
+        if then_callback then
+            then_callback()
+        end
 
         vim.ceceppa.update_git_status()
     end)
 end
 
- function get_commit_message()
+function get_commit_message()
     local prompt = "Prepend: ! = Force push | ~ = Push with no verify | ? = Push with no verify and force push"
     local input = vim.fn.input(prompt .. "\nEnter the commit message: ")
     local original_input = input
@@ -163,4 +165,3 @@ end, { desc = '@: Git: Write commit message and push' });
 vim.keymap.set('n', '<leader>gss', function()
     git_stash_with_name()
 end, { desc = '@: Git: stash with name' });
-
