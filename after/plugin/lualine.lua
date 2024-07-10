@@ -128,13 +128,13 @@ local function git_status()
 
     -- build output string
     if git_num[1] ~= 0 then
-        git_state[2] = '• 󱣫 Staged: ' .. git_num[1]
+        git_state[2] = '󱣫 Staged: ' .. git_num[1]
     end
     if git_num[2] ~= 0 then
-        git_state[3] = '• 󰷉 Modified: ' .. git_num[2]
+        git_state[3] = '󰷉 Modified: ' .. git_num[2]
     end
     if git_num[3] ~= 0 then
-        git_state[4] = '•  New: ' .. git_num[3]
+        git_state[4] = ' New: ' .. git_num[3]
     end
 
     -- save to variable
@@ -372,19 +372,21 @@ require('lualine').setup {
         lualine_x = {
             {
                 function()
+                    local git_label = '󰊢 Git: '
+
                     if git_is_waiting then
-                        return HOURGLASSES[1] .. ' '
+                        return git_label .. HOURGLASSES[1] .. ' '
                     end
 
                     if not is_git_repo then
-                        return 'No git repo'
+                        return git_label .. 'No git repo'
                     end
 
                     if vim.b.git_show then
-                        return 'Git'
+                        return git_label
                     end
 
-                    return 'Git:   updated '
+                    return git_label .. '  updated '
                 end,
                 color = { fg = '#ffffff', bg = '#00575a' },
                 separator = {
