@@ -4,9 +4,9 @@ local tsc_utils = require('tsc.utils')
 local LINT_INTERVAL = 60000
 
 vim.ceceppa.errors = {
-    errors._waiting = 0,
+    _waiting = 0,
     show_errors = false,
-    errors.running = false,
+    running = false,
     lint = {},
     tsc = {},
 }

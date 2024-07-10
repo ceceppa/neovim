@@ -5,7 +5,11 @@ function display_git_output(output)
 end
 
 local function execute_git_command(description, args, then_callback)
-    utils.execute_command('git', description, args, then_callback)
+    utils.execute_command('git', description, args, function()
+        then_callback()
+
+        vim.ceceppa.update_git_status()
+    end)
 end
 
  function get_commit_message()

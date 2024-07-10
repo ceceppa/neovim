@@ -1,4 +1,5 @@
 local TIMEOUT = 3000
+local HOURGLASSES = { '', '', '' }
 
 -- helper function to loop over string lines
 -- copied from https://stackoverflow.com/a/19329565
@@ -46,10 +47,11 @@ function find_dir(d)
 end
 
 -- get git status
-local latest_check_datetime = nil
+local git_is_waiting = true
 local old_branch_col = nil
 
 local function git_status()
+    git_is_waiting = false
     vim.b.git_state = { '', '', '' }
     -- get & check file directory
     file_dir = find_dir(vim.fn.expand("%:p:h"))
@@ -142,18 +144,25 @@ local function git_status()
     old_branch_col = branch_col
 end
 
+vim.ceceppa.update_git_status = git_status
+
 local is_git_repo = false
 
 -- if .git directory exists, update git status
 if vim.fn.isdirectory('.git') == 1 then
     is_git_repo = true
-    git_status()
+
+    vim.defer_fn(function()
+        git_status()
+    end, 500)
 
     vim.api.nvim_create_autocmd("BufWritePre", {
         pattern = "*.*",
         desc = "Update git status",
         callback = function()
-            git_status()
+            vim.defer_fn(function()
+                git_status()
+            end, 500)
         end,
     })
 else
@@ -192,7 +201,6 @@ local function inlay_hints_status()
 end
 
 local custom_diagnostics = nil
-local HOURGLASSES = { '', '', '' }
 local hourglass = 1
 
 local function update_diagnostics()
@@ -364,6 +372,10 @@ require('lualine').setup {
         lualine_x = {
             {
                 function()
+                    if git_is_waiting then
+                        return HOURGLASSES[1] .. ' '
+                    end
+
                     if not is_git_repo then
                         return 'No git repo'
                     end
@@ -372,7 +384,7 @@ require('lualine').setup {
                         return 'Git'
                     end
 
-                    return 'Git:   '
+                    return 'Git:   updated '
                 end,
                 color = { fg = '#ffffff', bg = '#00575a' },
                 separator = {
