@@ -5,6 +5,7 @@ local LINT_INTERVAL = 60000
 
 vim.ceceppa = {
     _waiting = 0,
+    show_errors = false,
     running = false,
     errors = {
         lint = {},
@@ -67,44 +68,12 @@ function do_yarn_lint(is_watch)
         return
     end
 
+    vim.ceceppa.errors.show_errors = true
+
     do_command("yarn", "Linting", { 'lint' }, function(data)
         vim.ceceppa.errors.lint = parse_lint_output(data)
         process_completed()
     end, is_watch)
-
-    -- utils.execute_command("yarn", "Linting", { 'lint' }, function(data)
-    --     vim.ceceppa.errors.lint = parse_lint_output(data)
-    --     process_completed()
-    -- end, true, is_watch)
-
-    -- local ts_check = vim.fn.json_decode(vim.fn.readfile('package.json'))['scripts']['ts:check'];
-    --
-    --
-    -- if ts_check ~= nil then
-    --     do_command("yarn", "TypeScript check", { 'ts:check' }, function(data)
-    --         local result = tsc_utils.parse_tsc_output(data, { pretty_errors = true })
-    --
-    --         vim.ceceppa.errors.tsc = result.errors
-    --         process_completed()
-    --     end, is_watch)
-    --
-    --     -- utils.execute_command(
-    --     --     "yarn",
-    --     --     "Linting", { 'ts:check' },
-    --     --     function(data)
-    --     --         local result = tsc_utils.parse_tsc_output(data, { pretty_errors = true })
-    --     --
-    --     --         vim.ceceppa.errors.tsc = result.errors
-    --     --     end,
-    --     --     true,
-    --     --     is_watch)
-    -- end
-
-    if is_watch then
-        vim.defer_fn(
-            function() do_yarn_lint(is_watch) end
-            , LINT_INTERVAL)
-    end
 end
 
 if vim.fn.filereadable('package.json') == 1 then
@@ -115,9 +84,13 @@ if vim.fn.filereadable('package.json') == 1 then
         return
     end
 
-    -- vim.notify("Linting & TypeScript check", "Watching for changes every 30s", nil, { title = "Watcher" })
-
-    do_yarn_lint(true)
+    vim.api.nvim_create_autocmd("BufWritePre", {
+        pattern = "*.{ts,tsx,.js,.jsx}",
+        desc = "Run lint on save",
+        callback = function()
+            do_yarn_lint(true)
+        end,
+    })
 end
 
 vim.api.nvim_set_keymap('n', '<leader>tc', ':lua do_yarn_lint()<CR>',

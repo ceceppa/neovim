@@ -1,4 +1,4 @@
--- -- try git status
+local TIMEOUT = 3000
 
 -- helper function to loop over string lines
 -- copied from https://stackoverflow.com/a/19329565
@@ -179,16 +179,61 @@ local function inlay_hints_status()
     return label .. '🕵️ Enabled '
 end
 
-local function custom_diagnostics()
-    local lint = ' '
-    local tsc = #vim.ceceppa.errors.tsc
- 
-    if not vim.ceceppa.running then
-        lint = #vim.ceceppa.errors.lint
+local custom_diagnostics = nil
+local HOURGLASSES = { '', '', '' }
+local hourglass = 1
+
+local function update_diagnostics()
+    local vim_diagnostic = vim.diagnostic.get()
+    local values = {
+        errors = 0,
+        warnings = 0,
+    }
+
+    for _, value in ipairs(vim_diagnostic) do
+        if value.severity == 1 then
+            values.errors = values.errors + 1
+        elseif value.severity == 2 then
+            values.warnings = values.warnings + 1
+        end
     end
 
-   return '  /  Lint: ' .. lint .. ' TSC: ' .. tsc
+    for _, value in ipairs(vim.ceceppa.errors.lint) do
+        if value.type:upper() == 'ERROR' then
+            values.errors = values.errors + 1
+        else
+            values.warnings = values.warnings + 1
+        end
+    end
+
+    for _, value in ipairs(vim.ceceppa.errors.tsc) do
+        if value.type:upper() == 'ERROR' then
+            values.errors = values.errors + 1
+        else
+            values.warnings = values.warnings + 1
+        end
+    end
+
+    local status = '  '
+
+    if vim.ceceppa.running then
+        status = HOURGLASSES[hourglass] .. ' '
+    end
+
+    custom_diagnostics = status .. ' Errors: ' .. values.errors .. '    Warns: ' .. values.warnings
+
+    vim.defer_fn(function()
+        hourglass = hourglass + 1
+
+        if hourglass > 3 then
+            hourglass = 1
+        end
+
+        update_diagnostics()
+    end, TIMEOUT)
 end
+
+update_diagnostics()
 
 require('lualine').setup {
     options = {
@@ -204,9 +249,9 @@ require('lualine').setup {
         always_divide_middle = true,
         globalstatus = true,
         refresh = {
-            statusline = 5000,
-            tabline = 5000,
-            winbar = 1000,
+            statusline = TIMEOUT,
+            tabline = TIMEOUT,
+            winbar = TIMEOUT,
         }
     },
     sections = {
@@ -236,28 +281,16 @@ require('lualine').setup {
                 },
             },
             {
-                'diagnostics',
-                left = '',
-                sections = { 'error', 'warn', 'info', 'hint' },
-                symbols = {
-                    error = ' Err:',
-                    warn = '•   Warn: ',
-                    info = '•  Info: ',
-                    hint = '•  Hint: '
-                },
+                function()
+                    return custom_diagnostics
+                end,
                 color = {
-                    bg = '#aaffff'
+                    bg = '#aaffff',
+                    fg = '#000000',
                 },
                 separator = {
                     left = '',
                 },
-            },
-            {
-                custom_diagnostics,
-                color = {
-                    bg = '#aaffff',
-                    fg = '#000000',
-                }
             }
         },
         lualine_y = {},

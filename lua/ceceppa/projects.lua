@@ -30,10 +30,14 @@ function ceceppa_project_picker()
         sorter = conf.generic_sorter({}),
         attach_mappings = function(prompt_bufnr, map)
             local open_project = function()
+                local selection = action_state.get_selected_entry(prompt_bufnr)
+                if not selection then
+                    return
+                end
+
                 local auto_session = require("auto-session")
                 auto_session.SaveSession()
 
-                local selection = action_state.get_selected_entry(prompt_bufnr)
                 actions.close(prompt_bufnr)
 
                 vim.cmd("cd " .. selection.value)
