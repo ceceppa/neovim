@@ -238,13 +238,14 @@ local function update_diagnostics()
         end
     end
 
-    local status = '  '
+    local status = '󰒲  '
 
     if vim.ceceppa.errors.running then
         status = HOURGLASSES[hourglass] .. ' '
     end
 
-    custom_diagnostics = status .. ' Errors: ' .. values.errors .. '    Warns: ' .. values.warnings
+    custom_diagnostics = status ..
+        ' Errors: ' .. values.errors .. '    Warns: ' .. values.warnings 
 
     vim.defer_fn(function()
         hourglass = hourglass + 1
@@ -315,7 +316,7 @@ require('lualine').setup {
                 separator = {
                     left = '',
                 },
-            }
+            },
         },
         lualine_y = {},
         lualine_z = { 'progress', 'location' }

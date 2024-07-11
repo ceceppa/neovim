@@ -22,8 +22,8 @@ function PhpCsFixerFixFile()
     local filename = vim.api.nvim_buf_get_name(0)
 
     vim.cmd([[!]] .. config.php_path .. " " .. config.path .. " fix --rules=" .. config.rules .. " '" .. filename .. "'")
-
-    vim.notify(filename, nil, {
-        title = "PhpCsFixer",
-    })
+    --
+    -- vim.notify(filename, nil, {
+    --     title = "PhpCsFixer",
+    -- })
 end

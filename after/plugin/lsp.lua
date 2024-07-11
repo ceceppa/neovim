@@ -93,7 +93,7 @@ lsp.on_attach(function(client)
 
     -- By default, enable inlay hints for TypeScript and JavaScript only
     local filetype = vim.bo.filetype
-    if filetype == 'typescript' or filetype == 'javascript' then
+    if filetype == 'typescript' or filetype == 'javascript' or filetype == 'typescriptreact' then
         vim.defer_fn(function()
             enable_inlay_hints()
         end, 100)
