@@ -4,6 +4,8 @@ local Popup = require 'plenary.popup'
 local M = {}
 local is_showing_qflist = false
 
+local _latest_output = {}
+
 local function show_qflist(title, output)
     is_showing_qflist = true
 
@@ -24,7 +26,6 @@ local function show_popup(title, output)
 
     popup_id = Popup.create(output, {
         title = title,
-        highlight = title .. "Window",
         line = math.floor(((vim.o.lines - height) / 2) - 1),
         col = math.floor((vim.o.columns - width) / 2),
         minwidth = width,
@@ -142,28 +143,10 @@ M.execute_command = function(command, description, args, then_callback, should_r
             end
         end,
         on_exit = function(_, return_val)
+            _latest_output = output
+
             if should_return then
                 then_callback(output)
-                -- vim.schedule(function()
-                --     local formatted_output = should_return(output)
-                --
-                --     if #formatted_output > 0 then
-                --         show_qflist(command, formatted_output)
-                --     elseif #formatted_output == 0 then
-                --         if then_callback then
-                --             vim.schedule(function()
-                --                 then_callback()
-                --             end)
-                --         end
-                --
-                --         vim.schedule(function()
-                --             vim.cmd("cclose")
-                --             is_showing_qflist = false
-                --         end)
-                --     else
-                --         show_popup(command, output)
-                --     end
-                -- end)
             else
                 if return_val == 0 then
                     on_complete("success")
@@ -208,5 +191,25 @@ M.exec_async = function(command)
 
     M.execute_command(parts[1], parts[1], vim.list_slice(parts, 2, #parts), nil, nil, false)
 end
+
+M.get_unsaved_buffers_total = function()
+    local unsaved_buffers = 0
+
+    vim.b.unsaved_buffers = ''
+
+    for _, buffer in ipairs(vim.api.nvim_list_bufs()) do
+        local buffer_name = vim.api.nvim_buf_get_name(buffer)
+        if vim.api.nvim_buf_get_option(buffer, "modified") then
+            unsaved_buffers = unsaved_buffers + 1
+        end
+    end
+
+    return unsaved_buffers
+end
+
+
+vim.api.nvim_create_user_command("ExecAsyncLog", function()
+    show_popup("Latest Async Output", _latest_output)
+end, { desc = "Show the latest async output in a popup", force = true })
 
 return M

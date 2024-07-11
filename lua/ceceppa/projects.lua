@@ -4,6 +4,7 @@ local finders = require "telescope.finders"
 local conf = require("telescope.config").values
 local actions = require "telescope.actions"
 local action_state = require "telescope.actions.state"
+local utils = require('ceceppa.utils')
 
 local NVIM_PROJECTS_FILE = vim.fn.expand("~/.nvim.projects.json")
 
@@ -30,15 +31,24 @@ function ceceppa_project_picker()
         sorter = conf.generic_sorter({}),
         attach_mappings = function(prompt_bufnr, map)
             local open_project = function()
+                actions.close(prompt_bufnr)
+
                 local selection = action_state.get_selected_entry(prompt_bufnr)
+
                 if not selection then
+                    return
+                end
+
+                local open_buffers= utils.get_unsaved_buffers_total()
+
+                if open_buffers > 0 then
+                    vim.notify("  You have unsaved buffers", "warn", { title = "Projects" })
+
                     return
                 end
 
                 local auto_session = require("auto-session")
                 auto_session.SaveSession()
-
-                actions.close(prompt_bufnr)
 
                 vim.cmd("cd " .. selection.value)
 

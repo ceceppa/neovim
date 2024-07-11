@@ -38,7 +38,6 @@ return require('packer').startup(function(use)
         requires = { { "nvim-lua/plenary.nvim" } }
     }
 
-    use('mbbill/undotree')
     use('tpope/vim-fugitive')
 
     use {
@@ -91,7 +90,6 @@ return require('packer').startup(function(use)
             vim.fn['fzf#install']()
         end
     }
-    -- use('tpope/vim-commentary')
     use('airblade/vim-gitgutter')
     use('HiPhish/rainbow-delimiters.nvim')
 
@@ -157,7 +155,6 @@ return require('packer').startup(function(use)
 
     use "yuchanns/phpfmt.nvim"
 
-    vim.keymap.set('n', '<leader>ps', ':so<CR>:PackerSync<CR>')
 
     use({
         "stevearc/aerial.nvim",
@@ -205,4 +202,12 @@ return require('packer').startup(function(use)
         'nvim-neo-tree/neo-tree.nvim',
         requires = { 'MunifTanjim/nui.nvim' }
     }
+
+    use({ 'catppuccin/nvim', as = "catppuccin" })
+
+    use "debugloop/telescope-undo.nvim"
+
+    use 'justinmk/vim-sneak'
+
+    vim.keymap.set('n', '<leader>ps', ':so<CR>:PackerSync<CR>')
 end)

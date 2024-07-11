@@ -5,6 +5,7 @@ local actions = require "telescope.actions"
 local action_state = require "telescope.actions.state"
 local utils = require("ceceppa.utils")
 
+
 local NVIM_COMMANDS_FILE = vim.fn.expand("~/.nvim.commands.json")
 
 local commands_history = {}
@@ -21,7 +22,7 @@ else
     save_command(commands_history)
 end
 
-function ceceppa_command_picker()
+local function command_picker()
     pickers.new({}, {
         prompt_title = "Commands",
         finder = finders.new_table {
@@ -38,20 +39,30 @@ function ceceppa_command_picker()
 
                 local command_to_run = selection and selection.value or prompt
 
-                if not selection then
-                    table.insert(commands_history, command_to_run)
-                    save_command(commands_history)
-                end
-
                 if command_to_run and string.len(command_to_run) > 0 then
+                    local command = vim.split(command_to_run, " ")[1]
+                    local ok = pcall(vim.fn.executable, command)
+                    if not ok then
+                        vim.notify("Command not found: " .. command, vim.log.levels.ERROR)
+
+                        return
+                    end
+
                     utils.exec_async(command_to_run)
                 else
                     vim.notify("No command to run", vim.log.levels.ERROR)
+                end
+
+                if not selection then
+                    table.insert(commands_history, command_to_run)
+                    save_command(commands_history)
                 end
             end
 
             local remove_command_from_history = function()
                 local selection = action_state.get_selected_entry(prompt_bufnr)
+
+                actions.close(prompt_bufnr)
 
                 for i, command in ipairs(commands_history) do
                     if command == selection.value then
@@ -73,4 +84,10 @@ function ceceppa_command_picker()
     }):find()
 end
 
-vim.api.nvim_set_keymap("n", "<leader>x", '<cmd>lua ceceppa_command_picker()<CR>', { noremap = true, silent = true })
+vim.api.nvim_create_user_command("ExecAsync", function()
+    command_picker()
+end, { desc = 'Async command picker / runner', force = true })
+
+vim.api.nvim_set_keymap("n", "<leader>x", ':ExecAsync<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap("n", "<leader>xl", ':ExecAsyncLog<CR>', { noremap = true, silent = true })
+

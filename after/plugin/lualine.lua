@@ -1,3 +1,4 @@
+local utils = require('ceceppa.utils')
 local TIMEOUT = 3000
 local HOURGLASSES = { '', '', '' }
 
@@ -170,23 +171,15 @@ else
     vim.b.git_show = false
 end
 
-local function unsaved_buffers()
-    local unsaved_buffers = 0
+local unsaved_buffers_total = utils.get_unsaved_buffers_total()
 
-    vim.b.unsaved_buffers = ''
-
-    for _, buffer in ipairs(vim.api.nvim_list_bufs()) do
-        if vim.api.nvim_buf_get_option(buffer, "modified") then
-            unsaved_buffers = unsaved_buffers + 1
-        end
-    end
-
-    if unsaved_buffers == 0 then
-        return ''
-    end
-
-    return "󱙃  Not saved: " .. unsaved_buffers
+local function get_unsaved_buffers()
+    unsaved_buffers_total = utils.get_unsaved_buffers_total()
 end
+
+vim.defer_fn(function()
+    unsaved_buffers_total = get_unsaved_buffers()
+end, 3000)
 
 local function inlay_hints_status()
     local is_enabled = vim.lsp.inlay_hint.is_enabled()
@@ -373,7 +366,13 @@ require('lualine').setup {
         },
         lualine_b = {
             {
-                unsaved_buffers,
+                function()
+                    if unsaved_buffers_total == 0 then
+                        return ''
+                    end
+
+                    return "󱙃  Not saved: " .. unsaved_buffers_total
+                end,
                 color = { fg = "#B50000", bg = "#e0e0e0" },
                 separator = {
                     right = '',
