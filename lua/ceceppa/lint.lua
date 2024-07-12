@@ -1,7 +1,4 @@
 local utils = require('ceceppa.utils')
-local tsc_utils = require('tsc.utils')
-
-local LINT_INTERVAL = 60000
 
 vim.ceceppa.errors = {
     _waiting = 0,
@@ -96,6 +93,8 @@ if vim.fn.filereadable('package.json') == 1 then
         end,
     })
 end
+
+do_yarn_lint(true)
 
 vim.api.nvim_set_keymap('n', '<leader>tc', ':lua do_yarn_lint()<CR>',
     { noremap = true, desc = '@: Linting & TypeScript check' })

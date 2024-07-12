@@ -59,8 +59,6 @@ local convert_diagnostic_type = function(severities, severity)
 end
 
 local function add_diagnostic_entries(diagnostics, values)
-    local severities = vim.diagnostic.severity
-
     for _, d in ipairs(diagnostics) do
         table.insert(values, {
             bufnr = 0,
@@ -203,17 +201,6 @@ function DiagnosticsShow()
             },
         })
         :find()
-end
-
-local function apply_checks(mod)
-    for k, v in pairs(mod) do
-        mod[k] = function(opts)
-            opts = opts or {}
-            v(opts)
-        end
-    end
-
-    return mod
 end
 
 vim.keymap.set('n', '<leader>e', ':lua DiagnosticsShow()<CR>', { desc = '@: Show errors in all open buffers' });

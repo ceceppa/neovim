@@ -184,7 +184,7 @@ end, 3000)
 local function inlay_hints_status()
     local is_enabled = vim.lsp.inlay_hint.is_enabled()
 
-    local label = 'Inlay hints: '
+    local label = 'Hints: '
 
     if not is_enabled then
         return label .. '🫥 Disabled'
@@ -245,7 +245,7 @@ local function update_diagnostics()
     end
 
     custom_diagnostics = status ..
-        ' Errors: ' .. values.errors .. '    Warns: ' .. values.warnings 
+        ' Errors: ' .. values.errors .. '    Warns: ' .. values.warnings
 
     vim.defer_fn(function()
         hourglass = hourglass + 1
@@ -258,12 +258,58 @@ local function update_diagnostics()
     end, TIMEOUT)
 end
 
+local function get_current_diagnostic()
+    local bufnr = 0
+    local line_nr = vim.api.nvim_win_get_cursor(0)[1] - 1
+    local opts = { ["lnum"] = line_nr }
+
+    local line_diagnostics = vim.diagnostic.get(bufnr, opts)
+    if vim.tbl_isempty(line_diagnostics) then
+        return
+    end
+
+    local best_diagnostic = nil
+
+    for _, diagnostic in ipairs(line_diagnostics) do
+        if
+            best_diagnostic == nil or diagnostic.severity < best_diagnostic.severity
+        then
+            best_diagnostic = diagnostic
+        end
+    end
+
+    return best_diagnostic
+end
+
+local function get_current_diagnostic_value()
+    local diagnostic = get_current_diagnostic()
+
+    if not diagnostic or not diagnostic.message then
+        return ""
+    end
+
+    local message = vim.split(diagnostic.message, "\n")[1]
+    local max_width = vim.api.nvim_win_get_width(0) - 35
+
+    local prefix = " Warning: "
+
+    if diagnostic.severity == 1 then
+        prefix = " Error: "
+    end
+
+    if string.len(message) < max_width then
+        return prefix .. ": " .. message
+    else
+        return string.sub(message, 1, max_width) .. "..."
+    end
+end
+
 update_diagnostics()
 
 require('lualine').setup {
     options = {
         icons_enabled = true,
-        theme = 'everforest',
+        theme = 'catppuccin',
         component_separators = { left = '', right = '' },
         section_separators = { left = '', right = '' },
         disabled_filetypes = {
@@ -296,15 +342,12 @@ require('lualine').setup {
             },
         },
         lualine_c = {
+            {
+                get_current_diagnostic_value,
+            },
         },
         lualine_x = {
-            {
-                inlay_hints_status,
-                color = { fg = '#ffffff', bg = '#2a2a2a' },
-                separator = {
-                    left = '',
-                },
-            },
+            { inlay_hints_status },
             {
                 function()
                     return custom_diagnostics

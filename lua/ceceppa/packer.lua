@@ -200,13 +200,11 @@ return require('packer').startup(function(use)
         requires = { 'MunifTanjim/nui.nvim' }
     }
 
-    use({ 'catppuccin/nvim', as = "catppuccin" })
-
     use "debugloop/telescope-undo.nvim"
 
     use 'justinmk/vim-sneak'
 
-    use 'folke/tokyonight.nvim'
+    use 'morhetz/gruvbox'
 
     vim.keymap.set('n', '<leader>ps', ':so<CR>:PackerSync<CR>')
 end)

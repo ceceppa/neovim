@@ -1,4 +1,3 @@
-
 vim.g.mapleader = " "
 vim.keymap.set("n", "<leader>pv", vim.cmd.Explore, { desc = '@: directory listing' })
 
@@ -66,7 +65,7 @@ vim.api.nvim_set_keymap('n', "<leader>v(", 'vi(',
     { noremap = true, silent = true, desc = '@: Select content inside parentheses (' })
 vim.api.nvim_set_keymap('n', "<leader>v{", 'vi{',
     { noremap = true, silent = true, desc = '@: Select content inside curly brackets {' })
-vim.api.nvim_set_keymap('n', "<C-S-_>", '_i',
+vim.api.nvim_set_keymap('n', "<C-S-->", '_i',
     { noremap = true, silent = true, desc = '@: Move cursor to first non-blank character and insert mode' })
 
 
@@ -74,7 +73,6 @@ vim.api.nvim_set_keymap('n', "<C-S-_>", '_i',
 -- Insert mode
 vim.api.nvim_set_keymap('i', '<C-S-x>', '<C-o>dd', { noremap = true, desc = '@: Save file' })
 vim.api.nvim_set_keymap('i', '<C-S-s>', '<C-o>:w<CR>', { noremap = true, desc = '@: Save file' })
-vim.api.nvim_set_keymap('i', '<C-f>s', '<C-o>:w<CR>', { noremap = true, desc = '@: Save file' })
 vim.api.nvim_set_keymap('i', '<Tab>', '<C-y>', { noremap = true, desc = '@: Autocomplete' })
 vim.api.nvim_set_keymap('i', '<C-v>', '<C-r><C-o>*', { noremap = true, desc = '@: Paste' })
 vim.api.nvim_set_keymap('i', '<C-b>', '<C-o>diw', { noremap = true, desc = '@: Delete word under cursor' })
@@ -103,6 +101,7 @@ vim.api.nvim_set_keymap('n', '<leader>wv', '<C-w>v', { noremap = true, desc = '@
 vim.api.nvim_set_keymap('n', '<C-n>', '<C-w>w', { noremap = true, desc = '@: Focus next window' })
 vim.api.nvim_set_keymap('n', '<C-S-n>', '<C-w>W', { noremap = true, desc = '@: Focus previous window' })
 vim.keymap.set("n", "<C-f><C-f>", vim.lsp.buf.format, { desc = '@: Format file' })
+vim.keymap.set("i", "<C-f><C-f>", vim.lsp.buf.format, { desc = '@: Format file' })
 vim.keymap.set("n", "<C-f><C-j>", ':%!jq .', { desc = '@: Format JSON file' })
 vim.api.nvim_set_keymap('n', '<leader>wm', ':lua MaximizeCurrentWindow()<CR>', { noremap = true, silent = true })
 
@@ -244,3 +243,15 @@ vim.keymap.set("n", "<C-S-X>", "ddi", { desc = '@: Delete entire line' })
 
 vim.keymap.set("n", "<C-.>", "V>", { desc = '@: Indent entire line' })
 vim.keymap.set("n", "<C-S-.>", "V<", { desc = '@: Deintend entire line' })
+
+vim.keymap.set("v", "<C-S-O>", function()
+    vim.cmd.normal { '"zy', bang = true }
+    local selection = vim.fn.getreg("z")
+
+    if string.len(selection) == 0 then
+        print("No selection found.")
+        return
+    end
+
+    os.execute("open https://www.google.com/search?q=" .. selection)
+end, { desc = '@: Search selection on Google' })

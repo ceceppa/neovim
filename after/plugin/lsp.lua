@@ -16,16 +16,6 @@ inlay.setup()
 
 lsp.preset("recommended")
 
-lsp.set_preferences({
-    suggest_lsp_servers = false,
-    sign_icons = {
-        error = '',
-        warn = '',
-        hint = '⚑',
-        info = ''
-    }
-})
-
 lsp.on_attach(function(client)
     was_enabled = vim.lsp.inlay_hint.is_enabled()
     are_inlay_hints_available = are_inlay_hints_available or
@@ -151,6 +141,17 @@ vim.diagnostic.config({
     signs = true,
     update_in_insert = false,
     underline = true,
+    float = {
+		border = "single",
+		format = function(diagnostic)
+			return string.format(
+				"%s (%s) [%s]",
+				diagnostic.message,
+				diagnostic.source,
+				diagnostic.code or diagnostic.user_data.lsp.code
+			)
+		end,
+	},
 })
 
 local capabilities = require("cmp_nvim_lsp").default_capabilities()
@@ -228,3 +229,14 @@ require 'lspconfig'.phpactor.setup {
         ["language_server_psalm.enabled"] = false,
     }
 }
+lsp.set_preferences({
+    suggest_lsp_servers = false,
+    sign_icons = {
+        error = ' ',
+        warn = ' ',
+        hint = '⚑ ',
+        info = ' '
+    }
+})
+
+
