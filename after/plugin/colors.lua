@@ -8,4 +8,4 @@ function ColorMyPencils(color, mode)
 	vim.cmd.colorscheme(color)
 end
 
-ColorMyPencils("solarized", "light")
+ColorMyPencils("tokyonight-day", "dark")

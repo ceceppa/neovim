@@ -209,5 +209,7 @@ return require('packer').startup(function(use)
 
     use 'justinmk/vim-sneak'
 
+    use 'folke/tokyonight.nvim'
+
     vim.keymap.set('n', '<leader>ps', ':so<CR>:PackerSync<CR>')
 end)

@@ -147,7 +147,10 @@ end)
 lsp.setup()
 
 vim.diagnostic.config({
-    virtual_text = true
+    virtual_text = true,
+    signs = true,
+    update_in_insert = false,
+    underline = true,
 })
 
 local capabilities = require("cmp_nvim_lsp").default_capabilities()
