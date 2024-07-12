@@ -166,6 +166,7 @@ return require('packer').startup(function(use)
 
     use {
         "LintaoAmons/bookmarks.nvim",
+        tag = "v0.5.3",
         config = function()
             require("bookmarks").setup({
                 json_db_path = vim.fs.normalize(vim.fn.stdpath("config") .. "/bookmarks.db.json"),

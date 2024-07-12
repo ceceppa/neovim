@@ -28,15 +28,9 @@ vim.g.copilot_no_tab_map = true
 vim.api.nvim_set_keymap("i", "<C-.>", 'copilot#Accept("<CR>")', { silent = true, expr = true })
 
 vim.g.copilot_filetypes = {
-    ["javascript"] = false,
-    ["typescript"] = false,
+    ["*"] = false,
     ["lua"] = true,
-    ["rust"] = true,
-    ["c"] = true,
-    ["c#"] = true,
-    ["c++"] = true,
-    ["go"] = true,
-    ["python"] = true,
+    ["php"] = true,
   }
 
 vim.o.guicursor = 'n-v-i-sm:block,c-ci-ve-i:ver25,r-cr-o:hor20,a:blinkwait700-blinkoff400-blinkon250-Cursor/lCursor'
