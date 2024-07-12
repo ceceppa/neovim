@@ -33,7 +33,7 @@ function find_dir(d)
         d = d:gsub("^%w+://", "")
     end
     -- check renaming
-    local ok, err, code = os.rename(d, d)
+    local ok, _, code = os.rename(d, d)
     if not ok then
         if code ~= 2 then
             -- all other than not existing
@@ -55,7 +55,7 @@ local function git_status()
     git_is_waiting = false
     vim.b.git_state = { '', '', '' }
     -- get & check file directory
-    file_dir = find_dir(vim.fn.expand("%:p:h"))
+    local file_dir = find_dir(vim.fn.expand("%:p:h"))
     -- check fugitive etc.
     if vim.b.git_state[1] ~= "" then
         return 'u'
@@ -108,10 +108,10 @@ local function git_status()
     -- loop over residual lines (files) &
     -- store number of files
     local git_num = { 0, 0, 0 }
-    for line in line_iter do
+    for l in line_iter do
         branch_col = 'm'
         -- get first char
-        local first = line:gsub("^(.).*", "%1")
+        local first = l:gsub("^(.).*", "%1")
         if first == '?' then
             -- untracked
             git_num[3] = git_num[3] + 1
@@ -120,7 +120,7 @@ local function git_status()
             git_num[1] = git_num[1] + 1
         end
         -- get second char
-        local second = line:gsub("^.(.).*", "%1")
+        local second = l:gsub("^.(.).*", "%1")
         if second == 'M' then
             -- modified
             git_num[2] = git_num[2] + 1
@@ -171,15 +171,27 @@ else
     vim.b.git_show = false
 end
 
-local unsaved_buffers_total = utils.get_unsaved_buffers_total()
+local unsaved_buffers_total
 
-local function get_unsaved_buffers()
+local function update_unsaved_buffers()
     unsaved_buffers_total = utils.get_unsaved_buffers_total()
+
+    vim.defer_fn(function()
+        update_unsaved_buffers()
+    end, 3000)
 end
 
-vim.defer_fn(function()
-    unsaved_buffers_total = get_unsaved_buffers()
-end, 3000)
+vim.api.nvim_create_autocmd("BufWritePre", {
+    pattern = "*.*",
+    desc = "Update unsaved buffers",
+    callback = function()
+        vim.defer_fn(function()
+            update_unsaved_buffers()
+        end, 500)
+    end,
+})
+
+update_unsaved_buffers()
 
 local function inlay_hints_status()
     local is_enabled = vim.lsp.inlay_hint.is_enabled()
@@ -326,7 +338,9 @@ require('lualine').setup {
         }
     },
     sections = {
-        lualine_a = { 'mode' },
+        lualine_a = {
+            { 'mode' },
+        },
         lualine_b = {
             {
                 'branch',
@@ -377,7 +391,7 @@ require('lualine').setup {
             {
                 function()
                     -- path
-                    return vim.fn.fnamemodify(vim.fn.getcwd(), ':t')
+                    return '󰝰 ' .. vim.fn.fnamemodify(vim.fn.getcwd(), ':t')
                 end,
                 separator = {
                     right = '',

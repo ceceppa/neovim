@@ -4,7 +4,6 @@ local make_entry = require "telescope.make_entry"
 local pickers = require "telescope.pickers"
 local utils = require "telescope.utils"
 local actions = require "telescope.actions"
-local action_state = require "telescope.actions.state"
 
 local sorting_comparator = function(opts)
     local current_buf = vim.api.nvim_get_current_buf()
