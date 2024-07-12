@@ -116,7 +116,9 @@ local diagnostics_to_tbl = function(opts)
 
         local filename = bufnr_name_map[diagnostic.bufnr]
 
-        if filename:find(vim.fn.getcwd()) == nil then
+        local current_dir = vim.fn.getcwd()
+
+        if filename:find(current_dir, 1, true) == nil then
             return false
         end
 

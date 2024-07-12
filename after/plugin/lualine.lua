@@ -213,7 +213,7 @@ local function update_diagnostics()
 
         -- ignore warnings from files outside the project
         -- this can happen when switching between projects
-        if filename:find(vim.fn.getcwd()) ~= nil then
+        if filename:find(vim.fn.getcwd(), 1, true) ~= nil then
             if value.severity == 1 then
                 values.errors = values.errors + 1
             elseif value.severity == 2 then

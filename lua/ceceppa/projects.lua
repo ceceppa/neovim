@@ -50,7 +50,8 @@ function ceceppa_project_picker()
                 local auto_session = require("auto-session")
                 auto_session.SaveSession()
 
-                vim.cmd("cd " .. selection.value)
+                local folder = selection.value
+                vim.cmd('cd ' .. folder)
 
                 -- Restore session and remove all buffers that are not in the project
                 vim.defer_fn(function()
