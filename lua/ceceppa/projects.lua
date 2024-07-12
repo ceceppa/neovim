@@ -22,7 +22,7 @@ else
     save_projects(projects)
 end
 
-function ceceppa_project_picker()
+local function projects_picker()
     pickers.new({}, {
         prompt_title = "Projects",
         finder = finders.new_table {
@@ -85,6 +85,8 @@ function ceceppa_project_picker()
                         break
                     end
                 end
+
+                projects_picker()
             end
 
             map("i", "<CR>", open_project)
@@ -96,7 +98,7 @@ function ceceppa_project_picker()
     }):find()
 end
 
-function ceceppa_project_add()
+local function project_add()
     local exists = false
     local current_path = vim.fn.getcwd()
 
@@ -117,5 +119,12 @@ function ceceppa_project_add()
     end
 end
 
-vim.api.nvim_set_keymap("n", "<leader>pp", '<cmd>lua ceceppa_project_picker()<CR>', { noremap = true, silent = true })
-vim.api.nvim_set_keymap("n", "<leader>pa", '<cmd>lua ceceppa_project_add()<CR>', { noremap = true, silent = true })
+vim.api.nvim_create_user_command("Projects", function(args)
+    if args.fargs[1] == "add" then
+        project_add()
+    else
+        projects_picker()
+    end
+end, { desc = '@ Ceceppa project manager', nargs = '*' })
+vim.api.nvim_set_keymap("n", "<leader>pp", ':Projects<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap("n", "<leader>pa", ':Projects add<CR>', { noremap = true, silent = true })

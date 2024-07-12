@@ -186,10 +186,10 @@ M.execute_command = function(command, description, args, then_callback, should_r
     }):start()
 end
 
-M.exec_async = function(command)
+M.exec_async = function(command, then_callback)
     local parts = vim.split(command, " ")
 
-    M.execute_command(parts[1], parts[1], vim.list_slice(parts, 2, #parts), nil, nil, false)
+    M.execute_command(parts[1], parts[1], vim.list_slice(parts, 2, #parts), then_callback, nil, false)
 end
 
 M.get_unsaved_buffers_total = function()

@@ -3,6 +3,8 @@ local finders = require "telescope.finders"
 local make_entry = require "telescope.make_entry"
 local pickers = require "telescope.pickers"
 local utils = require "telescope.utils"
+local actions = require "telescope.actions"
+local action_state = require "telescope.actions.state"
 
 local sorting_comparator = function(opts)
     local current_buf = vim.api.nvim_get_current_buf()
@@ -159,12 +161,13 @@ local diagnostics_to_tbl = function(opts)
 end
 
 
-function DiagnosticsShow()
+local function show_diagnostics(filter_type)
     local opts = {}
 
     if opts.bufnr ~= 0 then
         opts.bufnr = nil
     end
+
     if type(opts.bufnr) == "string" then
         opts.bufnr = tonumber(opts.bufnr)
     end
@@ -187,11 +190,25 @@ function DiagnosticsShow()
         return
     end
 
+    local filtered_diagnostics = {}
+
+    for _, diagnostic in ipairs(locations) do
+        if filter_type == nil or diagnostic.type == filter_type then
+            table.insert(filtered_diagnostics, diagnostic)
+        end
+    end
+
+    local suffix = " (ALL)"
+
+    if filter_type ~= nil then
+        suffix = string.format(" (%s)", filter_type)
+    end
+
     pickers
         .new(opts, {
-            prompt_title = opts.bufnr == nil and "Workspace Diagnostics" or "Document Diagnostics",
+            prompt_title = opts.bufnr == nil and "Workspace Diagnostics" .. suffix or "Document Diagnostics" .. suffix,
             finder = finders.new_table {
-                results = locations,
+                results = filtered_diagnostics,
                 entry_maker = opts.entry_maker or make_entry.gen_from_diagnostics(opts),
             },
             previewer = conf.qflist_previewer(opts),
@@ -199,8 +216,29 @@ function DiagnosticsShow()
                 tag = "type",
                 sorter = conf.generic_sorter(opts),
             },
+            attach_mappings = function(prompt_bufnr, map)
+                -- Couldn't figure out how to use get_current_picker():refresh... So closing and reopening
+                local show_only = function(what)
+                    return function()
+                        actions.close(prompt_bufnr)
+
+                        show_diagnostics(what)
+                    end
+                end
+
+                map("i", "<D-e>", show_only('ERROR'))
+                map("i", "<D-w>", show_only('WARN'))
+                map("i", "<D-i>", show_only('INFO'))
+                map("i", "<D-a>", show_only())
+
+                return true
+            end
         })
         :find()
 end
 
-vim.keymap.set('n', '<leader>e', ':lua DiagnosticsShow()<CR>', { desc = '@: Show errors in all open buffers' });
+vim.api.nvim_create_user_command("DiagnosticsShow", function(args)
+    show_diagnostics(args.fargs[1])
+end, { desc = '@ Ceceppa diagnostics', nargs = '*' })
+
+vim.keymap.set('n', '<leader>e', ':DiagnosticsShow<CR>', { desc = '@: Show errors in all open buffers' });

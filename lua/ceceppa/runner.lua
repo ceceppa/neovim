@@ -30,7 +30,7 @@ local function command_picker()
         },
         sorter = conf.generic_sorter({}),
         attach_mappings = function(prompt_bufnr, map)
-            local run_command = function()
+            local run_command = function(then_callback)
                 local selection = action_state.get_selected_entry(prompt_bufnr)
                 local picker = action_state.get_current_picker(prompt_bufnr)
                 local prompt = picker:_get_prompt()
@@ -48,7 +48,7 @@ local function command_picker()
                         return
                     end
 
-                    utils.exec_async(command_to_run)
+                    utils.exec_async(command_to_run, then_callback)
                 else
                     vim.notify("No command to run", vim.log.levels.ERROR)
                 end
@@ -73,10 +73,20 @@ local function command_picker()
                         break
                     end
                 end
+
+                command_picker()
+            end
+
+            local run_command_and_log = function()
+                run_command(function()
+                    vim.cmd('ExecAsyncLog')
+                end)
             end
 
             map("i", "<CR>", run_command)
             map("n", "<CR>", run_command)
+            map("i", "<S-CR>", run_command_and_log)
+            map("n", "<S-CR>", run_command_and_log)
             map("i", "<C-x>", remove_command_from_history)
 
             return true
@@ -90,4 +100,3 @@ end, { desc = 'Async command picker / runner', force = true })
 
 vim.api.nvim_set_keymap("n", "<leader>x", ':ExecAsync<CR>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap("n", "<leader>xl", ':ExecAsyncLog<CR>', { noremap = true, silent = true })
-
