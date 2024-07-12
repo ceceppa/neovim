@@ -9,6 +9,8 @@ local ensure_packer = function()
     return false
 end
 
+ensure_packer()
+
 return require('packer').startup(function(use)
     use 'wbthomason/packer.nvim'
 
@@ -201,10 +203,9 @@ return require('packer').startup(function(use)
     }
 
     use "debugloop/telescope-undo.nvim"
-
     use 'justinmk/vim-sneak'
-
     use 'morhetz/gruvbox'
+    use 'kdheepak/lazygit.nvim'
 
     vim.keymap.set('n', '<leader>ps', ':so<CR>:PackerSync<CR>')
 end)

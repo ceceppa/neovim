@@ -5,7 +5,7 @@ vim.api.nvim_set_hl(0, "NavicSeparator", { default = true, bg = "none", fg = "#e
 function ColorMyPencils(color, mode)
     vim.api.nvim_set_option("background", mode)
 
-	vim.cmd.colorscheme(color)
+    vim.cmd.colorscheme(color)
 end
 
 ColorMyPencils("gruvbox", "dark")
