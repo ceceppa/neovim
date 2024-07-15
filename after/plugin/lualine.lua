@@ -145,7 +145,7 @@ local function git_status()
     old_branch_col = branch_col
 end
 
-vim.ceceppa.update_git_status = git_status
+utils.add_event("UpdateGitStatus", git_status)
 
 local is_git_repo = false
 
@@ -191,7 +191,7 @@ local function update_unsaved_buffers()
     end, 3000)
 end
 
-vim.api.nvim_create_autocmd("BufWritePre", {
+vim.api.nvim_create_autocmd("BufWritePost", {
     pattern = "*.*",
     desc = "Update unsaved buffers",
     callback = function()
@@ -401,7 +401,7 @@ require('lualine').setup {
             {
                 function()
                     -- path
-                    return '󰝰 ' .. vim.fn.fnamemodify(vim.fn.getcwd(), ':t')
+                    return '󰐯 ' .. vim.fn.fnamemodify(vim.fn.getcwd(), ':t')
                 end,
                 separator = {
                     right = '',
@@ -464,7 +464,8 @@ require('lualine').setup {
                         return git_label
                     end
 
-                    return git_label .. '  updated '
+                    local action = vim.ceceppa.current_git_action or '  updated '
+                    return git_label .. action
                 end,
                 color = { fg = '#ffffff', bg = '#00575a' },
                 separator = {

@@ -5,12 +5,15 @@ function display_git_output(output)
 end
 
 local function execute_git_command(description, args, then_callback)
+    vim.ceceppa.current_git_action = description
+
     utils.execute_command('git', description, args, function()
         if then_callback then
             then_callback()
         end
 
-        vim.ceceppa.update_git_status()
+        utils.trigger_event('UpdateGitStatus')
+        vim.ceceppa.current_git_action = nil
     end)
 end
 

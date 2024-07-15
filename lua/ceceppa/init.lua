@@ -1,4 +1,6 @@
-vim.ceceppa = { }
+vim.ceceppa = {
+    current_git_action = nil,
+}
 
 require("ceceppa.remap")
 require("ceceppa.set")

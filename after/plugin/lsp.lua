@@ -16,12 +16,17 @@ inlay.setup()
 
 lsp.preset("recommended")
 
-lsp.on_attach(function(client)
-    was_enabled = vim.lsp.inlay_hint.is_enabled()
-    are_inlay_hints_available = are_inlay_hints_available or
-        client.server_capabilities.inlayHintProvider and vim.lsp.inlay_hint
+local INLAY_STATUESES = {
+    ignore = "ignore",
+    reEnable = "reEnable",
+}
 
-    local function enable_inlay_hints(is_change_mode)
+local inlay_status = INLAY_STATUESES.ignore
+
+lsp.on_attach(function(client)
+    local are_inlay_hints_supported = client.server_capabilities.inlayHintProvider and vim.lsp.inlay_hint
+
+    local function enable_inlay_hints(is_triggered_by_autocmd)
         local current_buffer_name = vim.fn.bufname(vim.fn.bufnr('%'))
 
         if current_buffer_name == "" then
@@ -36,37 +41,35 @@ lsp.on_attach(function(client)
 
         local should_enable = true
 
-        if is_change_mode and not was_enabled then
+        if is_triggered_by_autocmd and inlay_status == INLAY_STATUESES.reEnable then
             should_enable = false
         end
 
-        if are_inlay_hints_available and should_enable then
-            -- print("🕵️: Enabling inlay_hint")
-
+        if are_inlay_hints_supported and should_enable then
             local ok, result = pcall(vim.lsp.inlay_hint.enable, true)
 
             if not ok then
-                print("😔: Error enabling inlay_hint", result)
+                vim.notify("😔: Error enabling inlay_hint", "error", { title = "LSP" })
             end
 
-            if is_change_mode then
-                was_enabled = true
+            if is_triggered_by_autocmd then
+                inlay_status = INLAY_STATUESES.ignore
             end
         end
     end
 
-    local function disable_inlay_hints(is_change_mode)
+    local function disable_inlay_hints(is_triggered_by_autocmd)
         local current_buffer_name = vim.fn.bufname(vim.fn.bufnr('%'))
 
         if current_buffer_name == "" then
             return
         end
 
-        if are_inlay_hints_available then
+        if are_inlay_hints_supported then
             vim.lsp.inlay_hint.enable(false)
 
-            if is_change_mode then
-                was_enabled = false
+            if is_triggered_by_autocmd then
+                inlay_status = INLAY_STATUESES.reEnable
             end
         end
     end
