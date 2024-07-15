@@ -69,6 +69,8 @@ local function projects_picker()
                             vim.cmd("bdelete " .. buffer.bufnr)
                         end
                     end
+
+                    utils.trigger_event("ProjectOpened")
                 end, 100)
             end
 

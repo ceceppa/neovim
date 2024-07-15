@@ -207,6 +207,24 @@ M.get_unsaved_buffers_total = function()
     return unsaved_buffers
 end
 
+local event_handlers = {}
+M.add_event = function(event, callback)
+    if not event_handlers[event] then
+        event_handlers[event] = {}
+    end
+
+    table.insert(event_handlers[event], callback)
+end
+
+M.trigger_event = function(event, ...)
+    if not event_handlers[event] then
+        return
+    end
+
+    for _, callback in ipairs(event_handlers[event]) do
+        callback(...)
+    end
+end
 
 vim.api.nvim_create_user_command("ExecAsyncLog", function()
     show_popup("Latest Async Output", _latest_output)

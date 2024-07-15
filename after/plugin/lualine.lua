@@ -149,27 +149,37 @@ vim.ceceppa.update_git_status = git_status
 
 local is_git_repo = false
 
--- if .git directory exists, update git status
-if vim.fn.isdirectory('.git') == 1 then
-    is_git_repo = true
+local function check_is_git_repo()
+    -- if .git directory exists, update git status
+    if vim.fn.isdirectory('.git') == 1 then
+        is_git_repo = true
 
-    vim.defer_fn(function()
-        git_status()
-    end, 500)
+        vim.defer_fn(function()
+            git_status()
+        end, 500)
 
-    vim.api.nvim_create_autocmd("BufWritePre", {
-        pattern = "*.*",
-        desc = "Update git status",
-        callback = function()
-            vim.defer_fn(function()
-                git_status()
-            end, 500)
-        end,
-    })
-else
-    vim.b.git_state = { '', '', '', '' }
-    vim.b.git_show = false
+        vim.api.nvim_create_autocmd("BufWritePre", {
+            pattern = "*.*",
+            desc = "Update git status",
+            callback = function()
+                vim.defer_fn(function()
+                    git_status()
+                end, 500)
+            end,
+        })
+    else
+        is_git_repo = false
+        git_is_waiting = false
+        vim.b.git_state = { '', '', '', '' }
+        vim.b.git_show = false
+    end
 end
+
+check_is_git_repo()
+
+-- update git status on project open
+-- couldn't make it work using autocmd and DirChanged event
+utils.add_event("ProjectOpened", check_is_git_repo)
 
 local unsaved_buffers_total
 
