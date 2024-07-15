@@ -188,8 +188,6 @@ return require('packer').startup(function(use)
         },
     }
 
-    use 'maxmx03/solarized.nvim'
-
     use {
         'dmmulroy/ts-error-translator.nvim',
         config = function()
