@@ -201,7 +201,7 @@ return require('packer').startup(function(use)
         requires = { 'MunifTanjim/nui.nvim' }
     }
 
-    use "debugloop/telescope-undo.nvim"
+    use "mbbill/undotree"
     use 'justinmk/vim-sneak'
     use 'morhetz/gruvbox'
     use 'kdheepak/lazygit.nvim'

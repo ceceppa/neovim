@@ -90,8 +90,6 @@ require("telescope").setup {
 }
 require("telescope").load_extension("ui-select")
 require("telescope").load_extension("notify")
-require("telescope").load_extension("undo")
-
 
 -- Project
 vim.keymap.set('n', '<leader>pf', ':Telescope find_files hidden=true<CR>', { desc = '@: Find files' })
@@ -121,5 +119,5 @@ vim.keymap.set('n', '<C-S-F>', ':Telescope live_grep<CR>', { desc = '@: Live gre
 vim.keymap.set('n', '<leader>sl', ':Telescope live_grep<CR>', { desc = '@: Live grep in all files' });
 vim.keymap.set('n', '<leader>sr', ':Telescope lsp_references<CR>', { desc = '@: Search reference (Find usage)' });
 vim.keymap.set('n', '<leader>sh', ':Telescope search_history<CR>', { desc = '@: Search history' });
-vim.keymap.set("n", "<leader>ut", ':Telescope undo<CR>', { desc = '@: Telescope Undo' })
+vim.keymap.set("n", "<leader>ut", ':UndotreeToggle<CR>', { desc = '@: Telescope Undo' })
 

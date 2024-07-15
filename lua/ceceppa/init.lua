@@ -1,5 +1,6 @@
 vim.ceceppa = {
     current_git_action = nil,
+    package_manager = 'yarn',
 }
 
 require("ceceppa.remap")

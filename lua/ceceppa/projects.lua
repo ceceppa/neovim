@@ -30,7 +30,11 @@ local function projects_picker()
         },
         sorter = conf.generic_sorter({}),
         attach_mappings = function(prompt_bufnr, map)
-            local open_project = function()
+            local open_project = function(ignore_saved_session)
+                if ignore_saved_session == nil then
+                    ignore_saved_session = false
+                end
+
                 actions.close(prompt_bufnr)
 
                 local selection = action_state.get_selected_entry(prompt_bufnr)
@@ -39,7 +43,7 @@ local function projects_picker()
                     return
                 end
 
-                local open_buffers= utils.get_unsaved_buffers_total()
+                local open_buffers = utils.get_unsaved_buffers_total()
 
                 if open_buffers > 0 then
                     vim.notify("  You have unsaved buffers", "warn", { title = "Projects" })
@@ -47,8 +51,10 @@ local function projects_picker()
                     return
                 end
 
-                local auto_session = require("auto-session")
-                auto_session.SaveSession()
+                -- if not ignore_saved_session then
+                --     local auto_session = require("auto-session")
+                --     auto_session.SaveSession()
+                -- end
 
                 local folder = selection.value
                 vim.cmd('cd ' .. folder)
@@ -92,6 +98,7 @@ local function projects_picker()
             end
 
             map("i", "<CR>", open_project)
+            map("i", "<S-CR>", function() open_project(true) end)
             map("n", "<CR>", open_project)
             map("i", "<C-x>", remove_project)
 

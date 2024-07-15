@@ -67,7 +67,7 @@ function git_pull(description, args)
     execute_git_command(description, pull_command, function()
         -- if package.json exists
         if vim.fn.filereadable('package.json') == 1 then
-            utils.execute_command('yarn', 'install', { 'install' })
+            utils.execute_command(vim.ceceppa.package_manager, 'install', { 'install' })
         end
     end)
 end
