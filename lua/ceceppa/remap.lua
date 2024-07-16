@@ -67,6 +67,8 @@ vim.api.nvim_set_keymap('n', "<leader>v{", 'vi{',
     { noremap = true, silent = true, desc = '@: Select content inside curly brackets {' })
 vim.api.nvim_set_keymap('n', "<C-S-->", '_i',
     { noremap = true, silent = true, desc = '@: Move cursor to first non-blank character and insert mode' })
+vim.api.nvim_set_keymap('i', "<C-S-->", '<C-O>_',
+    { noremap = true, silent = true, desc = '@: Move cursor to first non-blank character and insert mode' })
 
 
 

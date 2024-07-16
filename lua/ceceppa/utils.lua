@@ -226,6 +226,19 @@ M.trigger_event = function(event, ...)
     end
 end
 
+M.get_spelunker_bad_list = function ()
+    vim.call('spelunker#cases#reset_case_counter')
+
+    local orig_spelunker_target_min_char_len = vim.g.spelunker_target_min_char_len
+    vim.g.spelunker_target_min_char_len = 1
+
+    local window_text_list = vim.call('spelunker#get_buffer#all')
+    local spell_bad_list = vim.call('spelunker#spellbad#get_spell_bad_list', window_text_list)
+
+    return spell_bad_list
+end
+
+
 vim.api.nvim_create_user_command("ExecAsyncLog", function()
     show_popup("Latest Async Output", _latest_output)
 end, { desc = "Show the latest async output in a popup", force = true })

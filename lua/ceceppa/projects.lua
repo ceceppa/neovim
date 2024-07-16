@@ -51,10 +51,10 @@ local function projects_picker()
                     return
                 end
 
-                -- if not ignore_saved_session then
-                --     local auto_session = require("auto-session")
-                --     auto_session.SaveSession()
-                -- end
+                if not ignore_saved_session then
+                    local auto_session = require("auto-session")
+                    auto_session.SaveSession()
+                end
 
                 local folder = selection.value
                 vim.cmd('cd ' .. folder)

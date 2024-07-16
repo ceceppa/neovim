@@ -10,7 +10,7 @@ local function iterlines(s)
 end
 
 -- find directory
-function find_dir(d)
+local function find_dir(d)
     -- return if root
     if d == '/' then
         return d
@@ -219,6 +219,10 @@ local custom_diagnostics = nil
 local hourglass = 1
 local bufnr_name_map = {}
 
+local get_spell_count = function()
+    return #utils.get_spelunker_bad_list()
+end
+
 local function update_diagnostics()
     local vim_diagnostic = vim.diagnostic.get()
     local values = {
@@ -266,8 +270,9 @@ local function update_diagnostics()
         status = HOURGLASSES[hourglass] .. ' '
     end
 
+    local mispellings = get_spell_count()
     custom_diagnostics = status ..
-        ' Errors: ' .. values.errors .. '    Warns: ' .. values.warnings
+        ' Errors: ' .. values.errors .. '    Warns: ' .. values.warnings .. '  Misspellings: ' .. mispellings
 
     vim.defer_fn(function()
         hourglass = hourglass + 1

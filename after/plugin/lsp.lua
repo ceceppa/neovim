@@ -46,7 +46,7 @@ lsp.on_attach(function(client)
         end
 
         if are_inlay_hints_supported and should_enable then
-            local ok, result = pcall(vim.lsp.inlay_hint.enable, true)
+            local ok = pcall(vim.lsp.inlay_hint.enable, true)
 
             if not ok then
                 vim.notify("😔: Error enabling inlay_hint", "error", { title = "LSP" })

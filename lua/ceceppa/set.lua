@@ -30,8 +30,4 @@ vim.opt.updatetime = 50
 vim.o.guifont = "VictorMono Nerd Font:h16"
 
 vim.o.ignorecase = true -- ignore case when searching
-vim.o.smartcase = true -- Unless we explicitly use cases in search
-
--- Set up automatic spell checking
-vim.opt.spelllang = "en"
-vim.opt.spell = true
+vim.o.smartcase = true  -- Unless we explicitly use cases in search

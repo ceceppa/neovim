@@ -99,7 +99,6 @@ vim.keymap.set('n', '<leader>pg', builtin.git_files, { desc = '@: Search in git 
 vim.keymap.set('n', '<leader>bb', builtin.buffers, { desc = '@: Show buffers' })
 vim.keymap.set('n', '<leader>ds', ':Telescope lsp_document_symbols<CR>', { desc = '@: Document symbols' });
 
-vim.keymap.set('n', 'zz', ':Telescope spell_suggest<CR>', { desc = '@: Spell suggest' });
 vim.keymap.set('n', '<leader>?', ':Telescope keymaps<CR>', { desc = '@: Keymaps' });
 
 -- Search

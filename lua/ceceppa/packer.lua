@@ -197,14 +197,15 @@ return require('packer').startup(function(use)
     }
 
     use {
-        'nvim-neo-tree/neo-tree.nvim',
-        requires = { 'MunifTanjim/nui.nvim' }
+        'nvim-tree/nvim-tree.lua',
+        requires = { 'nvim-tree/nvim-web-devicons' }
     }
 
     use "mbbill/undotree"
     use 'justinmk/vim-sneak'
     use 'morhetz/gruvbox'
     use 'kdheepak/lazygit.nvim'
+    use 'kamykn/spelunker.vim'
 
     vim.keymap.set('n', '<leader>ps', ':so<CR>:PackerSync<CR>')
 end)
