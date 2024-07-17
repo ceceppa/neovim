@@ -1,4 +1,6 @@
 local utils = require('ceceppa.utils')
+local projects = require('ceceppa.projects')
+local lint = require('lint')
 local TIMEOUT = 3000
 local HOURGLASSES = { '', '', '' }
 
@@ -151,28 +153,32 @@ local is_git_repo = false
 
 local function check_is_git_repo()
     -- if .git directory exists, update git status
-    if vim.fn.isdirectory('.git') == 1 then
-        is_git_repo = true
+    -- check return value of: git rev-parse --is-inside-work-tree
+    local command = "git rev-parse --is-inside-work-tree"
+    utils.exec_async(command, function(_, return_val)
+        if return_val == 0 then
+            is_git_repo = true
 
-        vim.defer_fn(function()
-            git_status()
-        end, 500)
+            vim.defer_fn(function()
+                git_status()
 
-        vim.api.nvim_create_autocmd("BufWritePre", {
-            pattern = "*.*",
-            desc = "Update git status",
-            callback = function()
-                vim.defer_fn(function()
-                    git_status()
-                end, 500)
-            end,
-        })
-    else
-        is_git_repo = false
-        git_is_waiting = false
-        vim.b.git_state = { '', '', '', '' }
-        vim.b.git_show = false
-    end
+                vim.api.nvim_create_autocmd("BufWritePre", {
+                    pattern = "*.*",
+                    desc = "Update git status",
+                    callback = function()
+                        vim.defer_fn(function()
+                            git_status()
+                        end, 500)
+                    end,
+                })
+            end, 500)
+        else
+            is_git_repo = false
+            git_is_waiting = false
+            vim.b.git_state = { '', '', '', '' }
+            vim.b.git_show = false
+        end
+    end, true)
 end
 
 check_is_git_repo()
@@ -248,7 +254,7 @@ local function update_diagnostics()
         end
     end
 
-    for _, value in ipairs(vim.ceceppa.errors.lint) do
+    for _, value in ipairs(lint.get_output()) do
         if value.type:upper() == 'ERROR' then
             values.errors = values.errors + 1
         else
@@ -256,17 +262,12 @@ local function update_diagnostics()
         end
     end
 
-    for _, value in ipairs(vim.ceceppa.errors.tsc) do
-        if value.type:upper() == 'ERROR' then
-            values.errors = values.errors + 1
-        else
-            values.warnings = values.warnings + 1
-        end
-    end
+    local tsc = require('tsc').get_output()
+    values.errors = values.errors + #tsc
 
-    local status = '󰒲  '
+    local status = '󰒲  ' and lint.is_active() or '󰇘 '
 
-    if vim.ceceppa.errors.running then
+    if lint.is_running() then
         status = HOURGLASSES[hourglass] .. ' '
     end
 
@@ -405,8 +406,9 @@ require('lualine').setup {
         lualine_a = {
             {
                 function()
-                    -- path
-                    return '󰐯 ' .. vim.fn.fnamemodify(vim.fn.getcwd(), ':t')
+                    -- project status & path
+                    local project_icon = projects.is_project() and '󰐯 ' or '󱠎 '
+                    return project_icon .. vim.fn.fnamemodify(vim.fn.getcwd(), ':t')
                 end,
                 separator = {
                     right = '',

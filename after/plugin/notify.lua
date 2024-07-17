@@ -3,7 +3,6 @@ require("notify").setup({
     foreground_colour = "#20ffa0",
     render = "compact",
     top_down = false,
-    max_width = 80,
 })
 
 vim.opt.termguicolors = true

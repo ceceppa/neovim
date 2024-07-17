@@ -5,9 +5,10 @@ tsc.setup({
     auto_start_watch_mode = true,
     auto_focus_qflits = false,
     pretty_errors = false,
+    enable_progress_notifications = false,
+    enable_error_notifications = false,
     flags = {
         watch = true,
     },
     verbose = false,
 })
-

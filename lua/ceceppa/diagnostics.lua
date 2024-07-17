@@ -146,12 +146,14 @@ local diagnostics_to_tbl = function(opts)
         end
     end
 
-    if #vim.ceceppa.errors.lint > 0 then
-        add_diagnostic_entries(vim.ceceppa.errors.lint, items)
+    local lint = require('lint').get_output()
+    if #lint > 0 then
+        add_diagnostic_entries(lint, items)
     end
 
-    if #vim.ceceppa.errors.tsc > 0 then
-        add_diagnostic_entries(vim.ceceppa.errors.tsc, items)
+    local tsc = require('tsc').get_output()
+    if #tsc > 0 then
+        add_diagnostic_entries(tsc, items)
     end
 
     table.sort(items, sorting_comparator(opts))
@@ -225,10 +227,10 @@ local function show_diagnostics(filter_type)
                     end
                 end
 
-                map("i", "<D-e>", show_only('ERROR'))
-                map("i", "<D-w>", show_only('WARN'))
-                map("i", "<D-i>", show_only('INFO'))
-                map("i", "<D-a>", show_only())
+                map("i", "<C-e>", show_only('ERROR'))
+                map("i", "<C-w>", show_only('WARN'))
+                map("i", "<C-i>", show_only('INFO'))
+                map("i", "<C-a>", show_only())
 
                 return true
             end

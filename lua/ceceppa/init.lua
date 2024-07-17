@@ -7,10 +7,13 @@ require("ceceppa.remap")
 require("ceceppa.set")
 require("ceceppa.git")
 require("ceceppa.autocmd")
-require("ceceppa.lint")
+-- require("ceceppa.lint")
 require("ceceppa.projects")
 require("ceceppa.runner")
 require("ceceppa.diagnostics")
+local utils = require('ceceppa.utils')
+
+local lint = require('lint')
 
 vim.api.nvim_set_option("clipboard","unnamed")
 
@@ -40,3 +43,5 @@ vim.o.guicursor = 'n-v-i-sm:block,c-ci-ve-i:ver25,r-cr-o:hor20,a:blinkwait700-bl
 
 vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
 vim.opt.foldtext = "v:lua.vim.treesitter.foldtext()"
+
+utils.add_event('ProjectOpened', lint.init)

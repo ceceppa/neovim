@@ -206,6 +206,15 @@ return require('packer').startup(function(use)
     use 'morhetz/gruvbox'
     use 'kdheepak/lazygit.nvim'
     use 'kamykn/spelunker.vim'
+    use {
+        'ceceppa/lint.nvim',
+        requires = {
+            'ceceppa/execAsync.nvim'
+        },
+        config = function()
+            require('lint').setup()
+        end
+    }
 
     vim.keymap.set('n', '<leader>ps', ':so<CR>:PackerSync<CR>')
 end)

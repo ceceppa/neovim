@@ -1,4 +1,5 @@
 local utils = require('ceceppa.utils')
+
 local package_manager = 'yarn'
 
 vim.ceceppa.errors = {

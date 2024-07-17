@@ -145,8 +145,8 @@ M.execute_command = function(command, description, args, then_callback, should_r
         on_exit = function(_, return_val)
             _latest_output = output
 
-            if should_return then
-                then_callback(output)
+            if should_return and then_callback then
+                then_callback(output, return_val)
             else
                 if return_val == 0 then
                     on_complete("success")
@@ -172,13 +172,7 @@ M.execute_command = function(command, description, args, then_callback, should_r
                     on_complete("error")
 
                     vim.schedule(function()
-                        local formatted_output = should_return and should_return(output) or {}
-
-                        if #formatted_output > 0 then
-                            show_qflist(command, formatted_output)
-                        else
-                            show_popup(command, output)
-                        end
+                        show_popup(command, output)
                     end)
                 end
             end
@@ -186,10 +180,14 @@ M.execute_command = function(command, description, args, then_callback, should_r
     }):start()
 end
 
-M.exec_async = function(command, then_callback)
+M.exec_async = function(command, then_callback, is_silent)
     local parts = vim.split(command, " ")
 
-    M.execute_command(parts[1], parts[1], vim.list_slice(parts, 2, #parts), then_callback, nil, false)
+    if is_silent == nil then
+        is_silent = false
+    end
+
+    M.execute_command(parts[1], parts[1], vim.list_slice(parts, 2, #parts), then_callback, true, is_silent)
 end
 
 M.get_unsaved_buffers_total = function()
@@ -226,7 +224,7 @@ M.trigger_event = function(event, ...)
     end
 end
 
-M.get_spelunker_bad_list = function ()
+M.get_spelunker_bad_list = function()
     vim.call('spelunker#cases#reset_case_counter')
 
     local orig_spelunker_target_min_char_len = vim.g.spelunker_target_min_char_len

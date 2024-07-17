@@ -30,7 +30,7 @@ local function command_picker()
         },
         sorter = conf.generic_sorter({}),
         attach_mappings = function(prompt_bufnr, map)
-            local run_command = function(then_callback)
+            local run_command = function(_, then_callback)
                 local selection = action_state.get_selected_entry(prompt_bufnr)
                 local picker = action_state.get_current_picker(prompt_bufnr)
                 local prompt = picker:_get_prompt()
@@ -77,8 +77,8 @@ local function command_picker()
                 command_picker()
             end
 
-            local run_command_and_log = function()
-                run_command(function()
+            local run_command_and_log = function(_)
+                run_command(_, function()
                     vim.cmd('ExecAsyncLog')
                 end)
             end

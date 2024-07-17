@@ -9,6 +9,7 @@ local utils = require('ceceppa.utils')
 local NVIM_PROJECTS_FILE = vim.fn.expand("~/.nvim.projects.json")
 
 local projects = {}
+local M = {}
 
 local save_projects = function(data)
     local json = vim.fn.json_encode(data)
@@ -128,6 +129,18 @@ local function project_add()
     end
 end
 
+M.is_project = function()
+    local current_path = vim.fn.getcwd()
+
+    for _, project in ipairs(projects) do
+        if project == current_path then
+            return true
+        end
+    end
+
+    return false
+end
+
 vim.api.nvim_create_user_command("Projects", function(args)
     if args.fargs[1] == "add" then
         project_add()
@@ -137,3 +150,5 @@ vim.api.nvim_create_user_command("Projects", function(args)
 end, { desc = '@ Ceceppa project manager', nargs = '*' })
 vim.api.nvim_set_keymap("n", "<leader>pp", ':Projects<CR>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap("n", "<leader>pa", ':Projects add<CR>', { noremap = true, silent = true })
+
+return M
