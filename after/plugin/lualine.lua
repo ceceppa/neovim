@@ -231,41 +231,30 @@ local get_spell_count = function()
 end
 
 local function update_diagnostics()
-    local vim_diagnostic = diagnostics.get_nvim_diagnostics()
+    local all_diagnostics = diagnostics.get_diagnostics({})
     local values = {
         errors = 0,
         warnings = 0,
         info = 0,
     }
 
-    for _, value in ipairs(vim_diagnostic) do
+    for _, value in ipairs(all_diagnostics) do
         local filename = value.filename
 
         -- ignore warnings from files outside the project
         -- this can happen when switching between projects
         if filename:find(vim.fn.getcwd(), 1, true) ~= nil then
-            if value.severity == 1 then
+            if value.severity == vim.diagnostic.severity.ERROR or value.type:upper() == 'ERROR' then
                 values.errors = values.errors + 1
-            elseif value.severity == 2 then
+            elseif value.severity == vim.diagnostic.severity.WARN or value.type:upper() == 'WARN' then
                 values.warnings = values.warnings + 1
-            elseif value.severity == 3 then
+            elseif value.severity == vim.diagnostic.severity.INFO or value.type:upper() == 'INFO' then
                 values.info = values.info + 1
             end
         end
     end
 
-    for _, value in ipairs(lint.get_output()) do
-        if value.type:upper() == 'ERROR' then
-            values.errors = values.errors + 1
-        else
-            values.warnings = values.warnings + 1
-        end
-    end
-
-    local tsc = require('tsc').get_output()
-    values.errors = values.errors + #tsc
-
-    local status = lint.is_active() and '󰒲  '  or '󰇘 '
+    local status = lint.is_active() and '󰒲  ' or '󰇘 '
 
     if lint.is_running() then
         status = HOURGLASSES[hourglass] .. ' '

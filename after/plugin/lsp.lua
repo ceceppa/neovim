@@ -39,8 +39,6 @@ local INLAY_STATUESES = {
 local inlay_status = INLAY_STATUESES.ignore
 
 lsp.on_attach(function(client)
-    local are_inlay_hints_supported = client.server_capabilities.inlayHintProvider and vim.lsp.inlay_hint
-
     local function enable_inlay_hints(is_triggered_by_autocmd)
         local current_buffer_name = vim.fn.bufname(vim.fn.bufnr('%'))
 
@@ -60,7 +58,7 @@ lsp.on_attach(function(client)
             should_enable = false
         end
 
-        if are_inlay_hints_supported and should_enable then
+        if should_enable then
             local ok = pcall(vim.lsp.inlay_hint.enable, true)
 
             if not ok then
@@ -80,17 +78,16 @@ lsp.on_attach(function(client)
             return
         end
 
-        if are_inlay_hints_supported then
-            vim.lsp.inlay_hint.enable(false)
+        vim.lsp.inlay_hint.enable(false)
 
-            if is_triggered_by_autocmd then
-                inlay_status = INLAY_STATUESES.reEnable
-            end
+        if is_triggered_by_autocmd then
+            inlay_status = INLAY_STATUESES.reEnable
         end
     end
 
     local function toggle_inlay_hints()
         local enabled = vim.lsp.inlay_hint.is_enabled()
+        print("Inlay hints ", enabled, " -> ", not enabled)
 
         if not enabled then
             enable_inlay_hints()

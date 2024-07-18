@@ -59,21 +59,32 @@ local convert_diagnostic_type = function(severities, severity)
     return severity
 end
 
+local function diagnostic_exists(diagnostic, diagnostics)
+    for _, d in ipairs(diagnostics) do
+        if d.filename == diagnostic.filename and d.lnum == diagnostic.lnum and d.col == diagnostic.col then
+            return true
+        end
+    end
+
+    return false
+end
 
 local function add_diagnostic_entries(diagnostics, values)
     local severities = vim.diagnostic.severity
 
     for _, d in ipairs(diagnostics) do
-        table.insert(values, {
-            bufnr = 0,
-            filename = d.filename,
-            lnum = d.lnum,
-            col = d.col,
-            text = d.text,
-            type = d.type,
-            severity = d.severity or severities[1],
-            source = d.source,
-        })
+        if not diagnostic_exists(d, values) then
+            table.insert(values, {
+                bufnr = 0,
+                filename = d.filename,
+                lnum = d.lnum,
+                col = d.col,
+                text = d.text,
+                type = d.type,
+                severity = d.severity or severities[1],
+                source = d.source,
+            })
+        end
     end
 
     return diagnostics
@@ -202,5 +213,6 @@ end, { desc = '@ Ceceppa diagnostics', nargs = '*' })
 vim.keymap.set('n', '<leader>e', ':DiagnosticsShow<CR>', { desc = '@: Show errors in all open buffers' });
 
 return {
-    get_nvim_diagnostics = get_nvim_diagnostics
+    get_diagnostics = get_diagnostics
+
 }
