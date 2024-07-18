@@ -1,6 +1,7 @@
 local utils = require('ceceppa.utils')
 local projects = require('ceceppa.projects')
 local lint = require('lint')
+local diagnostics = require('ceceppa.diagnostics')
 local TIMEOUT = 3000
 local HOURGLASSES = { '', '', '' }
 
@@ -230,18 +231,15 @@ local get_spell_count = function()
 end
 
 local function update_diagnostics()
-    local vim_diagnostic = vim.diagnostic.get()
+    local vim_diagnostic = diagnostics.get_nvim_diagnostics()
     local values = {
         errors = 0,
         warnings = 0,
+        info = 0,
     }
 
     for _, value in ipairs(vim_diagnostic) do
-        if bufnr_name_map[value.bufnr] == nil then
-            bufnr_name_map[value.bufnr] = vim.api.nvim_buf_get_name(value.bufnr)
-        end
-
-        local filename = bufnr_name_map[value.bufnr]
+        local filename = value.filename
 
         -- ignore warnings from files outside the project
         -- this can happen when switching between projects
@@ -250,6 +248,8 @@ local function update_diagnostics()
                 values.errors = values.errors + 1
             elseif value.severity == 2 then
                 values.warnings = values.warnings + 1
+            elseif value.severity == 3 then
+                values.info = values.info + 1
             end
         end
     end
@@ -265,15 +265,19 @@ local function update_diagnostics()
     local tsc = require('tsc').get_output()
     values.errors = values.errors + #tsc
 
-    local status = '󰒲  ' and lint.is_active() or '󰇘 '
+    local status = lint.is_active() and '󰒲  '  or '󰇘 '
 
     if lint.is_running() then
         status = HOURGLASSES[hourglass] .. ' '
     end
 
     local mispellings = get_spell_count()
-    custom_diagnostics = status ..
-        ' Errors: ' .. values.errors .. '    Warns: ' .. values.warnings .. '  Misspellings: ' .. mispellings
+    local errors = ' Errors: ' .. values.errors
+    local warnings = '    Warns: ' .. values.warnings
+    local info = '    Info: ' .. values.info
+    local mispellings = '    Misspellings: ' .. mispellings
+
+    custom_diagnostics = status .. errors .. warnings .. info .. mispellings
 
     vim.defer_fn(function()
         hourglass = hourglass + 1

@@ -6,10 +6,25 @@ require("mason").setup({
     ui = {
         icons = {
             package_installed = "✓",
-            package_pending = "➜",
+            package_pending = "󰥔",
             package_uninstalled = "✗"
         }
     }
+})
+
+require("mason-lspconfig").setup({
+    ensure_installed = {
+        "bashls",
+        "cssls",
+        "html",
+        "jsonls",
+        "rust_analyzer",
+        "tsserver",
+        "vimls",
+        "yamlls",
+        "phpactor",
+        "eslint"
+    },
 })
 
 inlay.setup()
@@ -145,16 +160,16 @@ vim.diagnostic.config({
     update_in_insert = false,
     underline = true,
     float = {
-		border = "single",
-		format = function(diagnostic)
-			return string.format(
-				"%s (%s) [%s]",
-				diagnostic.message,
-				diagnostic.source,
-				diagnostic.code or diagnostic.user_data.lsp.code
-			)
-		end,
-	},
+        border = "single",
+        format = function(diagnostic)
+            return string.format(
+                "%s (%s) [%s]",
+                diagnostic.message,
+                diagnostic.source,
+                diagnostic.code or diagnostic.user_data.lsp.code
+            )
+        end,
+    },
 })
 
 local capabilities = require("cmp_nvim_lsp").default_capabilities()
@@ -192,9 +207,6 @@ lspconfig.tsserver.setup({
             hint = {
                 enable = true
             },
-            lens = {
-                enable = true,
-            },
             inlayHints = {
                 includeInlayEnumMemberValueHints = true,
                 includeInlayFunctionLikeReturnTypeHints = true,
@@ -209,9 +221,6 @@ lspconfig.tsserver.setup({
             hint = {
                 enable = true
             },
-            lens = {
-                enable = true,
-            },
             inlayHints = {
                 includeInlayEnumMemberValueHints = true,
                 includeInlayFunctionLikeReturnTypeHints = true,
@@ -222,6 +231,17 @@ lspconfig.tsserver.setup({
                 includeInlayVariableTypeHints = true,
             },
         },
+    },
+})
+
+lspconfig.eslint.setup({
+    filetypes = { 'javascript', 'javascriptreact', 'typescript', 'typescriptreact' },
+    settings = {
+        workingDirectory = {
+            mode = "auto"
+        },
+        format = { enable = true },
+        lint = { enable = true },
     },
 })
 
@@ -241,5 +261,3 @@ lsp.set_preferences({
         info = ' '
     }
 })
-
-

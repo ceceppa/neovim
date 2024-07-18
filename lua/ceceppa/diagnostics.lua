@@ -59,7 +59,10 @@ local convert_diagnostic_type = function(severities, severity)
     return severity
 end
 
+
 local function add_diagnostic_entries(diagnostics, values)
+    local severities = vim.diagnostic.severity
+
     for _, d in ipairs(diagnostics) do
         table.insert(values, {
             bufnr = 0,
@@ -68,85 +71,53 @@ local function add_diagnostic_entries(diagnostics, values)
             col = d.col,
             text = d.text,
             type = d.type,
+            severity = d.severity or severities[1],
+            source = d.source,
         })
     end
 
     return diagnostics
 end
 
-local diagnostics_to_tbl = function(opts)
+local get_nvim_diagnostics = function(opts)
     opts = vim.F.if_nil(opts, {})
-    local items = {}
     local severities = vim.diagnostic.severity
 
     opts.severity = convert_diagnostic_type(severities, opts.severity)
     opts.severity_limit = convert_diagnostic_type(severities, opts.severity_limit)
     opts.severity_bound = convert_diagnostic_type(severities, opts.severity_bound)
 
-    local diagnosis_opts = { severity = {}, namespace = opts.namespace }
-    if opts.severity ~= nil then
-        if opts.severity_limit ~= nil or opts.severity_bound ~= nil then
-            utils.notify("builtin.diagnostics", {
-                msg = "Invalid severity parameters. Both a specific severity and a limit/bound is not allowed",
-                level = "ERROR",
+    local diagnostics = {}
+    local buffer_names = {}
+    local buffers = vim.api.nvim_list_bufs()
+
+    for _, buffer_number in ipairs(buffers) do
+        local buffer_diagnostics = vim.diagnostic.get(buffer_number)
+
+        if buffer_names[buffer_number] == nil then
+            buffer_names[buffer_number] = vim.api.nvim_buf_get_name(buffer_number)
+        end
+
+        for _, diagnostic in ipairs(buffer_diagnostics) do
+            table.insert(diagnostics, {
+                filename = buffer_names[buffer_number],
+                lnum = diagnostic.lnum,
+                col = diagnostic.col,
+                type = severities[diagnostic.severity] or severities[1],
+                text = diagnostic.message,
+                bufnr = buffer_number,
+                source = diagnostic.source,
             })
-            return {}
-        end
-        diagnosis_opts.severity = opts.severity
-    else
-        if opts.severity_limit ~= nil then
-            diagnosis_opts.severity["min"] = opts.severity_limit
-        end
-        if opts.severity_bound ~= nil then
-            diagnosis_opts.severity["max"] = opts.severity_bound
-        end
-        if vim.version().minor > 9 and vim.tbl_isempty(diagnosis_opts.severity) then
-            diagnosis_opts.severity = nil
         end
     end
 
-    opts.root_dir = opts.root_dir == true and vim.loop.cwd() or opts.root_dir
+    return diagnostics
+end
 
-    local bufnr_name_map = {}
-    local filter_diag = function(diagnostic)
-        if bufnr_name_map[diagnostic.bufnr] == nil then
-            bufnr_name_map[diagnostic.bufnr] = vim.api.nvim_buf_get_name(diagnostic.bufnr)
-        end
-
-        local filename = bufnr_name_map[diagnostic.bufnr]
-
-        local current_dir = vim.fn.getcwd()
-
-        if filename:find(current_dir, 1, true) == nil then
-            return false
-        end
-
-
-        local root_dir_test = not opts.root_dir
-            or string.sub(bufnr_name_map[diagnostic.bufnr], 1, #opts.root_dir) == opts.root_dir
-        local listed_test = not opts.no_unlisted or vim.api.nvim_buf_get_option(diagnostic.bufnr, "buflisted")
-
-        return root_dir_test and listed_test
-    end
-
-    local preprocess_diag = function(diagnostic)
-        return {
-            bufnr = diagnostic.bufnr,
-            filename = bufnr_name_map[diagnostic.bufnr],
-            lnum = diagnostic.lnum + 1,
-            col = diagnostic.col + 1,
-            text = vim.trim(diagnostic.message:gsub("[\n]", "")),
-            type = severities[diagnostic.severity] or severities[1],
-        }
-    end
-
-    for _, d in ipairs(vim.diagnostic.get(opts.bufnr, diagnosis_opts)) do
-        if filter_diag(d) then
-            table.insert(items, preprocess_diag(d))
-        end
-    end
-
+local get_diagnostics = function(opts)
+    local items = get_nvim_diagnostics(opts)
     local lint = require('lint').get_output()
+
     if #lint > 0 then
         add_diagnostic_entries(lint, items)
     end
@@ -160,7 +131,6 @@ local diagnostics_to_tbl = function(opts)
 
     return items
 end
-
 
 local function show_diagnostics(filter_type)
     local opts = {}
@@ -176,18 +146,10 @@ local function show_diagnostics(filter_type)
         opts.path_display = vim.F.if_nil(opts.path_display, "hidden")
     end
 
-    local locations = diagnostics_to_tbl(opts)
+    local locations = get_diagnostics(opts)
 
-    if vim.tbl_isempty(locations) then
+    if #locations == 0 then
         vim.notify("No diagnostics found", vim.log.levels.INFO)
-        return
-    end
-
-    if type(opts.line_width) == "string" and opts.line_width ~= "full" then
-        utils.notify("builtin.diagnostics", {
-            msg = string.format("'%s' is not a valid value for line_width", opts.line_width),
-            level = "ERROR",
-        })
         return
     end
 
@@ -199,29 +161,24 @@ local function show_diagnostics(filter_type)
         end
     end
 
-    local suffix = " (ALL)"
+    local suffix = "ALL"
 
     if filter_type ~= nil then
-        suffix = string.format(" (%s)", filter_type)
+        suffix = string.format("%s", filter_type)
     end
 
     pickers
-        .new(opts, {
-            prompt_title = opts.bufnr == nil and "Workspace Diagnostics" .. suffix or "Document Diagnostics" .. suffix,
+        .new({}, {
+            prompt_title = "Workspace DiagnosticsL (" .. suffix .. " " .. #filtered_diagnostics .. ")",
             finder = finders.new_table {
                 results = filtered_diagnostics,
-                entry_maker = opts.entry_maker or make_entry.gen_from_diagnostics(opts),
+                entry_maker = make_entry.gen_from_diagnostics({}),
             },
-            previewer = conf.qflist_previewer(opts),
-            sorter = conf.prefilter_sorter {
-                tag = "type",
-                sorter = conf.generic_sorter(opts),
-            },
-            attach_mappings = function(prompt_bufnr, map)
-                -- Couldn't figure out how to use get_current_picker():refresh... So closing and reopening
+            previewer = conf.qflist_previewer({}),
+            attach_mappings = function(prompt_buffer_number, map)
                 local show_only = function(what)
                     return function()
-                        actions.close(prompt_bufnr)
+                        actions.close(prompt_buffer_number)
 
                         show_diagnostics(what)
                     end
@@ -243,3 +200,7 @@ vim.api.nvim_create_user_command("DiagnosticsShow", function(args)
 end, { desc = '@ Ceceppa diagnostics', nargs = '*' })
 
 vim.keymap.set('n', '<leader>e', ':DiagnosticsShow<CR>', { desc = '@: Show errors in all open buffers' });
+
+return {
+    get_nvim_diagnostics = get_nvim_diagnostics
+}

@@ -207,7 +207,7 @@ return require('packer').startup(function(use)
     use 'kdheepak/lazygit.nvim'
     use 'kamykn/spelunker.vim'
     use {
-        'ceceppa/lint.nvim',
+        '~/Projects/lint.nvim',
         requires = {
             'ceceppa/execAsync.nvim'
         },
