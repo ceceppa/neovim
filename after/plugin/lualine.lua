@@ -1,5 +1,5 @@
 local utils = require('ceceppa.utils')
-local projects = require('ceceppa.projects')
+local projects = require('projects')
 local lint = require('lint')
 local diagnostics = require('ceceppa.diagnostics')
 local TIMEOUT = 3000
@@ -366,7 +366,6 @@ require('lualine').setup {
         },
         lualine_c = {
             {
-                get_current_diagnostic_value,
             },
         },
         lualine_x = {

@@ -205,23 +205,19 @@ M.get_unsaved_buffers_total = function()
     return unsaved_buffers
 end
 
-local event_handlers = {}
 M.add_event = function(event, callback)
-    if not event_handlers[event] then
-        event_handlers[event] = {}
-    end
-
-    table.insert(event_handlers[event], callback)
+    vim.api.nvim_create_autocmd("User", {
+        pattern = event,
+        callback = function()
+            if callback then
+                callback()
+            end
+        end
+    })
 end
 
-M.trigger_event = function(event, ...)
-    if not event_handlers[event] then
-        return
-    end
-
-    for _, callback in ipairs(event_handlers[event]) do
-        callback(...)
-    end
+M.trigger_event = function(event)
+    vim.api.nvim_exec('doautocmd User ' .. event, false)
 end
 
 M.get_spelunker_bad_list = function()

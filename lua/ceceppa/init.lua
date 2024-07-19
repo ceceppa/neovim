@@ -7,8 +7,6 @@ require("ceceppa.remap")
 require("ceceppa.set")
 require("ceceppa.git")
 require("ceceppa.autocmd")
--- require("ceceppa.lint")
-require("ceceppa.projects")
 require("ceceppa.runner")
 require("ceceppa.diagnostics")
 local utils = require('ceceppa.utils')
@@ -37,6 +35,7 @@ vim.g.copilot_filetypes = {
     ["*"] = false,
     ["lua"] = true,
     ["php"] = true,
+    ["markdown"] = true,
   }
 
 vim.o.guicursor = 'n-v-i-sm:block,c-ci-ve-i:ver25,r-cr-o:hor20,a:blinkwait700-blinkoff400-blinkon250-Cursor/lCursor'
