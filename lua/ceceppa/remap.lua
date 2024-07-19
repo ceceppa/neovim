@@ -246,14 +246,19 @@ vim.keymap.set("n", "<C-S-X>", "ddi", { desc = '@: Delete entire line' })
 vim.keymap.set("n", "<C-.>", "V>", { desc = '@: Indent entire line' })
 vim.keymap.set("n", "<C-S-.>", "V<", { desc = '@: Deintend entire line' })
 
-vim.keymap.set("v", "<C-S-O>", function()
-    vim.cmd.normal { '"zy', bang = true }
-    local selection = vim.fn.getreg("z")
-
+local function search_selection_on_google(selection)
     if string.len(selection) == 0 then
-        print("No selection found.")
         return
     end
 
     os.execute("open https://www.google.com/search?q=" .. selection)
+end
+
+vim.keymap.set('n', '<C-S-O>', function()
+    search_selection_on_google(vim.fn.expand("<cword>"))
+end, { desc = '@: Search selection on Google' })
+
+vim.keymap.set("v", "<C-S-O>", function()
+    vim.cmd.normal { '"zy', bang = true }
+    search_selection_on_google(vim.fn.getreg("z"))
 end, { desc = '@: Search selection on Google' })

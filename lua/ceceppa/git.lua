@@ -101,6 +101,10 @@ vim.keymap.set('n', '<leader>gv', ':Gvdiffsplit!<CR>', { desc = '@: Git diff' })
 vim.keymap.set('n', '<leader>gg', ':LazyGit<CR>', { desc = '@: Open LazyGit' });
 vim.keymap.set('n', '<leader>gh', ':LazyGitFilterCurrentFile<CR>', { desc = '@: Git file history' });
 vim.keymap.set('n', '<leader>gl', ':LazyGitFilter<CR>', { desc = '@: Git history' });
+vim.keymap.set('n', '<leader>gr', function()
+    local command = [[!git remote -v | head -n 1 | awk -F "@" '{print $2}' | awk -F " " '{print $1}' | sed 's/:/\//g' | sed 's/.git//g' | awk '{print "http://"$1}' | xargs open]]
+    vim.cmd(command)
+end, { desc = '@: Git open remote repository in Browser' });
 
 vim.keymap.set('n', '<leader>gc', ':Telescope git_commits<CR>', { desc = '@: Git commits' });
 
